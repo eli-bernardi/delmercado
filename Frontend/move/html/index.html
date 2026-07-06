@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Del Mercado - Movimentação & Vendas</title>
+  <link rel="stylesheet" href="../../shop/css/style.css">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: '#d62828',
+            darkBg: '#0a0a0a',
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-[#0a0a0a] text-white">
+
+  <!-- NAVBAR -->
+  <header class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-8 py-4 bg-[#0a0a0a]/90 backdrop-blur-md shadow-md border-b border-white/5">
+    <a href="../../shop/html/index.html" class="text-logo text-2xl font-black tracking-wide">Del Mercado</a>
+    <nav class="hidden md:flex items-center space-x-6 text-sm font-medium">
+      <a href="../../shop/html/index.html" class="hover:text-brand transition-colors">Início</a>
+      <a href="../../shop/html/produtos.html" class="hover:text-brand transition-colors">Produtos (CRUD)</a>
+      <a href="../../user/html/index.html" class="hover:text-brand transition-colors">Usuários (CRUD)</a>
+      <a href="./index.html" class="text-brand transition-colors font-semibold">Movimentações</a>
+      <a href="../../shop/html/relatorios.html" class="hover:text-brand transition-colors">Relatórios</a>
+      <a href="../../shop/html/graficos.html" class="hover:text-brand transition-colors">Gráficos</a>
+    </nav>
+    <button class="md:hidden text-white hover:text-brand transition-colors focus:outline-none">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+      </svg>
+    </button>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="pt-24 px-6 max-w-7xl mx-auto pb-16">
+    <div class="my-8 text-center md:text-left">
+      <h1 class="text-3xl font-black text-white">Movimentação e Vendas</h1>
+      <p class="text-gray-400 text-sm mt-1">Registre entradas (cargas no estoque) ou saídas (compras/vendas) e veja o histórico completo.</p>
+    </div>
+
+    <!-- Toast message area -->
+    <div id="move-toast" class="hidden mb-6 p-3 rounded-lg text-sm font-semibold text-center"></div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Form Panel -->
+      <section class="lg:col-span-1 glass-panel rounded-2xl p-6 border-glow h-fit">
+        <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+          <span class="text-brand">📝</span> Registrar Movimentação
+        </h2>
+
+        <form id="movement-form" class="space-y-4">
+          <div>
+            <label class="block text-gray-400 text-xs font-semibold uppercase mb-1">Usuário / Comprador *</label>
+            <select id="move-usuario" required class="w-full bg-neutral-900 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-brand text-sm">
+              <option value="">Selecione um usuário...</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-gray-400 text-xs font-semibold uppercase mb-1">Produto *</label>
+            <select id="move-produto" required class="w-full bg-neutral-900 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-brand text-sm">
+              <option value="">Selecione um produto...</option>
+            </select>
+            <span id="product-stock-hint" class="text-xs text-gray-500 mt-1 block"></span>
+          </div>
+
+          <div>
+            <label class="block text-gray-400 text-xs font-semibold uppercase mb-1">Tipo de Movimento *</label>
+            <div class="flex gap-4 mt-1">
+              <label class="inline-flex items-center text-sm cursor-pointer">
+                <input type="radio" name="tipoMovimento" value="SAIDA" checked class="text-brand focus:ring-brand bg-neutral-900 border-white/10">
+                <span class="ml-2 text-red-400 font-semibold uppercase">Saída (Venda)</span>
+              </label>
+              <label class="inline-flex items-center text-sm cursor-pointer">
+                <input type="radio" name="tipoMovimento" value="ENTRADA" class="text-brand focus:ring-brand bg-neutral-900 border-white/10">
+                <span class="ml-2 text-green-400 font-semibold uppercase">Entrada (Carga)</span>
+              </label>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-gray-400 text-xs font-semibold uppercase mb-1">Quantidade Movimentada *</label>
+            <input type="number" id="move-quantidade" min="1" required class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-brand text-sm">
+          </div>
+
+          <div>
+            <label class="block text-gray-400 text-xs font-semibold uppercase mb-1">Forma de Pagamento *</label>
+            <select id="move-pagamento" required class="w-full bg-neutral-900 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-brand text-sm">
+              <option value="DEBITO">Cartão de Débito</option>
+              <option value="CREDITO">Cartão de Crédito</option>
+              <option value="DINHEIRO">Dinheiro</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-gray-400 text-xs font-semibold uppercase mb-1">Status da Compra *</label>
+            <select id="move-status" required class="w-full bg-neutral-900 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-brand text-sm">
+              <option value="PAGA">PAGA</option>
+              <option value="PENDENTE">PENDENTE</option>
+            </select>
+          </div>
+
+          <!-- Calculated values preview -->
+          <div class="bg-white/5 p-4 rounded-xl border border-white/5 space-y-1.5 text-xs text-gray-400">
+            <div class="flex justify-between">
+              <span>Preço unitário:</span>
+              <span id="preview-preco" class="text-white">-</span>
+            </div>
+            <div class="flex justify-between">
+              <span>Desconto aplicado:</span>
+              <span id="preview-desconto" class="text-white">-</span>
+            </div>
+            <div class="flex justify-between text-sm font-bold border-t border-white/5 pt-2">
+              <span class="text-gray-300">Valor Final Estimado:</span>
+              <span id="preview-final" class="text-brand">-</span>
+            </div>
+          </div>
+
+          <button type="submit" class="w-full bg-brand hover:bg-[#a51d1d] text-white font-semibold py-2.5 px-4 rounded-lg transition-all duration-300">
+            Registrar Movimentação
+          </button>
+        </form>
+      </section>
+
+      <!-- History Table List -->
+      <div class="lg:col-span-2 glass-panel rounded-2xl p-6 border-glow flex flex-col justify-between">
+        <div>
+          <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+            <span class="text-brand">📋</span> Histórico Geral de Movimentação
+          </h2>
+
+          <div class="overflow-x-auto">
+            <table class="min-w-full text-left text-xs">
+              <thead class="bg-white/5 border-b border-white/10 text-gray-400 font-bold uppercase tracking-wider">
+                <tr>
+                  <th class="px-4 py-3">Data</th>
+                  <th class="px-4 py-3">Movimento</th>
+                  <th class="px-4 py-3">Usuário</th>
+                  <th class="px-4 py-3">Produto</th>
+                  <th class="px-4 py-3">Qtd</th>
+                  <th class="px-4 py-3">Preço Final</th>
+                  <th class="px-4 py-3">Pagamento</th>
+                  <th class="px-4 py-3">Status</th>
+                </tr>
+              </thead>
+              <tbody id="movements-table-body" class="divide-y divide-white/5">
+                <!-- Dynamic rows -->
+              </tbody>
+            </table>
+          </div>
+
+          <div id="table-spinner" class="flex justify-center items-center py-12">
+            <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-brand"></div>
+          </div>
+
+          <div id="table-empty" class="hidden text-center py-12 text-gray-500">
+            Nenhuma movimentação de estoque registrada.
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const API_BASE = 'http://localhost:3000';
+    
+    const form = document.getElementById('movement-form');
+    const selectUsuario = document.getElementById('move-usuario');
+    const selectProduto = document.getElementById('move-produto');
+    const inputQuantidade = document.getElementById('move-quantidade');
+    const selectPagamento = document.getElementById('move-pagamento');
+    const selectStatus = document.getElementById('move-status');
+    const stockHint = document.getElementById('product-stock-hint');
+    
+    // Preview values
+    const previewPreco = document.getElementById('preview-preco');
+    const previewDesconto = document.getElementById('preview-desconto');
+    const previewFinal = document.getElementById('preview-final');
+    
+    const toast = document.getElementById('move-toast');
+    const tableBody = document.getElementById('movements-table-body');
+    const tableSpinner = document.getElementById('table-spinner');
+    const tableEmpty = document.getElementById('table-empty');
+    
+    let productsList = [];
+    let selectedProd = null;
+
+    function showToast(message, isError = false) {
+      toast.textContent = message;
+      toast.className = `mb-6 p-3 rounded-lg text-sm text-center font-semibold ${
+        isError ? 'bg-red-500/20 text-red-400 border border-red-500/30' : 'bg-green-500/20 text-green-400 border border-green-500/30'
+      }`;
+      toast.classList.remove('hidden');
+      setTimeout(() => {
+        toast.classList.add('hidden');
+      }, 5500);
+    }
+
+    async function loadFormSelects() {
+      try {
+        // Fetch Users
+        const resUsers = await fetch(`${API_BASE}/usuarios`);
+        const users = await resUsers.json();
+        users.forEach(u => {
+          const opt = document.createElement('option');
+          opt.value = u.codUsuario;
+          opt.textContent = `${u.Nome} ${u.Sobrenome} (ID: ${u.codUsuario})`;
+          selectUsuario.appendChild(opt);
+        });
+
+        // Fetch Products
+        const resProds = await fetch(`${API_BASE}/produtos`);
+        productsList = await resProds.json();
+        productsList.forEach(p => {
+          const opt = document.createElement('option');
+          opt.value = p.codProduto;
+          opt.textContent = `${p.Nome} (Estoque: ${p.Quantidade})`;
+          selectProduto.appendChild(opt);
+        });
+
+        // Query param pre-select product
+        const urlParams = new URLSearchParams(window.location.search);
+        const preSelectedProdId = urlParams.get('productId');
+        if (preSelectedProdId) {
+          selectProduto.value = preSelectedProdId;
+          handleProductChange();
+        }
+      } catch (err) {
+        showToast('Erro ao carregar seletores do formulário.', true);
+      }
+    }
+
+    function handleProductChange() {
+      const prodId = selectProduto.value;
+      selectedProd = productsList.find(p => p.codProduto == prodId);
+      if (selectedProd) {
+        const stock = parseInt(selectedProd.Quantidade);
+        stockHint.textContent = `Quantidade em estoque atual: ${stock}`;
+        previewPreco.textContent = `R$ ${parseFloat(selectedProd['Preço']).toFixed(2)}`;
+        previewDesconto.textContent = `${parseFloat(selectedProd['Percentual de desconto'] || 0).toFixed(1)}%`;
+        updateCalculations();
+      } else {
+        stockHint.textContent = '';
+        previewPreco.textContent = '-';
+        previewDesconto.textContent = '-';
+        previewFinal.textContent = '-';
+      }
+    }
+
+    function updateCalculations() {
+      if (!selectedProd) return;
+      const qty = parseInt(inputQuantidade.value) || 0;
+      const price = parseFloat(selectedProd['Preço']);
+      const desc = parseFloat(selectedProd['Percentual de desconto']) || 0;
+      const finalVal = (price * (1 - desc / 100)) * qty;
+      previewFinal.textContent = `R$ ${finalVal.toFixed(2)}`;
+    }
+
+    selectProduto.addEventListener('change', handleProductChange);
+    inputQuantidade.addEventListener('input', updateCalculations);
+
+    // Load logs table
+    async function loadMovementsLogs() {
+      tableSpinner.classList.remove('hidden');
+      tableEmpty.classList.add('hidden');
+      tableBody.innerHTML = '';
+
+      try {
+        const res = await fetch(`${API_BASE}/compras`);
+        if (!res.ok) throw new Error();
+        const logs = await res.json();
+        tableSpinner.classList.add('hidden');
+
+        if (logs.length === 0) {
+          tableEmpty.classList.remove('hidden');
+          return;
+        }
+
+        logs.forEach(l => {
+          const row = document.createElement('tr');
+          row.className = 'hover:bg-white/5 transition-colors border-b border-white/5';
+          
+          const formattedDate = new Date(l.dataCompra).toLocaleString('pt-BR');
+          const isSaida = l.tipoMovimento === 'SAIDA';
+          const typeBadge = isSaida 
+            ? '<span class="bg-red-500/20 text-red-400 border border-red-500/20 px-2 py-0.5 rounded font-bold">SAÍDA</span>' 
+            : '<span class="bg-green-500/20 text-green-400 border border-green-500/20 px-2 py-0.5 rounded font-bold">ENTRADA</span>';
+
+          row.innerHTML = `
+            <td class="px-4 py-3 text-gray-400">${formattedDate}</td>
+            <td class="px-4 py-3 font-semibold">${typeBadge}</td>
+            <td class="px-4 py-3 text-gray-300 font-medium">${l.usuario ? l.usuario.Nome + ' ' + l.usuario.Sobrenome : 'Desconhecido'}</td>
+            <td class="px-4 py-3 text-gray-300 truncate max-w-[120px]" title="${l.produto ? l.produto.Nome : ''}">${l.produto ? l.produto.Nome : 'Desconhecido'}</td>
+            <td class="px-4 py-3 font-semibold">${l.quantidadeMovimentada}</td>
+            <td class="px-4 py-3 font-extrabold text-white">R$ ${parseFloat(l.precoFinal).toFixed(2)}</td>
+            <td class="px-4 py-3 text-gray-400">${l.formaPagamento}</td>
+            <td class="px-4 py-3">
+              <span class="px-2 py-0.5 rounded font-semibold text-[10px] ${
+                l.statusCompra === 'PAGA' ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/20'
+              }">${l.statusCompra}</span>
+            </td>
+          `;
+          tableBody.appendChild(row);
+        });
+      } catch (err) {
+        tableSpinner.classList.add('hidden');
+        tableEmpty.textContent = 'Erro ao carregar histórico.';
+        tableEmpty.classList.remove('hidden');
+      }
+    }
+
+    // Submit movement
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const typeInput = document.querySelector('input[name="tipoMovimento"]:checked');
+      
+      const payload = {
+        codUsuario: parseInt(selectUsuario.value, 10),
+        codProduto: parseInt(selectProduto.value, 10),
+        tipoMovimento: typeInput.value,
+        quantidadeMovimentada: parseInt(inputQuantidade.value, 10),
+        formaPagamento: selectPagamento.value,
+        statusCompra: selectStatus.value
+      };
+
+      try {
+        const res = await fetch(`${API_BASE}/compras`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Erro ao registrar movimento');
+
+        showToast('Movimentação registrada com sucesso!');
+        form.reset();
+        selectedProd = null;
+        stockHint.textContent = '';
+        previewPreco.textContent = '-';
+        previewDesconto.textContent = '-';
+        previewFinal.textContent = '-';
+        
+        // Reload all
+        loadMovementsLogs();
+        // Reload products list in cache to reflect new stocks
+        const resProds = await fetch(`${API_BASE}/produtos`);
+        productsList = await resProds.json();
+      } catch (err) {
+        showToast(err.message, true);
+      }
+    });
+
+    // Initialize
+    loadFormSelects();
+    loadMovementsLogs();
+  </script>
+</body>
+</html>

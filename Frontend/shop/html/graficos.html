@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Del Mercado - Relatórios Gráficos</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: '#d62828',
+            darkBg: '#0a0a0a',
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-[#0a0a0a] text-white">
+
+  <!-- NAVBAR -->
+  <header class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-8 py-4 bg-[#0a0a0a]/90 backdrop-blur-md shadow-md border-b border-white/5">
+    <a href="./index.html" class="text-logo text-2xl font-black tracking-wide">Del Mercado</a>
+    <nav class="hidden md:flex items-center space-x-6 text-sm font-medium">
+      <a href="./index.html" class="hover:text-brand transition-colors">Início</a>
+      <a href="./produtos.html" class="hover:text-brand transition-colors">Produtos (CRUD)</a>
+      <a href="../../user/html/index.html" class="hover:text-brand transition-colors">Usuários (CRUD)</a>
+      <a href="../../move/html/index.html" class="hover:text-brand transition-colors">Movimentações</a>
+      <a href="./relatorios.html" class="hover:text-brand transition-colors">Relatórios</a>
+      <a href="./graficos.html" class="text-brand transition-colors font-semibold">Gráficos</a>
+    </nav>
+    <button class="md:hidden text-white hover:text-brand transition-colors focus:outline-none">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+      </svg>
+    </button>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="pt-24 px-6 max-w-7xl mx-auto pb-16">
+    <div class="my-8 text-center md:text-left">
+      <h1 class="text-3xl font-black text-white">Gráficos Analíticos</h1>
+      <p class="text-gray-400 text-sm mt-1">Visões gerenciais e dinâmicas alimentadas em tempo real pelas movimentações do estoque.</p>
+    </div>
+
+    <!-- Error/Toast -->
+    <div id="graphics-toast" class="hidden mb-6 p-3 rounded-lg text-sm font-semibold text-center bg-red-500/20 text-red-400 border border-red-500/30"></div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      
+      <!-- Chart 1: Vertical Bars (Estoque Físico Atual) -->
+      <div class="glass-panel rounded-2xl p-6 border-glow flex flex-col justify-between">
+        <div class="mb-4 text-center lg:text-left">
+          <h2 class="text-xl font-bold text-white flex items-center justify-center lg:justify-start gap-2">
+            <span class="text-brand">📊</span> Estoque Físico Crítico
+          </h2>
+          <p class="text-gray-400 text-xs mt-1">Saldo de produtos abaixo de 10 unidades. Eixo X: Produto, Eixo Y: Qtd.</p>
+        </div>
+        
+        <!-- Chart Canvas -->
+        <div class="relative w-full h-[320px] md:h-[400px] flex items-center justify-center">
+          <canvas id="chart-estoque-critico"></canvas>
+          <div id="chart-spinner-1" class="absolute animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-brand"></div>
+          <div id="chart-empty-1" class="absolute hidden text-gray-500 text-sm">Sem dados críticos de estoque.</div>
+        </div>
+      </div>
+
+      <!-- Chart 2: Horizontal Bars (Volume Financeiro de Compras) -->
+      <div class="glass-panel rounded-2xl p-6 border-glow flex flex-col justify-between">
+        <div class="mb-4 text-center lg:text-left">
+          <h2 class="text-xl font-bold text-white flex items-center justify-center lg:justify-start gap-2">
+            <span class="text-brand">📈</span> Volume Financeiro de Compras (Top 5)
+          </h2>
+          <p class="text-gray-400 text-xs mt-1">Top 5 produtos com maior volume de capital movimentado em saídas. Eixo X: Capital (R$), Eixo Y: Produto.</p>
+        </div>
+
+        <!-- Chart Canvas -->
+        <div class="relative w-full h-[320px] md:h-[400px] flex items-center justify-center">
+          <canvas id="chart-volume-compras"></canvas>
+          <div id="chart-spinner-2" class="absolute animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-brand"></div>
+          <div id="chart-empty-2" class="absolute hidden text-gray-500 text-sm">Nenhuma movimentação registrada.</div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    const API_URL = 'http://localhost:3000/compras/relatorios/graficos';
+    const toast = document.getElementById('graphics-toast');
+    
+    // Spinners
+    const spinner1 = document.getElementById('chart-spinner-1');
+    const spinner2 = document.getElementById('chart-spinner-2');
+    
+    // Empty state labels
+    const empty1 = document.getElementById('chart-empty-1');
+    const empty2 = document.getElementById('chart-empty-2');
+
+    // Chart instances
+    let chart1Instance = null;
+    let chart2Instance = null;
+
+    // Apply global Chart.js config overrides for beautiful dark theme integration
+    Chart.defaults.color = 'rgba(255, 255, 255, 0.7)';
+    Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.08)';
+    Chart.defaults.font.family = "'Inter', sans-serif";
+
+    async function loadChartData() {
+      try {
+        const res = await fetch(API_URL);
+        if (!res.ok) throw new Error('Falha ao conectar com o backend.');
+        const data = await res.json();
+
+        // 1. Render Estoque Físico Crítico
+        spinner1.classList.add('hidden');
+        if (!data.estoqueCritico || data.estoqueCritico.length === 0) {
+          empty1.classList.remove('hidden');
+        } else {
+          renderEstoqueCriticoChart(data.estoqueCritico);
+        }
+
+        // 2. Render Volume Financeiro de Compras
+        spinner2.classList.add('hidden');
+        if (!data.volumeCompras || data.volumeCompras.length === 0) {
+          empty2.classList.remove('hidden');
+        } else {
+          renderVolumeComprasChart(data.volumeCompras);
+        }
+
+      } catch (err) {
+        spinner1.classList.add('hidden');
+        spinner2.classList.add('hidden');
+        toast.textContent = `Erro ao carregar gráficos: ${err.message}`;
+        toast.classList.remove('hidden');
+      }
+    }
+
+    function renderEstoqueCriticoChart(list) {
+      const ctx = document.getElementById('chart-estoque-critico').getContext('2d');
+      const labels = list.map(item => item.title);
+      const values = list.map(item => item.stock);
+
+      chart1Instance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Itens em Estoque',
+            data: values,
+            backgroundColor: 'rgba(214, 40, 40, 0.7)',
+            borderColor: 'rgba(214, 40, 40, 1)',
+            borderWidth: 1.5,
+            borderRadius: 6,
+            hoverBackgroundColor: 'rgba(255, 107, 107, 0.9)'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              backgroundColor: 'rgba(18, 18, 18, 0.95)',
+              borderColor: 'rgba(214, 40, 40, 0.3)',
+              borderWidth: 1,
+              titleColor: '#fff',
+              bodyColor: '#ddd',
+              padding: 10
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: {
+                color: 'rgba(255, 255, 255, 0.05)'
+              },
+              ticks: {
+                precision: 0
+              }
+            },
+            x: {
+              grid: {
+                display: false
+              }
+            }
+          }
+        }
+      });
+    }
+
+    function renderVolumeComprasChart(list) {
+      const ctx = document.getElementById('chart-volume-compras').getContext('2d');
+      const labels = list.map(item => item.nome);
+      const values = list.map(item => parseFloat(item.valor_financeiro_movimentado));
+
+      chart2Instance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Volume Financeiro (R$)',
+            data: values,
+            backgroundColor: 'rgba(255, 107, 107, 0.7)',
+            borderColor: 'rgba(255, 107, 107, 1)',
+            borderWidth: 1.5,
+            borderRadius: 6,
+            hoverBackgroundColor: 'rgba(214, 40, 40, 0.9)'
+          }]
+        },
+        options: {
+          indexAxis: 'y', // Makes it horizontal
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              backgroundColor: 'rgba(18, 18, 18, 0.95)',
+              borderColor: 'rgba(255, 107, 107, 0.3)',
+              borderWidth: 1,
+              titleColor: '#fff',
+              bodyColor: '#ddd',
+              padding: 10,
+              callbacks: {
+                label: function(context) {
+                  return `R$ ${context.parsed.x.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              beginAtZero: true,
+              grid: {
+                color: 'rgba(255, 255, 255, 0.05)'
+              },
+              ticks: {
+                callback: function(value) {
+                  return `R$ ${value}`;
+                }
+              }
+            },
+            y: {
+              grid: {
+                display: false
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // Load graphics on render
+    loadChartData();
+  </script>
+</body>
+</html>

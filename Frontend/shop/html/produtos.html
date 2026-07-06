@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Del Mercado - Gerenciamento de Produtos</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: '#d62828',
+            darkBg: '#0a0a0a',
+          }
+        }
+      }
+    }
+  </script>
+</head>
+
+<body class="bg-[#0a0a0a] text-white">
+
+  <!-- NAVBAR -->
+  <header
+    class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-8 py-4 bg-[#0a0a0a]/90 backdrop-blur-md shadow-md border-b border-white/5">
+    <a href="./index.html" class="text-logo text-2xl font-black tracking-wide">Del Mercado</a>
+    <nav class="hidden md:flex items-center space-x-6 text-sm font-medium">
+      <a href="./index.html" class="hover:text-brand transition-colors">Início</a>
+      <a href="./produtos.html" class="text-brand transition-colors font-semibold">Produtos (CRUD)</a>
+      <a href="../../user/html/index.html" class="hover:text-brand transition-colors">Usuários (CRUD)</a>
+      <a href="../../move/html/index.html" class="hover:text-brand transition-colors">Movimentações</a>
+      <a href="./relatorios.html" class="hover:text-brand transition-colors">Relatórios</a>
+      <a href="./graficos.html" class="hover:text-brand transition-colors">Gráficos</a>
+    </nav>
+    <button class="md:hidden text-white hover:text-brand transition-colors focus:outline-none">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+      </svg>
+    </button>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="pt-24 px-6 max-w-7xl mx-auto pb-16">
+    <div class="my-8 text-center md:text-left md:flex justify-between items-center">
+      <div>
+        <h1 class="text-3xl font-black text-white">Gerenciamento de Produtos</h1>
+        <p class="text-gray-400 text-sm mt-1">Crie, edite ou remova produtos do catálogo do sistema.</p>
+      </div>
+      <button id="btn-show-form"
+        class="mt-4 md:mt-0 bg-brand hover:bg-[#a51d1d] text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 flex items-center gap-2">
+        <span>+</span> Novo Produto
+      </button>
+    </div>
+
+    <div id="crud-toast" class="hidden mb-6 p-3 rounded-lg text-sm font-semibold text-center"></div>
+
+    <section id="form-container" class="hidden glass-panel rounded-2xl p-6 mb-8 border-glow">
+      <div class="flex justify-between items-center mb-6">
+        <h2 id="form-title" class="text-xl font-bold text-white">Cadastrar Novo Produto</h2>
+        <button id="btn-cancel" class="text-gray-400 hover:text-white transition-colors text-sm">Cancelar</button>
+      </div>
+
+      <form id="product-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <input type="hidden" id="product-id">
+
+        <div>
+          <label class="block text-gray-400 text-xs font-semibold uppercase mb-1">Nome do Produto *</label>
+          <input type="text" id="prod-nome" required
+            class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-brand transition-colors text-sm">
+        </div>
+
+        <div>
+          <label class="block text-gray-400 text-xs font-semibold uppercase mb-1">Marca</label>
+          <input type="text" id="prod-marca"
+            class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-brand transition-colors text-sm">
+        </div>
+
+        <div class="md:col-span-2">
+          <label class="block text-gray-400 text-xs font-semibold uppercase mb-1">Descrição</label>
+          <textarea id="prod-descricao" rows="2"
+            class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-brand transition-colors text-sm"></textarea>
+        </div>
+
+        <div>
+          <label class="block text-gray-400 text-xs font-semibold uppercase mb-1">Categoria</label>
+          <input type="text" id="prod-categoria"
+            class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-brand transition-colors text-sm">
+        </div>
+
+        <div>
+          <label class="block text-gray-400 text-xs font-semibold uppercase mb-1">Preço Unitário (R$) *</label>
+          <input type="number" id="prod-preco" step="0.01" min="0" required
+            class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-brand transition-colors text-sm">
+        </div>
+
+        <div>
+          <label class="block text-gray-400 text-xs font-semibold uppercase mb-1">Percentual de Desconto (%)</label>
+          <input type="number" id="prod-desconto" step="0.1" min="0" max="100"
+            class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-brand transition-colors text-sm">
+        </div>
+
+        <div>
+          <label class="block text-gray-400 text-xs font-semibold uppercase mb-1">Quantidade em Estoque (Quantidade)
+            *</label>
+          <input type="number" id="prod-quantidade" min="0" required
+            class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-brand transition-colors text-sm">
+        </div>
+
+        <div class="md:col-span-2">
+          <label class="block text-gray-400 text-xs font-semibold uppercase mb-1">URL da Imagem (Imagem)</label>
+          <input type="url" id="prod-imagem" placeholder="https://..."
+            class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-brand transition-colors text-sm">
+        </div>
+
+        <div class="md:col-span-2 flex justify-end gap-2 mt-4">
+          <button type="button" id="btn-form-cancel"
+            class="bg-white/5 hover:bg-white/10 text-white font-semibold py-2 px-4 rounded-lg transition-all text-sm border border-white/10">Cancelar</button>
+          <button type="submit"
+            class="bg-brand hover:bg-[#a51d1d] text-white font-semibold py-2 px-6 rounded-lg transition-all text-sm">Salvar</button>
+        </div>
+      </form>
+    </section>
+
+    <div class="glass-panel rounded-2xl overflow-hidden border border-white/5">
+      <div class="overflow-x-auto">
+        <table class="min-w-full text-left text-sm">
+          <thead class="bg-white/5 border-b border-white/10 text-xs font-bold uppercase text-gray-400 tracking-wider">
+            <tr>
+              <th class="px-6 py-4">ID</th>
+              <th class="px-6 py-4">Imagem</th>
+              <th class="px-6 py-4">Nome / Marca</th>
+              <th class="px-6 py-4">Categoria</th>
+              <th class="px-6 py-4">Preço (R$)</th>
+              <th class="px-6 py-4">Desconto (%)</th>
+              <th class="px-6 py-4">Estoque</th>
+              <th class="px-6 py-4 text-right">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="products-table-body" class="divide-y divide-white/5">
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Spinner -->
+      <div id="table-spinner" class="flex justify-center items-center py-12">
+        <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-brand"></div>
+      </div>
+
+      <!-- Empty state inside table -->
+      <div id="table-empty" class="hidden text-center py-12 text-gray-500">
+        Nenhum produto cadastrado no banco.
+      </div>
+    </div>
+  </main>
+
+  <!-- Script for CRUD logic -->
+  <script>
+    const API_URL = 'http://localhost:3000/produtos';
+
+    const formContainer = document.getElementById('form-container');
+    const productForm = document.getElementById('product-form');
+    const formTitle = document.getElementById('form-title');
+    const btnShowForm = document.getElementById('btn-show-form');
+    const btnCancel = document.getElementById('btn-cancel');
+    const btnFormCancel = document.getElementById('btn-form-cancel');
+    const crudToast = document.getElementById('crud-toast');
+
+    const tableBody = document.getElementById('products-table-body');
+    const tableSpinner = document.getElementById('table-spinner');
+    const tableEmpty = document.getElementById('table-empty');
+
+    // Inputs
+    const inputId = document.getElementById('product-id');
+    const inputNome = document.getElementById('prod-nome');
+    const inputMarca = document.getElementById('prod-marca');
+    const inputDescricao = document.getElementById('prod-descricao');
+    const inputCategoria = document.getElementById('prod-categoria');
+    const inputPreco = document.getElementById('prod-preco');
+    const inputDesconto = document.getElementById('prod-desconto');
+    const inputQuantidade = document.getElementById('prod-quantidade');
+    const inputImagem = document.getElementById('prod-imagem');
+
+    function showToast(message, isError = false) {
+      crudToast.textContent = message;
+      crudToast.className = `mb-6 p-3 rounded-lg text-sm text-center font-semibold ${isError ? 'bg-red-500/20 text-red-400 border border-red-500/30' : 'bg-green-500/20 text-green-400 border border-green-500/30'
+        }`;
+      crudToast.classList.remove('hidden');
+      setTimeout(() => {
+        crudToast.classList.add('hidden');
+      }, 4000);
+    }
+
+    function openForm(isEdit = false, data = null) {
+      formContainer.classList.remove('hidden');
+      if (isEdit && data) {
+        formTitle.textContent = 'Editar Produto';
+        inputId.value = data.codProduto;
+        inputNome.value = data.Nome;
+        inputMarca.value = data.Marca || '';
+        inputDescricao.value = data['Descrição'] || '';
+        inputCategoria.value = data.Categoria || '';
+        inputPreco.value = data['Preço'];
+        inputDesconto.value = data['Percentual de desconto'] || 0;
+        inputQuantidade.value = data.Quantidade;
+        inputImagem.value = data.Imagem || '';
+      } else {
+        formTitle.textContent = 'Cadastrar Novo Produto';
+        productForm.reset();
+        inputId.value = '';
+      }
+      formContainer.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function closeForm() {
+      formContainer.classList.add('hidden');
+      productForm.reset();
+      inputId.value = '';
+    }
+
+    async function loadProducts() {
+      tableSpinner.classList.remove('hidden');
+      tableEmpty.classList.add('hidden');
+      tableBody.innerHTML = '';
+
+      try {
+        const res = await fetch(API_URL);
+        if (!res.ok) throw new Error('Erro ao buscar produtos');
+        const products = await res.json();
+
+        tableSpinner.classList.add('hidden');
+        if (products.length === 0) {
+          tableEmpty.classList.remove('hidden');
+          return;
+        }
+
+        products.forEach(p => {
+          const row = document.createElement('tr');
+          row.className = 'hover:bg-white/5 transition-colors';
+          row.innerHTML = `
+            <td class="px-6 py-4 font-mono text-gray-400">${p.codProduto}</td>
+            <td class="px-6 py-4">
+              <img src="${p.Imagem || 'https://placehold.co/50x50?text=S/I'}" alt="${p.Nome}" class="w-10 h-10 object-cover rounded-lg border border-white/10" onerror="this.src='https://placehold.co/50x50?text=S/I';">
+            </td>
+            <td class="px-6 py-4">
+              <div class="font-semibold text-white">${p.Nome}</div>
+              <div class="text-xs text-gray-500">${p.Marca || '-'}</div>
+            </td>
+            <td class="px-6 py-4 text-gray-300">${p.Categoria || '-'}</td>
+            <td class="px-6 py-4 font-semibold text-white">R$ ${parseFloat(p['Preço']).toFixed(2)}</td>
+            <td class="px-6 py-4 text-gray-300">${p['Percentual de desconto'] ? parseFloat(p['Percentual de desconto']).toFixed(1) + '%' : '0%'}</td>
+            <td class="px-6 py-4">
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold ${parseInt(p.Quantidade) === 0 ? 'bg-red-500/20 text-red-400' : (parseInt(p.Quantidade) < 10 ? 'bg-yellow-500/20 text-yellow-400' : 'bg-green-500/20 text-green-400')
+            }">
+                ${p.Quantidade}
+              </span>
+            </td>
+            <td class="px-6 py-4 text-right flex justify-end gap-2 mt-1">
+              <button onclick='editProduct(${JSON.stringify(p).replace(/'/g, "&apos;")})' class="bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 border border-blue-500/30 px-2.5 py-1 rounded text-xs transition-colors">Editar</button>
+              <button onclick="deleteProduct(${p.codProduto})" class="bg-red-500/20 hover:bg-red-500/30 text-red-400 border border-red-500/30 px-2.5 py-1 rounded text-xs transition-colors">Excluir</button>
+            </td>
+          `;
+          tableBody.appendChild(row);
+        });
+      } catch (err) {
+        tableSpinner.classList.add('hidden');
+        tableEmpty.textContent = 'Erro ao carregar dados do servidor.';
+        tableEmpty.classList.remove('hidden');
+        showToast(err.message, true);
+      }
+    }
+
+    // Save Product (Create or Update)
+    productForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const id = inputId.value;
+      const payload = {
+        Nome: inputNome.value,
+        Marca: inputMarca.value,
+        'Descrição': inputDescricao.value,
+        Categoria: inputCategoria.value,
+        'Preço': parseFloat(inputPreco.value),
+        'Percentual de desconto': parseFloat(inputDesconto.value) || 0,
+        Quantidade: parseInt(inputQuantidade.value, 10),
+        Imagem: inputImagem.value
+      };
+
+      const method = id ? 'PUT' : 'POST';
+      const url = id ? `${API_URL}/${id}` : API_URL;
+
+      try {
+        const res = await fetch(url, {
+          method: method,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Erro ao salvar produto');
+
+        showToast(id ? 'Produto atualizado com sucesso!' : 'Produto cadastrado com sucesso!');
+        closeForm();
+        loadProducts();
+      } catch (err) {
+        showToast(err.message, true);
+      }
+    });
+
+    window.editProduct = (p) => {
+      openForm(true, p);
+    };
+
+    window.deleteProduct = async (id) => {
+      if (!confirm('Deseja realmente remover este produto?')) return;
+      try {
+        const res = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Erro ao remover produto');
+        showToast('Produto excluído com sucesso!');
+        loadProducts();
+      } catch (err) {
+        showToast(err.message, true);
+      }
+    };
+
+    // Listeners
+    btnShowForm.addEventListener('click', () => openForm(false));
+    btnCancel.addEventListener('click', closeForm);
+    btnFormCancel.addEventListener('click', closeForm);
+
+    // On load
+    loadProducts();
+  </script>
+</body>
+
+</html>

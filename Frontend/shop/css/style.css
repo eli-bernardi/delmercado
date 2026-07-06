@@ -1,0 +1,95 @@
+/* Custom CSS extending Tailwind for Del Mercado, styled after Del Company */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #0a0a0a;
+  color: #ffffff;
+  min-height: 100vh;
+}
+
+/* Custom Gradients */
+.text-logo {
+  background: linear-gradient(135deg, #ff6b6b, #d62828);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.bg-gradient-primary {
+  background: linear-gradient(135deg, #d62828 0%, #a51d1d 100%);
+}
+
+.border-glow {
+  border: 1px solid rgba(214, 40, 40, 0.15);
+  box-shadow: 0 0 15px rgba(214, 40, 40, 0.05);
+}
+
+.border-glow:hover {
+  border-color: rgba(214, 40, 40, 0.4);
+  box-shadow: 0 0 20px rgba(214, 40, 40, 0.15);
+}
+
+/* Scrollbar Customization */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2a2a2a;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #d62828;
+}
+
+/* Section Line breaks as seen in Del Company */
+.section-hr {
+  width: 100%;
+  max-width: 300px;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #d62828, transparent);
+  border: none;
+  margin: 24px auto;
+  opacity: 0.6;
+  transition: all 0.3s ease;
+}
+
+.section-hr:hover {
+  opacity: 1;
+  max-width: 400px;
+}
+
+/* Glassmorphism elements */
+.glass-panel {
+  background: rgba(26, 26, 26, 0.45);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.glass-panel-heavy {
+  background: rgba(18, 18, 18, 0.85);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Interactive elements */
+.hover-scale {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-scale:hover {
+  transform: translateY(-4px);
+}

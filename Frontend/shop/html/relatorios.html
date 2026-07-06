@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Del Mercado - Relatórios Analíticos</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: '#d62828',
+            darkBg: '#0a0a0a',
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-[#0a0a0a] text-white">
+
+  <!-- NAVBAR -->
+  <header class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-8 py-4 bg-[#0a0a0a]/90 backdrop-blur-md shadow-md border-b border-white/5">
+    <a href="./index.html" class="text-logo text-2xl font-black tracking-wide">Del Mercado</a>
+    <nav class="hidden md:flex items-center space-x-6 text-sm font-medium">
+      <a href="./index.html" class="hover:text-brand transition-colors">Início</a>
+      <a href="./produtos.html" class="hover:text-brand transition-colors">Produtos (CRUD)</a>
+      <a href="../../user/html/index.html" class="hover:text-brand transition-colors">Usuários (CRUD)</a>
+      <a href="../../move/html/index.html" class="hover:text-brand transition-colors">Movimentações</a>
+      <a href="./relatorios.html" class="text-brand transition-colors font-semibold">Relatórios</a>
+      <a href="./graficos.html" class="hover:text-brand transition-colors">Gráficos</a>
+    </nav>
+    <button class="md:hidden text-white hover:text-brand transition-colors focus:outline-none">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+      </svg>
+    </button>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="pt-24 px-6 max-w-7xl mx-auto pb-16">
+    <div class="my-8 text-center md:text-left">
+      <h1 class="text-3xl font-black text-white">Relatórios Estratégicos (Views)</h1>
+      <p class="text-gray-400 text-sm mt-1">Exibição de dados consolidados diretamente de views do banco de dados.</p>
+    </div>
+
+    <!-- Toast message area -->
+    <div id="reports-toast" class="hidden mb-6 p-3 rounded-lg text-sm font-semibold text-center"></div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      
+      <!-- Report 1 Panel: vw_produtos_criticos -->
+      <section class="glass-panel rounded-2xl p-6 border-glow">
+        <div class="mb-4">
+          <h2 class="text-xl font-bold text-white flex items-center gap-2">
+            <span class="text-brand">⚠️</span> Relatório de Produtos Críticos
+          </h2>
+          <span class="text-xs text-gray-500 font-mono">View: vw_produtos_criticos</span>
+          <p class="text-gray-400 text-xs mt-2">Identifica gargalos de estoque do varejista (produtos com saldo inferior a 10 unidades).</p>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-left text-xs">
+            <thead class="bg-white/5 border-b border-white/10 text-gray-400 font-bold uppercase tracking-wider">
+              <tr>
+                <th class="px-4 py-3">Código</th>
+                <th class="px-4 py-3">Nome</th>
+                <th class="px-4 py-3">Categoria</th>
+                <th class="px-4 py-3">Estoque Atual</th>
+              </tr>
+            </thead>
+            <tbody id="criticos-table-body" class="divide-y divide-white/5">
+              <!-- Dynamic rows -->
+            </tbody>
+          </table>
+        </div>
+
+        <div id="criticos-spinner" class="flex justify-center items-center py-8">
+          <div class="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-brand"></div>
+        </div>
+
+        <div id="criticos-empty" class="hidden text-center py-8 text-gray-500 text-xs">
+          Nenhum produto crítico de estoque no momento.
+        </div>
+      </section>
+
+      <!-- Report 2 Panel: vw_volume_compras -->
+      <section class="glass-panel rounded-2xl p-6 border-glow">
+        <div class="mb-4">
+          <h2 class="text-xl font-bold text-white flex items-center gap-2">
+            <span class="text-brand">💰</span> Volume Comprado por Produto
+          </h2>
+          <span class="text-xs text-gray-500 font-mono">View: vw_volume_compras</span>
+          <p class="text-gray-400 text-xs mt-2">Exibe o volume financeiro total das movimentações de saídas do estoque por produto.</p>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-left text-xs">
+            <thead class="bg-white/5 border-b border-white/10 text-gray-400 font-bold uppercase tracking-wider">
+              <tr>
+                <th class="px-4 py-3">Produto</th>
+                <th class="px-4 py-3">Quantidade Total Comprada</th>
+                <th class="px-4 py-3">Valor Movimentado</th>
+              </tr>
+            </thead>
+            <tbody id="volume-table-body" class="divide-y divide-white/5">
+              <!-- Dynamic rows -->
+            </tbody>
+          </table>
+        </div>
+
+        <div id="volume-spinner" class="flex justify-center items-center py-8">
+          <div class="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-brand"></div>
+        </div>
+
+        <div id="volume-empty" class="hidden text-center py-8 text-gray-500 text-xs">
+          Nenhuma movimentação de saída registrada para produtos.
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <script>
+    const API_BASE = 'http://localhost:3000/compras/relatorios';
+    const toast = document.getElementById('reports-toast');
+    
+    // Critical products elements
+    const criticosBody = document.getElementById('criticos-table-body');
+    const criticosSpinner = document.getElementById('criticos-spinner');
+    const criticosEmpty = document.getElementById('criticos-empty');
+    
+    // Volume purchased elements
+    const volumeBody = document.getElementById('volume-table-body');
+    const volumeSpinner = document.getElementById('volume-spinner');
+    const volumeEmpty = document.getElementById('volume-empty');
+
+    function showToast(message, isError = false) {
+      toast.textContent = message;
+      toast.className = `mb-6 p-3 rounded-lg text-sm text-center font-semibold ${
+        isError ? 'bg-red-500/20 text-red-400 border border-red-500/30' : 'bg-green-500/20 text-green-400 border border-green-500/30'
+      }`;
+      toast.classList.remove('hidden');
+      setTimeout(() => {
+        toast.classList.add('hidden');
+      }, 4000);
+    }
+
+    async function loadCriticalProducts() {
+      criticosBody.innerHTML = '';
+      criticosSpinner.classList.remove('hidden');
+      criticosEmpty.classList.add('hidden');
+
+      try {
+        const res = await fetch(`${API_BASE}/produtos-criticos`);
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        criticosSpinner.classList.add('hidden');
+
+        if (data.length === 0) {
+          criticosEmpty.classList.remove('hidden');
+          return;
+        }
+
+        data.forEach(item => {
+          const row = document.createElement('tr');
+          row.className = 'hover:bg-white/5 transition-colors border-b border-white/5';
+          row.innerHTML = `
+            <td class="px-4 py-3 font-mono text-gray-400">${item.codigo_produto}</td>
+            <td class="px-4 py-3 font-semibold text-white">${item.nome}</td>
+            <td class="px-4 py-3 text-gray-300">${item.categoria || '-'}</td>
+            <td class="px-4 py-3 font-bold text-yellow-400 bg-yellow-500/10 text-center rounded max-w-fit px-2 my-1.5">${item.quantidade_atual}</td>
+          `;
+          criticosBody.appendChild(row);
+        });
+      } catch (err) {
+        criticosSpinner.classList.add('hidden');
+        criticosEmpty.textContent = 'Erro ao carregar dados.';
+        criticosEmpty.classList.remove('hidden');
+      }
+    }
+
+    async function loadVolumePurchased() {
+      volumeBody.innerHTML = '';
+      volumeSpinner.classList.remove('hidden');
+      volumeEmpty.classList.add('hidden');
+
+      try {
+        const res = await fetch(`${API_BASE}/volume-compras`);
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        volumeSpinner.classList.add('hidden');
+
+        if (data.length === 0) {
+          volumeEmpty.classList.remove('hidden');
+          return;
+        }
+
+        data.forEach(item => {
+          const row = document.createElement('tr');
+          row.className = 'hover:bg-white/5 transition-colors border-b border-white/5';
+          row.innerHTML = `
+            <td class="px-4 py-3 font-semibold text-white">${item.nome}</td>
+            <td class="px-4 py-3 text-gray-300 font-bold">${item.quantidade_total_movimentada}</td>
+            <td class="px-4 py-3 font-black text-brand text-sm">R$ ${parseFloat(item.valor_financeiro_movimentado).toFixed(2)}</td>
+          `;
+          volumeBody.appendChild(row);
+        });
+      } catch (err) {
+        volumeSpinner.classList.add('hidden');
+        volumeEmpty.textContent = 'Erro ao carregar dados.';
+        volumeEmpty.classList.remove('hidden');
+      }
+    }
+
+    // Load both on page ready
+    loadCriticalProducts();
+    loadVolumePurchased();
+  </script>
+</body>
+</html>

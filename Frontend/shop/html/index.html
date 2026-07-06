@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Del Mercado - Início & Dashboard</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Custom Tailwind Config if needed -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: '#d62828',
+            darkBg: '#0a0a0a',
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-[#0a0a0a] text-white">
+
+  <!-- NAVBAR -->
+  <header class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-8 py-4 bg-[#0a0a0a]/90 backdrop-blur-md shadow-md border-b border-white/5">
+    <a href="./index.html" class="text-logo text-2xl font-black tracking-wide">Del Mercado</a>
+    
+    <nav class="hidden md:flex items-center space-x-6 text-sm font-medium">
+      <a href="./index.html" class="text-brand transition-colors font-semibold">Início</a>
+      <a href="./produtos.html" class="hover:text-brand transition-colors">Produtos (CRUD)</a>
+      <a href="../../user/html/index.html" class="hover:text-brand transition-colors">Usuários (CRUD)</a>
+      <a href="../../move/html/index.html" class="hover:text-brand transition-colors">Movimentações</a>
+      <a href="./relatorios.html" class="hover:text-brand transition-colors">Relatórios</a>
+      <a href="./graficos.html" class="hover:text-brand transition-colors">Gráficos</a>
+    </nav>
+    
+    <button class="md:hidden text-white hover:text-brand transition-colors focus:outline-none">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+      </svg>
+    </button>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="pt-24 px-6 max-w-7xl mx-auto pb-16">
+    <!-- Hero / Intro -->
+    <div class="text-center my-12">
+      <h1 class="text-logo text-5xl md:text-6xl font-black mb-4">Del Mercado</h1>
+      <p class="text-gray-400 text-lg max-w-2xl mx-auto">
+        Sistema de Compras Interno do tipo web para unificar operações de estoque, vendas e relatórios analíticos de forma integrada.
+      </p>
+      <hr class="section-hr">
+    </div>
+
+    <!-- Quick Integrations Panel -->
+    <section class="glass-panel rounded-2xl p-6 mb-12 border-glow">
+      <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+        <span class="text-brand">⚡</span> Integração e Carga de Dados (P.O. Requirement)
+      </h2>
+      <p class="text-gray-400 text-sm mb-6">
+        Alimente as tabelas locais do banco de dados <code class="text-brand font-mono font-bold bg-white/5 px-2 py-1 rounded">db_compras</code> consumindo dados de APIs externas via bulkCreate.
+      </p>
+      
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="bg-white/5 p-4 rounded-xl border border-white/5 flex flex-col justify-between">
+          <div>
+            <h3 class="font-bold text-white mb-2">Importar Catálogo de Produtos</h3>
+            <p class="text-gray-400 text-xs mb-4">Consome a API DummyJSON (/products) e mapeia os produtos externos no banco local.</p>
+          </div>
+          <button id="btn-load-products" class="bg-brand hover:bg-[#a51d1d] text-white font-semibold py-2.5 px-4 rounded-lg transition-all duration-300 w-full flex items-center justify-center gap-2">
+            Carregar Produtos
+          </button>
+        </div>
+
+        <div class="bg-white/5 p-4 rounded-xl border border-white/5 flex flex-col justify-between">
+          <div>
+            <h3 class="font-bold text-white mb-2">Importar Usuários Demo</h3>
+            <p class="text-gray-400 text-xs mb-4">Consome a API DummyJSON (/users) e mapeia os usuários no banco local.</p>
+          </div>
+          <button id="btn-load-users" class="bg-brand hover:bg-[#a51d1d] text-white font-semibold py-2.5 px-4 rounded-lg transition-all duration-300 w-full flex items-center justify-center gap-2">
+            Carregar Usuários
+          </button>
+        </div>
+      </div>
+      
+      <!-- Notification toast area inside container -->
+      <div id="toast-message" class="hidden mt-4 p-3 rounded-lg text-sm text-center font-semibold"></div>
+    </section>
+
+    <!-- Products Cards Dashboard Section -->
+    <section>
+      <div class="flex justify-between items-center mb-8">
+        <div>
+          <h2 class="text-3xl font-extrabold tracking-tight">Dashboard de Produtos</h2>
+          <p class="text-gray-400 text-sm">Visualização do catálogo de produtos ativos e nível de estoque atual.</p>
+        </div>
+        <div class="flex gap-2">
+          <input type="text" id="search-input" placeholder="Buscar produto..." class="bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-brand transition-colors w-48 sm:w-64">
+        </div>
+      </div>
+
+      <!-- Loading / Empty state -->
+      <div id="loading-spinner" class="flex justify-center items-center py-16">
+        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand"></div>
+      </div>
+
+      <!-- Products Grid -->
+      <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 hidden">
+        <!-- Dynamic product cards go here -->
+      </div>
+
+      <div id="empty-state" class="hidden text-center py-16">
+        <p class="text-gray-500 mb-4">Nenhum produto cadastrado no banco de dados.</p>
+        <p class="text-xs text-gray-600">Use os botões de carga de dados acima ou vá em Produtos (CRUD) para adicionar manualmente.</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-white/5 py-8 text-center text-sm text-gray-500 bg-[#070707]">
+    <div class="max-w-7xl mx-auto px-6">
+      <p>&copy; 2026 - Del Mercado | Todos os direitos reservados</p>
+      <div class="flex justify-center space-x-6 mt-4">
+        <span class="hover:text-brand transition-colors cursor-pointer">Documentação SENAI</span>
+        <span class="hover:text-brand transition-colors cursor-pointer">Docente Carlos Roberto</span>
+        <span class="hover:text-brand transition-colors cursor-pointer">Aluno: Eliel Bernardi</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>

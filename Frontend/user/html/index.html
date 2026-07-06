@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Del Mercado - Gerenciamento de Usuários</title>
+  <link rel="stylesheet" href="../../shop/css/style.css">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: '#d62828',
+            darkBg: '#0a0a0a',
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-[#0a0a0a] text-white">
+
+  <!-- NAVBAR -->
+  <header class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-8 py-4 bg-[#0a0a0a]/90 backdrop-blur-md shadow-md border-b border-white/5">
+    <a href="../../shop/html/index.html" class="text-logo text-2xl font-black tracking-wide">Del Mercado</a>
+    <nav class="hidden md:flex items-center space-x-6 text-sm font-medium">
+      <a href="../../shop/html/index.html" class="hover:text-brand transition-colors">Início</a>
+      <a href="../../shop/html/produtos.html" class="hover:text-brand transition-colors">Produtos (CRUD)</a>
+      <a href="./index.html" class="text-brand transition-colors font-semibold">Usuários (CRUD)</a>
+      <a href="../../move/html/index.html" class="hover:text-brand transition-colors">Movimentações</a>
+      <a href="../../shop/html/relatorios.html" class="hover:text-brand transition-colors">Relatórios</a>
+      <a href="../../shop/html/graficos.html" class="hover:text-brand transition-colors">Gráficos</a>
+    </nav>
+    <button class="md:hidden text-white hover:text-brand transition-colors focus:outline-none">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+      </svg>
+    </button>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="pt-24 px-6 max-w-7xl mx-auto pb-16">
+    <div class="my-8 text-center md:text-left md:flex justify-between items-center">
+      <div>
+        <h1 class="text-3xl font-black text-white">Gerenciamento de Usuários</h1>
+        <p class="text-gray-400 text-sm mt-1">Crie, edite ou remova usuários do sistema de compras.</p>
+      </div>
+      <button id="btn-show-form" class="mt-4 md:mt-0 bg-brand hover:bg-[#a51d1d] text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 flex items-center gap-2">
+        <span>+</span> Novo Usuário
+      </button>
+    </div>
+
+    <!-- Feedback Toast -->
+    <div id="crud-toast" class="hidden mb-6 p-3 rounded-lg text-sm font-semibold text-center"></div>
+
+    <!-- User Form Panel (Hidden by default) -->
+    <section id="form-container" class="hidden glass-panel rounded-2xl p-6 mb-8 border-glow">
+      <div class="flex justify-between items-center mb-6">
+        <h2 id="form-title" class="text-xl font-bold text-white">Cadastrar Novo Usuário</h2>
+        <button id="btn-cancel" class="text-gray-400 hover:text-white transition-colors text-sm">Cancelar</button>
+      </div>
+
+      <form id="user-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <input type="hidden" id="user-id">
+        
+        <div>
+          <label class="block text-gray-400 text-xs font-semibold uppercase mb-1">Nome *</label>
+          <input type="text" id="usr-nome" required class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-brand transition-colors text-sm">
+        </div>
+
+        <div>
+          <label class="block text-gray-400 text-xs font-semibold uppercase mb-1">Sobrenome *</label>
+          <input type="text" id="usr-sobrenome" required class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-brand transition-colors text-sm">
+        </div>
+
+        <div>
+          <label class="block text-gray-400 text-xs font-semibold uppercase mb-1">Idade *</label>
+          <input type="number" id="usr-idade" min="1" required class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-brand transition-colors text-sm">
+        </div>
+
+        <div>
+          <label class="block text-gray-400 text-xs font-semibold uppercase mb-1">E-mail *</label>
+          <input type="email" id="usr-email" required class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-brand transition-colors text-sm">
+        </div>
+
+        <div>
+          <label class="block text-gray-400 text-xs font-semibold uppercase mb-1">Telefone</label>
+          <input type="text" id="usr-telefone" placeholder="(XX) XXXXX-XXXX" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-brand transition-colors text-sm">
+        </div>
+
+        <div>
+          <label class="block text-gray-400 text-xs font-semibold uppercase mb-1">Endereço</label>
+          <input type="text" id="usr-endereco" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-brand transition-colors text-sm">
+        </div>
+
+        <div>
+          <label class="block text-gray-400 text-xs font-semibold uppercase mb-1">Cidade</label>
+          <input type="text" id="usr-cidade" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-brand transition-colors text-sm">
+        </div>
+
+        <div>
+          <label class="block text-gray-400 text-xs font-semibold uppercase mb-1">Estado</label>
+          <input type="text" id="usr-estado" placeholder="SC, SP..." class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-brand transition-colors text-sm">
+        </div>
+
+        <div class="md:col-span-2 flex justify-end gap-2 mt-4">
+          <button type="button" id="btn-form-cancel" class="bg-white/5 hover:bg-white/10 text-white font-semibold py-2 px-4 rounded-lg transition-all text-sm border border-white/10">Cancelar</button>
+          <button type="submit" class="bg-brand hover:bg-[#a51d1d] text-white font-semibold py-2 px-6 rounded-lg transition-all text-sm">Salvar</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Table Section -->
+    <div class="glass-panel rounded-2xl overflow-hidden border border-white/5">
+      <div class="overflow-x-auto">
+        <table class="min-w-full text-left text-sm">
+          <thead class="bg-white/5 border-b border-white/10 text-xs font-bold uppercase text-gray-400 tracking-wider">
+            <tr>
+              <th class="px-6 py-4">ID</th>
+              <th class="px-6 py-4">Nome Completo</th>
+              <th class="px-6 py-4">Idade</th>
+              <th class="px-6 py-4">E-mail</th>
+              <th class="px-6 py-4">Telefone</th>
+              <th class="px-6 py-4">Localização</th>
+              <th class="px-6 py-4 text-right">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="users-table-body" class="divide-y divide-white/5">
+            <!-- Dynamic users rows -->
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- Spinner -->
+      <div id="table-spinner" class="flex justify-center items-center py-12">
+        <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-brand"></div>
+      </div>
+      
+      <!-- Empty state inside table -->
+      <div id="table-empty" class="hidden text-center py-12 text-gray-500">
+        Nenhum usuário cadastrado no banco.
+      </div>
+    </div>
+  </main>
+
+  <!-- Script for CRUD logic -->
+  <script>
+    const API_URL = 'http://localhost:3000/usuarios';
+    
+    const formContainer = document.getElementById('form-container');
+    const userForm = document.getElementById('user-form');
+    const formTitle = document.getElementById('form-title');
+    const btnShowForm = document.getElementById('btn-show-form');
+    const btnCancel = document.getElementById('btn-cancel');
+    const btnFormCancel = document.getElementById('btn-form-cancel');
+    const crudToast = document.getElementById('crud-toast');
+    
+    const tableBody = document.getElementById('users-table-body');
+    const tableSpinner = document.getElementById('table-spinner');
+    const tableEmpty = document.getElementById('table-empty');
+    
+    // Inputs
+    const inputId = document.getElementById('user-id');
+    const inputNome = document.getElementById('usr-nome');
+    const inputSobrenome = document.getElementById('usr-sobrenome');
+    const inputIdade = document.getElementById('usr-idade');
+    const inputEmail = document.getElementById('usr-email');
+    const inputTelefone = document.getElementById('usr-telefone');
+    const inputEndereco = document.getElementById('usr-endereco');
+    const inputCidade = document.getElementById('usr-cidade');
+    const inputEstado = document.getElementById('usr-estado');
+    
+    function showToast(message, isError = false) {
+      crudToast.textContent = message;
+      crudToast.className = `mb-6 p-3 rounded-lg text-sm text-center font-semibold ${
+        isError ? 'bg-red-500/20 text-red-400 border border-red-500/30' : 'bg-green-500/20 text-green-400 border border-green-500/30'
+      }`;
+      crudToast.classList.remove('hidden');
+      setTimeout(() => {
+        crudToast.classList.add('hidden');
+      }, 4000);
+    }
+    
+    function openForm(isEdit = false, data = null) {
+      formContainer.classList.remove('hidden');
+      if (isEdit && data) {
+        formTitle.textContent = 'Editar Usuário';
+        inputId.value = data.codUsuario;
+        inputNome.value = data.Nome;
+        inputSobrenome.value = data.Sobrenome;
+        inputIdade.value = data.Idade;
+        inputEmail.value = data['E-mail'];
+        inputTelefone.value = data.Telefone || '';
+        inputEndereco.value = data['Endereço'] || '';
+        inputCidade.value = data.Cidade || '';
+        inputEstado.value = data.Estado || '';
+      } else {
+        formTitle.textContent = 'Cadastrar Novo Usuário';
+        userForm.reset();
+        inputId.value = '';
+      }
+      formContainer.scrollIntoView({ behavior: 'smooth' });
+    }
+    
+    function closeForm() {
+      formContainer.classList.add('hidden');
+      userForm.reset();
+      inputId.value = '';
+    }
+    
+    async function loadUsers() {
+      tableSpinner.classList.remove('hidden');
+      tableEmpty.classList.add('hidden');
+      tableBody.innerHTML = '';
+      
+      try {
+        const res = await fetch(API_URL);
+        if (!res.ok) throw new Error('Erro ao buscar usuários');
+        const users = await res.json();
+        
+        tableSpinner.classList.add('hidden');
+        if (users.length === 0) {
+          tableEmpty.classList.remove('hidden');
+          return;
+        }
+        
+        users.forEach(u => {
+          const row = document.createElement('tr');
+          row.className = 'hover:bg-white/5 transition-colors';
+          
+          const localStr = [u['Endereço'], u.Cidade, u.Estado].filter(Boolean).join(', ');
+          
+          row.innerHTML = `
+            <td class="px-6 py-4 font-mono text-gray-400">${u.codUsuario}</td>
+            <td class="px-6 py-4 font-semibold text-white">${u.Nome} ${u.Sobrenome}</td>
+            <td class="px-6 py-4 text-gray-300">${u.Idade}</td>
+            <td class="px-6 py-4 text-gray-300">${u['E-mail']}</td>
+            <td class="px-6 py-4 text-gray-300">${u.Telefone || '-'}</td>
+            <td class="px-6 py-4 text-gray-400 truncate max-w-xs" title="${localStr}">${localStr || '-'}</td>
+            <td class="px-6 py-4 text-right flex justify-end gap-2 mt-1">
+              <button onclick='editUser(${JSON.stringify(u).replace(/'/g, "&apos;")})' class="bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 border border-blue-500/30 px-2.5 py-1 rounded text-xs transition-colors">Editar</button>
+              <button onclick="deleteUser(${u.codUsuario})" class="bg-red-500/20 hover:bg-red-500/30 text-red-400 border border-red-500/30 px-2.5 py-1 rounded text-xs transition-colors">Excluir</button>
+            </td>
+          `;
+          tableBody.appendChild(row);
+        });
+      } catch (err) {
+        tableSpinner.classList.add('hidden');
+        tableEmpty.textContent = 'Erro ao carregar dados do servidor.';
+        tableEmpty.classList.remove('hidden');
+        showToast(err.message, true);
+      }
+    }
+    
+    userForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const id = inputId.value;
+      const payload = {
+        Nome: inputNome.value,
+        Sobrenome: inputSobrenome.value,
+        Idade: parseInt(inputIdade.value, 10),
+        'E-mail': inputEmail.value,
+        Telefone: inputTelefone.value,
+        'Endereço': inputEndereco.value,
+        Cidade: inputCidade.value,
+        Estado: inputEstado.value
+      };
+      
+      const method = id ? 'PUT' : 'POST';
+      const url = id ? `${API_URL}/${id}` : API_URL;
+      
+      try {
+        const res = await fetch(url, {
+          method: method,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Erro ao salvar usuário');
+        
+        showToast(id ? 'Usuário atualizado com sucesso!' : 'Usuário cadastrado com sucesso!');
+        closeForm();
+        loadUsers();
+      } catch (err) {
+        showToast(err.message, true);
+      }
+    });
+    
+    window.editUser = (u) => {
+      openForm(true, u);
+    };
+    
+    window.deleteUser = async (id) => {
+      if (!confirm('Deseja realmente remover este usuário?')) return;
+      try {
+        const res = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Erro ao remover usuário');
+        showToast('Usuário excluído com sucesso!');
+        loadUsers();
+      } catch (err) {
+        showToast(err.message, true);
+      }
+    };
+    
+    btnShowForm.addEventListener('click', () => openForm(false));
+    btnCancel.addEventListener('click', closeForm);
+    btnFormCancel.addEventListener('click', closeForm);
+    
+    loadUsers();
+  </script>
+</body>
+</html>

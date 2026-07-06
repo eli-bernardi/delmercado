@@ -1,0 +1,135 @@
+# Integration tests for Del Mercado API
+# To run these tests, install the "REST Client" extension in VS Code.
+
+@baseUrl = http://localhost:3000
+
+### 1. Test Server Health Check
+GET {{baseUrl}}/
+Accept: application/json
+
+### 2. Trigger Bulk Create load for Users
+POST {{baseUrl}}/usuarios/bulk
+Content-Type: application/json
+
+### 3. Trigger Bulk Create load for Products
+POST {{baseUrl}}/produtos/bulk
+Content-Type: application/json
+
+### 4. CRUD - Get All Products
+GET {{baseUrl}}/produtos
+Accept: application/json
+
+### 5. CRUD - Create a New Product (Manual)
+POST {{baseUrl}}/produtos
+Content-Type: application/json
+
+{
+  "Nome": "Teclado Mecânico Del Company RGB",
+  "Descrição": "Teclado mecânico gamer switch blue premium com iluminação RGB",
+  "Categoria": "eletronicos",
+  "Preço": 249.99,
+  "Percentual de desconto": 10.0,
+  "Quantidade": 15,
+  "Marca": "Del Company",
+  "Imagem": "https://images.unsplash.com/photo-1618384887929-16ec33fab9ef"
+}
+
+### 6. CRUD - Get Product by ID (assuming ID 1 exists)
+GET {{baseUrl}}/produtos/1
+Accept: application/json
+
+### 7. CRUD - Update Product (assuming ID 1 exists)
+PUT {{baseUrl}}/produtos/1
+Content-Type: application/json
+
+{
+  "Nome": "Produto Teste Modificado",
+  "Preço": 99.99,
+  "Quantidade": 20
+}
+
+### 8. CRUD - Get All Users
+GET {{baseUrl}}/usuarios
+Accept: application/json
+
+### 9. CRUD - Create a New User (Manual)
+POST {{baseUrl}}/usuarios
+Content-Type: application/json
+
+{
+  "Nome": "Eliel",
+  "Sobrenome": "Bernardi",
+  "Idade": 21,
+  "E-mail": "eliel.teste@gmail.com",
+  "Telefone": "48991004282",
+  "Endereço": "Rua Bathuel de Oliveira, 189",
+  "Cidade": "Tijucas",
+  "Estado": "SC"
+}
+
+### 10. CRUD - Update User (assuming ID 1 exists)
+PUT {{baseUrl}}/usuarios/1
+Content-Type: application/json
+
+{
+  "Nome": "Nome Modificado",
+  "Idade": 22
+}
+
+### 11. Transaction - Successful Movement: SAIDA (Decrease Stock)
+# Deducts stock, calculates discount and final price
+POST {{baseUrl}}/compras
+Content-Type: application/json
+
+{
+  "codUsuario": 1,
+  "codProduto": 1,
+  "tipoMovimento": "SAIDA",
+  "quantidadeMovimentada": 2,
+  "formaPagamento": "CREDITO",
+  "statusCompra": "PAGA"
+}
+
+### 12. Transaction - Successful Movement: ENTRADA (Increase Stock)
+# Increases stock
+POST {{baseUrl}}/compras
+Content-Type: application/json
+
+{
+  "codUsuario": 1,
+  "codProduto": 1,
+  "tipoMovimento": "ENTRADA",
+  "quantidadeMovimentada": 10,
+  "formaPagamento": "DEBITO",
+  "statusCompra": "PAGA"
+}
+
+### 13. Transaction - Failed Movement (Out of stock error validation)
+# Should return HTTP 400 Bad Request with "Saldo insuficiente em estoque"
+POST {{baseUrl}}/compras
+Content-Type: application/json
+
+{
+  "codUsuario": 1,
+  "codProduto": 1,
+  "tipoMovimento": "SAIDA",
+  "quantidadeMovimentada": 9999,
+  "formaPagamento": "DINHEIRO",
+  "statusCompra": "PENDENTE"
+}
+
+### 14. Report - Get All Transaction Movement Logs
+GET {{baseUrl}}/compras
+Accept: application/json
+
+### 15. View Report - Critical Products (estoque < 10)
+GET {{baseUrl}}/compras/relatorios/produtos-criticos
+Accept: application/json
+
+### 16. View Report - Financial Volume bought per Product
+GET {{baseUrl}}/compras/relatorios/volume-compras
+Accept: application/json
+
+### 17. Chart Data - Physical Stock and Top 5 Financial Sales
+GET {{baseUrl}}/compras/relatorios/graficos
+Accept: application/json
