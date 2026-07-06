@@ -4,145 +4,153 @@ const Produto = require('../models/Produto');
 const Usuario = require('../models/Usuario');
 const VwHistoricoSaida = require('../models/VwHistoricoSaida');
 
-// Register a movement (ENTRADA or SAIDA)
-exports.create = async (req, res) => {
+const cadastrar = async (req, res) => {
+  const valores = req.body;
+
+  // Valida campos obrigatórios de acordo com o modelo
+  if (!valores.idUsuario || !valores.idProduto || !valores.tipo ||
+    !valores.qtdeMov || !valores.formaPagamento || !valores.statusCompra) {
+    return res.status(400).json({ message: 'Campos obrigatórios: idUsuario, idProduto, tipo, qtdeMov, formaPagamento, statusCompra.' });
+  }
+
+  if (valores.qtdeMov <= 0) {
+    return res.status(400).json({ message: 'Quantidade movimentada deve ser maior que zero.' });
+  }
+
   const transaction = await sequelize.transaction();
   try {
-    const {
-      codUsuario,
-      codProduto,
-      tipoMovimento,
-      quantidadeMovimentada,
-      formaPagamento,
-      statusCompra
-    } = req.body;
-
-    // Validation of basic input
-    if (!codUsuario || !codProduto || !tipoMovimento || !quantidadeMovimentada || !formaPagamento || !statusCompra) {
-      return res.status(400).json({ error: 'Todos os campos são obrigatórios' });
-    }
-
-    if (quantidadeMovimentada <= 0) {
-      return res.status(400).json({ error: 'Quantidade movimentada deve ser maior que zero' });
-    }
-
-    // Verify user
-    const usuario = await Usuario.findByPk(codUsuario, { transaction });
+    const usuario = await Usuario.findByPk(valores.idUsuario, { transaction });
     if (!usuario) {
       await transaction.rollback();
-      return res.status(404).json({ error: 'Usuário não encontrado' });
+      return res.status(404).json({ message: 'Usuário não encontrado.' });
     }
 
-    // Verify product
-    const produto = await Produto.findByPk(codProduto, { transaction });
+    const produto = await Produto.findByPk(valores.idProduto, { transaction });
     if (!produto) {
       await transaction.rollback();
-      return res.status(404).json({ error: 'Produto não encontrado' });
+      return res.status(404).json({ message: 'Produto não encontrado.' });
     }
 
-    // Calculate Prices
     const precoUnitario = parseFloat(produto['Preço']);
     const desconto = parseFloat(produto['Percentual de desconto']) || 0;
-    const precoFinal = (precoUnitario * (1 - desconto / 100)) * quantidadeMovimentada;
+    const precoFinal = (precoUnitario * (1 - desconto / 100)) * valores.qtdeMov;
 
-    // Stock verification and update
-    if (tipoMovimento === 'SAIDA') {
-      if (produto.Quantidade < quantidadeMovimentada) {
+    if (valores.tipo === 'SAIDA') {
+      if (produto.Quantidade < valores.qtdeMov) {
         await transaction.rollback();
-        return res.status(400).json({ error: 'Saldo insuficiente em estoque' });
+        return res.status(400).json({ message: 'Saldo insuficiente em estoque.' });
       }
-      produto.Quantidade -= parseInt(quantidadeMovimentada, 10);
-    } else if (tipoMovimento === 'ENTRADA') {
-      produto.Quantidade += parseInt(quantidadeMovimentada, 10);
+      produto.Quantidade -= parseInt(valores.qtdeMov, 10);
+    } else if (valores.tipo === 'ENTRADA') {
+      produto.Quantidade += parseInt(valores.qtdeMov, 10);
     } else {
       await transaction.rollback();
-      return res.status(400).json({ error: 'Tipo de movimento inválido. Use ENTRADA ou SAIDA' });
+      return res.status(400).json({ message: 'Tipo de movimento inválido. Use ENTRADA ou SAIDA.' });
     }
 
-    // Save updated product stock
     await produto.save({ transaction });
 
-    // Create purchase record
     const novaCompra = await Compra.create({
-      codUsuario,
-      codProduto,
-      tipoMovimento,
-      quantidadeMovimentada,
-      precoUnitario,
-      descontoAplicado: desconto,
+      idUsuario: valores.idUsuario,
+      idProduto: valores.idProduto,
+      tipo: valores.tipo,
+      qtdeMov: valores.qtdeMov,
+      precoUnit: precoUnitario,
+      descAplicado: desconto,
       precoFinal,
-      formaPagamento,
-      statusCompra,
+      formaPagamento: valores.formaPagamento,
+      statusCompra: valores.statusCompra,
       dataCompra: new Date()
     }, { transaction });
 
     await transaction.commit();
-    res.status(201).json(novaCompra);
-  } catch (error) {
+    res.status(201).json({ message: 'Compra registrada com sucesso!', dados: novaCompra });
+  } catch (err) {
     await transaction.rollback();
-    res.status(500).json({ error: error.message });
+    console.error('Não foi possível registrar a compra', err);
+    res.status(500).json({ message: 'Não foi possível registrar a compra' });
   }
 };
 
-// Get all purchase movements logs
-exports.getAll = async (req, res) => {
+const listar = async (req, res) => {
   try {
-    const compras = await Compra.findAll({
+    const dados = await Compra.findAll({
       include: [
         { model: Usuario, as: 'usuario', attributes: ['Nome', 'Sobrenome'] },
         { model: Produto, as: 'produto', attributes: ['Nome'] }
       ],
       order: [['dataCompra', 'DESC']]
     });
-    res.json(compras);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(200).json(dados);
+  } catch (err) {
+    console.error('Não foi possível listar as compras', err);
+    res.status(500).json({ message: 'Não foi possível listar as compras' });
   }
 };
 
-// Relatório 1: Produtos Críticos (vw_produtos_criticos)
-exports.getProdutosCriticos = async (req, res) => {
+const buscarPorCod = async (req, res) => {
+  const id = req.params.id;
   try {
-    // Query directly from database view vw_produtos_criticos
+    const dados = await Compra.findByPk(id, {
+      include: [
+        { model: Usuario, as: 'usuario', attributes: ['Nome', 'Sobrenome'] },
+        { model: Produto, as: 'produto', attributes: ['Nome'] }
+      ]
+    });
+    if (!dados) {
+      return res.status(404).json({ message: 'Compra não encontrada!' });
+    }
+    res.status(200).json(dados);
+  } catch (err) {
+    console.error('Não foi possível encontrar a compra', err);
+    res.status(500).json({ message: 'Não foi possível encontrar a compra' });
+  }
+};
+
+// Relatório de produtos com estoque crítico
+const relatorioProdutosCriticos = async (req, res) => {
+  try {
     const [results] = await sequelize.query('SELECT * FROM vw_produtos_criticos');
-    res.json(results);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(200).json(results);
+  } catch (err) {
+    console.error('Erro ao buscar produtos críticos', err);
+    res.status(500).json({ message: 'Erro ao buscar produtos críticos' });
   }
 };
 
-// Relatório 2: Volume Comprado por Produto (vw_volume_compras)
-exports.getVolumeCompras = async (req, res) => {
+// Relatório de volume financeiro movimentado por produto
+const relatorioVolumeCompras = async (req, res) => {
   try {
-    // Query directly using our mapping model VwHistoricoSaida
     const results = await VwHistoricoSaida.findAll({
       order: [['valor_financeiro_movimentado', 'DESC']]
     });
-    res.json(results);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(200).json(results);
+  } catch (err) {
+    console.error('Erro ao buscar volume de compras', err);
+    res.status(500).json({ message: 'Erro ao buscar volume de compras' });
   }
 };
 
-// Relatório Gráfico Data
-exports.getGraficos = async (req, res) => {
+// Dados para gráficos (estoque crítico e top 5 financeiro)
+const relatorioGraficos = async (req, res) => {
   try {
-    // Gráfico 1: Estoque Físico Atual (todos os produtos com estoque < 10)
-    // Eixo X: Nome do produto, Eixo Y: quantidade de itens em estoque.
-    const [estoqueCritico] = await sequelize.query('SELECT Nome as title, Quantidade as stock FROM produtos WHERE Quantidade < 10');
+    const [estoqueCritico] = await sequelize.query(
+      'SELECT Nome as title, Quantidade as stock FROM produtos WHERE Quantidade < 10'
+    );
 
-    // Gráfico 2: Volume Financeiro de Compras (5 produtos com maior valor financeiro movimentado)
-    // Eixo X: Valor financeiro total movimentado, Eixo Y: Nome do produto.
     const volumeComprasTop5 = await VwHistoricoSaida.findAll({
       limit: 5,
       order: [['valor_financeiro_movimentado', 'DESC']]
     });
 
-    res.json({
+    res.status(200).json({
       estoqueCritico,
       volumeCompras: volumeComprasTop5
     });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+  } catch (err) {
+    console.error('Erro ao gerar dados para gráficos', err);
+    res.status(500).json({ message: 'Erro ao gerar dados para gráficos' });
   }
 };
+
+module.exports = { cadastrar, listar, buscarPorCod, relatorioProdutosCriticos, relatorioVolumeCompras, relatorioGraficos };
