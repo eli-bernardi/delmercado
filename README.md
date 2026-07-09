@@ -1,76 +1,94 @@
-Aqui está um **README.md** completo e profissional para o seu sistema **Del Mercado**:
-
----
-
-## 📄 `README.md`
-
-```markdown
 # 🛒 Del Mercado - Sistema de Compras Interno
 
-Sistema web full-stack para gerenciamento de compras, estoque, usuários, produtos e relatórios analíticos. Desenvolvido como protótipo piloto para uma rede varejista, com arquitetura REST e integração com banco de dados MySQL.
+![Node.js](https://img.shields.io/badge/Node.js-20.x-339933?style=for-the-badge&logo=node.js&logoColor=white)
+![Express](https://img.shields.io/badge/Express.js-Backend-000000?style=for-the-badge&logo=express&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![License](https://img.shields.io/badge/License-MIT-success?style=for-the-badge)
+
+Sistema web **Full Stack** para gerenciamento de compras, estoque, usuários, produtos e relatórios analíticos. Desenvolvido como protótipo piloto para uma rede varejista, utilizando arquitetura REST, banco de dados MySQL e interface web integrada.
 
 ---
 
-## 📋 Índice
+# 📋 Índice
 
-- [Sobre o Projeto](#sobre-o-projeto)
-- [Tecnologias Utilizadas](#tecnologias-utilizadas)
-- [Estrutura do Projeto](#estrutura-do-projeto)
-- [Pré-requisitos](#pré-requisitos)
-- [Instalação e Configuração](#instalação-e-configuração)
-- [Endpoints da API](#endpoints-da-api)
-- [Funcionalidades](#funcionalidades)
-- [Telas do Sistema](#telas-do-sistema)
-- [Testes](#testes)
-- [Contribuição](#contribuição)
-- [Licença](#licença)
-
----
-
-## 🚀 Sobre o Projeto
-
-O **Del Mercado** é um sistema de compras interno desenvolvido para unificar operações de estoque, vendas e relatórios analíticos. O projeto foi criado como um protótipo piloto para validar a arquitetura de software proposta, garantindo o fluxo contínuo e íntegro dos dados.
-
-### Principais Objetivos
-
-- ✅ Integração com catálogos externos (DummyJSON) para carga inicial de produtos e usuários
-- ✅ Gestão transacional de usuários, produtos e movimentações de estoque
-- ✅ Consolidação de relatórios analíticos e gráficos para tomada de decisões gerenciais
-- ✅ Arquitetura REST full-stack com Node.js e MySQL
+- [🚀 Sobre o Projeto](#-sobre-o-projeto)
+- [🎯 Objetivos](#-objetivos)
+- [🛠️ Tecnologias Utilizadas](#️-tecnologias-utilizadas)
+- [📁 Estrutura do Projeto](#-estrutura-do-projeto)
+- [📦 Pré-requisitos](#-pré-requisitos)
+- [⚙️ Instalação e Configuração](#️-instalação-e-configuração)
+- [🔗 Endpoints da API](#-endpoints-da-api)
+- [🎯 Funcionalidades](#-funcionalidades)
+- [🖥️ Telas do Sistema](#️-telas-do-sistema)
+- [🧪 Testes](#-testes)
+- [🤝 Contribuição](#-contribuição)
+- [📝 Licença](#-licença)
+- [📞 Contato](#-contato)
 
 ---
 
-## 🛠️ Tecnologias Utilizadas
+# 🚀 Sobre o Projeto
 
-### Backend
+O **Del Mercado** é um sistema web desenvolvido para centralizar o gerenciamento de usuários, produtos, movimentações de estoque e relatórios gerenciais em um único ambiente.
+
+A aplicação foi criada como um **protótipo piloto**, simulando o funcionamento de um sistema interno utilizado por redes varejistas para controlar entradas e saídas de produtos, manter o cadastro de usuários e disponibilizar indicadores estratégicos por meio de gráficos e relatórios.
+
+Toda a comunicação entre frontend e backend ocorre através de uma **API REST**, utilizando o banco de dados **MySQL** para armazenamento permanente das informações.
+
+---
+
+# 🎯 Objetivos
+
+- ✅ Centralizar o gerenciamento de produtos.
+- ✅ Gerenciar usuários do sistema.
+- ✅ Controlar movimentações de estoque.
+- ✅ Importar dados automaticamente utilizando a API DummyJSON.
+- ✅ Disponibilizar relatórios estratégicos.
+- ✅ Exibir gráficos analíticos para tomada de decisão.
+- ✅ Demonstrar uma arquitetura Full Stack utilizando Node.js, Express e MySQL.
+
+---
+# 🛠️ Tecnologias Utilizadas
+
+## Backend
+
 | Tecnologia | Descrição |
 |------------|-----------|
 | **Node.js** | Ambiente de execução JavaScript |
 | **Express.js** | Framework para construção da API REST |
-| **Sequelize** | ORM para mapeamento objeto-relacional |
+| **Sequelize** | ORM para comunicação com o banco de dados |
 | **MySQL** | Banco de dados relacional |
-| **CORS** | Middleware para requisições cross-origin |
-
-### Frontend
-| Tecnologia | Descrição |
-|------------|-----------|
-| **HTML5** | Estrutura das páginas |
-| **CSS3** | Estilização e animações (Glassmorphism) |
-| **JavaScript (Vanilla)** | Interações e consumo da API |
-| **Chart.js** | Geração de gráficos analíticos |
-
-### Ferramentas
-| Tecnologia | Descrição |
-|------------|-----------|
-| **Nodemon** | Recarga automática do servidor durante desenvolvimento |
-| **REST Client** | Testes de API via VS Code |
-| **Git/GitHub** | Versionamento de código |
+| **CORS** | Middleware para permitir requisições entre diferentes origens |
 
 ---
 
-## 📁 Estrutura do Projeto
+## Frontend
 
-```
+| Tecnologia | Descrição |
+|------------|-----------|
+| **HTML5** | Estrutura das páginas |
+| **CSS3** | Estilização completa utilizando Glassmorphism |
+| **JavaScript (Vanilla)** | Consumo da API e interações da interface |
+| **Chart.js** | Construção dos gráficos analíticos |
+
+---
+
+## Ferramentas
+
+| Ferramenta | Utilização |
+|------------|------------|
+| Git | Versionamento do projeto |
+| GitHub | Hospedagem do repositório |
+| VS Code | Ambiente de desenvolvimento |
+| REST Client | Testes dos endpoints |
+| Nodemon | Reinicialização automática do servidor |
+
+---
+
+# 📁 Estrutura do Projeto
+
+```text
 del-mercado/
 ├── backend/
 │   ├── controller/
@@ -121,232 +139,484 @@ del-mercado/
 ```
 
 ---
+# 📦 Pré-requisitos
 
-## 📦 Pré-requisitos
+Antes de executar o projeto, certifique-se de possuir os seguintes softwares instalados em sua máquina:
 
-Antes de começar, certifique-se de ter instalado:
-
-- [Node.js](https://nodejs.org/) (versão 16 ou superior)
-- [MySQL](https://www.mysql.com/) (versão 8 ou superior)
-- [Git](https://git-scm.com/) (para clonar o repositório)
-- [VS Code](https://code.visualstudio.com/) (recomendado) com extensão **REST Client**
+| Software | Versão Recomendada |
+|----------|--------------------|
+| Node.js | 16 ou superior |
+| MySQL | 8.0 ou superior |
+| Git | Última versão |
+| VS Code | Recomendado |
+| REST Client (Extensão) | Opcional para testes |
 
 ---
 
-## ⚙️ Instalação e Configuração
+# ⚙️ Instalação e Configuração
 
-### 1. Clone o repositório
+## 1. Clone o repositório
 
 ```bash
 git clone https://github.com/eli-bernardi/del-mercado.git
+```
+
+Entre na pasta do projeto:
+
+```bash
 cd del-mercado
 ```
 
-### 2. Configure o banco de dados
+Caso o `package.json` esteja localizado na pasta **backend**, entre nela:
 
-Crie o banco de dados no MySQL:
-
-```sql
-CREATE DATABASE db_compras;
+```bash
+cd backend
 ```
 
-### 3. Instale as dependências
+---
+
+## 2. Instale as dependências
 
 ```bash
 npm install
 ```
 
-### 4. Configure as variáveis de ambiente
+---
 
-Crie um arquivo `.env` na raiz do projeto:
+## 3. Configure o banco de dados
+
+Abra o MySQL e execute:
+
+```sql
+CREATE DATABASE db_compras;
+```
+
+---
+
+## 4. Configure as variáveis de ambiente
+
+Crie um arquivo chamado **.env** na pasta **backend** contendo:
 
 ```env
 PORT=3000
 DB_HOST=localhost
 DB_USER=root
-DB_PASSWORD=seu_password
+DB_PASSWORD=sua_senha
 DB_NAME=db_compras
 ```
 
-### 5. Execute as migrations (criação das tabelas e views)
+Substitua **sua_senha** pela senha do seu usuário do MySQL.
 
-O servidor criará automaticamente as tabelas e views ao iniciar.
+---
 
-### 6. Inicie o servidor
+## 5. Inicialização do banco
+
+Ao iniciar o servidor pela primeira vez, o sistema utilizará o Sequelize para criar automaticamente as tabelas necessárias.
+
+Caso existam Views SQL utilizadas pelo projeto, execute os scripts correspondentes antes da utilização do sistema.
+
+---
+
+## 6. Inicie o servidor
 
 ```bash
 npm run dev
 ```
 
-O servidor estará rodando em `http://localhost:3000`.
+ou
 
-### 7. Acesse o frontend
+```bash
+node index.js
+```
 
-Abra o arquivo `frontend/html/index.html` no navegador ou sirva via Live Server.
+caso não utilize o Nodemon.
+
+Após iniciar, a API estará disponível em:
+
+```text
+http://localhost:3000
+```
 
 ---
 
-## 🔗 Endpoints da API
+## 7. Execute o Frontend
 
-### Usuários
+Abra o arquivo
+
+```text
+frontend/html/index.html
+```
+
+utilizando o **Live Server** do VS Code ou qualquer servidor HTTP de sua preferência.
+
+---
+# 🔗 Endpoints da API
+
+A API do **Del Mercado** segue o padrão REST, utilizando os métodos HTTP para manipulação dos recursos.
+
+---
+
+# 👤 Usuários
 
 | Método | Endpoint | Descrição |
-|--------|----------|-----------|
-| GET | `/usuarios` | Lista todos os usuários |
-| GET | `/usuarios/:id` | Busca usuário por ID |
-| POST | `/usuarios` | Cadastra novo usuário |
-| PUT | `/usuarios/:id` | Atualiza usuário |
-| DELETE | `/usuarios/:id` | Exclui usuário |
-| POST | `/usuarios/bulk` | Carga em lote via DummyJSON |
+|---------|----------|-----------|
+| GET | `/usuarios` | Lista todos os usuários cadastrados |
+| GET | `/usuarios/:id` | Retorna um usuário específico |
+| POST | `/usuarios` | Cadastra um novo usuário |
+| PUT | `/usuarios/:id` | Atualiza um usuário existente |
+| DELETE | `/usuarios/:id` | Remove um usuário |
+| POST | `/usuarios/bulk` | Importa usuários da DummyJSON |
 
-### Produtos
+---
+
+# 📦 Produtos
 
 | Método | Endpoint | Descrição |
-|--------|----------|-----------|
+|---------|----------|-----------|
 | GET | `/produtos` | Lista todos os produtos |
-| GET | `/produtos/:id` | Busca produto por ID |
-| POST | `/produtos` | Cadastra novo produto |
-| PUT | `/produtos/:id` | Atualiza produto |
-| DELETE | `/produtos/:id` | Exclui produto |
-| POST | `/produtos/bulk` | Carga em lote via DummyJSON |
+| GET | `/produtos/:id` | Busca um produto pelo ID |
+| POST | `/produtos` | Cadastra um novo produto |
+| PUT | `/produtos/:id` | Atualiza um produto |
+| DELETE | `/produtos/:id` | Remove um produto |
+| POST | `/produtos/bulk` | Importa produtos da DummyJSON |
 
-### Compras / Movimentações
+---
+
+# 🛒 Compras / Movimentações
 
 | Método | Endpoint | Descrição |
-|--------|----------|-----------|
+|---------|----------|-----------|
 | GET | `/compras` | Lista todas as movimentações |
-| POST | `/compras` | Registra nova movimentação (entrada/saída) |
+| POST | `/compras` | Registra uma nova movimentação |
 
-### Relatórios
+---
+
+# 📊 Relatórios
 
 | Método | Endpoint | Descrição |
-|--------|----------|-----------|
-| GET | `/compras/relatorios/produtos-criticos` | Produtos com estoque < 10 |
-| GET | `/compras/relatorios/volume-compras` | Volume financeiro por produto |
-| GET | `/compras/relatorios/graficos` | Dados para gráficos |
+|---------|----------|-----------|
+| GET | `/compras/relatorios/produtos-criticos` | Produtos com estoque &lt; 10 |
+| GET | `/compras/relatorios/volume-compras` | Volume financeiro movimentado por produto |
+| GET | `/compras/relatorios/graficos` | Dados utilizados pelos gráficos |
 
 ---
 
-## 🎯 Funcionalidades
+# 📥 Exemplo de Requisição
 
-### Usuários (CRUD)
-- ✅ Cadastrar usuário
-- ✅ Listar usuários
-- ✅ Buscar por ID ou nome
-- ✅ Atualizar dados
-- ✅ Excluir usuário
-- ✅ Carga em lote via DummyJSON
-
-### Produtos (CRUD)
-- ✅ Cadastrar produto
-- ✅ Listar produtos
-- ✅ Buscar por ID ou nome
-- ✅ Atualizar dados
-- ✅ Excluir produto
-- ✅ Carga em lote via DummyJSON
-
-### Movimentações
-- ✅ Registrar entrada de produtos
-- ✅ Registrar saída de produtos (com validação de estoque)
-- ✅ Listar histórico completo
-
-### Relatórios
-- ✅ Produtos críticos (estoque < 10)
-- ✅ Volume financeiro movimentado por produto
-
-### Gráficos (Chart.js)
-- ✅ Estoque físico atual (barras verticais)
-- ✅ Volume financeiro de compras (barras horizontais - Top 5)
-
-### Dashboard
-- ✅ Cards com informações de produtos
-- ✅ Busca em tempo real
-- ✅ Importação de dados via DummyJSON
-
----
-
-## 🖥️ Telas do Sistema
-
-| Tela | Descrição |
-|------|-----------|
-| **Dashboard** | Visão geral com cards de produtos e botões de importação |
-| **Usuários** | CRUD completo com tabela e formulário |
-| **Produtos** | CRUD completo com tabela e formulário |
-| **Movimentações** | Registro de entrada/saída de produtos |
-| **Relatórios** | Exibição de relatórios estratégicos |
-| **Gráficos** | Visualização analítica com Chart.js |
-
----
-
-## 🧪 Testes
-
-### Testes com REST Client (VS Code)
-
-O projeto inclui um arquivo `teste.http` na raiz com testes para todos os endpoints. Para executar:
-
-1. Instale a extensão **REST Client** no VS Code
-2. Abra o arquivo `teste.http`
-3. Clique em "Send Request" em cada bloco de teste
-
-### Exemplo de teste
+## Cadastrar Usuário
 
 ```http
-### Listar todos os usuários
-GET http://localhost:3000/usuarios
-
-### Cadastrar novo usuário
 POST http://localhost:3000/usuarios
 Content-Type: application/json
 
 {
-  "nome": "João",
-  "sobrenome": "Silva",
-  "idade": 30,
-  "email": "joao@email.com",
-  "telefone": "999999999",
-  "endereco": "Rua Teste, 123",
-  "cidade": "São Paulo",
-  "estado": "SP"
+    "nome": "João",
+    "sobrenome": "Silva",
+    "idade": 30,
+    "email": "joao@email.com",
+    "telefone": "999999999",
+    "endereco": "Rua Teste, 123",
+    "cidade": "São Paulo",
+    "estado": "SP"
 }
 ```
 
 ---
 
-## 🤝 Contribuição
+## Resposta Esperada
 
-1. Faça um fork do projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/nova-funcionalidade`)
-3. Commit suas mudanças (`git commit -m 'Adiciona nova funcionalidade'`)
-4. Push para a branch (`git push origin feature/nova-funcionalidade`)
-5. Abra um Pull Request
-
----
-
-## 📝 Licença
-
-Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
-
----
-
-## 📞 Contato
-
-**Desenvolvedor:** Eliel Bernardi  
-**Email:** elielbernardi0012@gmail.com  
-**GitHub:** [eli-bernardi](https://github.com/eli-bernardi)  
-**Instagram:** [@elielbrnrd](https://www.instagram.com/elielbrnrd/)  
-**Whatsapp:** (48) 99101-3184
-
----
-
-**Desenvolvido com 💻 e ☕ por Eliel Bernardi - Del Company © 2025**
+```json
+{
+    "message": "Usuário cadastrado com sucesso."
+}
 ```
 
 ---
 
-## 📌 Como usar
+## Listar Usuários
 
-1. Crie um arquivo chamado `README.md` na raiz do seu projeto.
-2. Cole todo o conteúdo acima.
-3. Ajuste as informações conforme necessário (ex: seu nome, email, links).
+```http
+GET http://localhost:3000/usuarios
+```
 
-Se precisar de alterações ou adicionar mais detalhes, é só me avisar! 😊
+---
+
+## Buscar Usuário por ID
+
+```http
+GET http://localhost:3000/usuarios/1
+```
+
+---
+
+## Atualizar Usuário
+
+```http
+PUT http://localhost:3000/usuarios/1
+Content-Type: application/json
+
+{
+    "nome":"João Atualizado"
+}
+```
+
+---
+
+## Excluir Usuário
+
+```http
+DELETE http://localhost:3000/usuarios/1
+```
+
+---
+# 🎯 Funcionalidades
+
+O sistema foi desenvolvido utilizando uma arquitetura Full Stack, oferecendo funcionalidades para gerenciamento de usuários, produtos, movimentações de estoque e geração de indicadores estratégicos.
+
+---
+
+# 👤 Módulo de Usuários
+
+O módulo de usuários permite o gerenciamento completo das informações cadastradas.
+
+### Funcionalidades
+
+- ✅ Cadastro de novos usuários
+- ✅ Consulta por ID
+- ✅ Consulta por nome
+- ✅ Listagem completa
+- ✅ Atualização de dados
+- ✅ Exclusão de usuários
+- ✅ Importação automática através da API DummyJSON
+
+---
+
+# 📦 Módulo de Produtos
+
+Responsável pelo gerenciamento de todos os produtos cadastrados no sistema.
+
+### Funcionalidades
+
+- ✅ Cadastro de produtos
+- ✅ Consulta individual
+- ✅ Busca por nome
+- ✅ Atualização de informações
+- ✅ Exclusão
+- ✅ Importação automática via DummyJSON
+
+---
+
+# 🛒 Movimentações
+
+O módulo de movimentações controla as entradas e saídas do estoque.
+
+### Recursos
+
+- ✅ Entrada de produtos
+- ✅ Saída de produtos
+- ✅ Validação automática do estoque disponível
+- ✅ Histórico completo das movimentações
+- ✅ Registro de data e horário
+
+---
+
+# 📊 Relatórios
+
+O sistema gera informações estratégicas para acompanhamento do estoque.
+
+### Relatórios disponíveis
+
+- Produtos com estoque crítico (menor que 10 unidades)
+- Volume financeiro por produto
+- Produtos mais movimentados
+- Histórico de movimentações
+
+---
+
+# 📈 Dashboard
+
+A tela inicial apresenta indicadores importantes para acompanhamento do sistema.
+
+### Recursos disponíveis
+
+- Cards com total de usuários
+- Cards com total de produtos
+- Cards com movimentações realizadas
+- Botão para importação automática
+- Pesquisa em tempo real
+- Navegação rápida entre módulos
+
+---
+
+# 📉 Gráficos
+
+Os gráficos são desenvolvidos utilizando a biblioteca **Chart.js**.
+
+### Gráfico de Estoque
+
+- Barras verticais
+- Quantidade disponível por produto
+- Atualização automática
+
+### Volume Financeiro
+
+- Barras horizontais
+- Top 5 produtos com maior movimentação financeira
+
+---
+
+# 🖥️ Telas do Sistema
+
+| Tela | Descrição |
+|------|-----------|
+| Dashboard | Página inicial do sistema |
+| Usuários | Cadastro e gerenciamento de usuários |
+| Produtos | Cadastro e gerenciamento de produtos |
+| Movimentações | Controle de entrada e saída |
+| Relatórios | Indicadores estratégicos |
+| Gráficos | Visualização analítica |
+
+---
+
+# 🧪 Testes
+
+O projeto acompanha um arquivo chamado:
+
+```text
+teste.http
+```
+
+Esse arquivo contém requisições prontas para todos os endpoints da API.
+
+Para utilizá-lo:
+
+1. Instale a extensão **REST Client** no Visual Studio Code.
+2. Abra o arquivo `teste.http`.
+3. Clique em **Send Request** sobre qualquer requisição.
+4. Analise o retorno da API diretamente no VS Code.
+
+---
+
+## Exemplo
+
+```http
+GET http://localhost:3000/produtos
+```
+
+```http
+GET http://localhost:3000/usuarios
+```
+
+```http
+GET http://localhost:3000/compras
+```
+
+---
+# 🤝 Contribuição
+
+Contribuições são sempre bem-vindas. Caso deseje colaborar com o projeto, siga os passos abaixo:
+
+1. Faça um **Fork** deste repositório.
+2. Crie uma nova branch para sua funcionalidade.
+
+```bash
+git checkout -b feature/minha-funcionalidade
+```
+
+3. Realize as alterações necessárias.
+
+4. Faça o commit.
+
+```bash
+git commit -m "Adiciona nova funcionalidade"
+```
+
+5. Envie as alterações para seu repositório.
+
+```bash
+git push origin feature/minha-funcionalidade
+```
+
+6. Abra um **Pull Request** descrevendo as alterações realizadas.
+
+---
+
+# 📝 Licença
+
+Este projeto é distribuído sob a licença **MIT**.
+
+Você pode utilizar, modificar e distribuir este projeto livremente, desde que os créditos ao autor original sejam mantidos.
+
+Para mais informações consulte o arquivo:
+
+```text
+LICENSE
+```
+
+---
+
+# 👨‍💻 Desenvolvedor
+
+## Eliel Bernardi
+
+Desenvolvedor Full Stack responsável pelo desenvolvimento do projeto **Del Mercado**.
+
+### Contato
+
+📧 **Email**
+
+elielbernardi0012@gmail.com
+
+🐙 **GitHub**
+
+https://github.com/eli-bernardi
+
+📷 **Instagram**
+
+https://www.instagram.com/elielbrnrd/
+
+💼 **Projeto desenvolvido por**
+
+**Del Company**
+
+---
+
+# 📚 Referências
+
+- Node.js
+- Express.js
+- Sequelize ORM
+- MySQL
+- Chart.js
+- DummyJSON API
+- HTML5
+- CSS3
+- JavaScript (ES6)
+
+---
+
+# 📌 Observações
+
+- O projeto foi desenvolvido para fins acadêmicos e demonstração de uma arquitetura Full Stack baseada em API REST.
+- A importação de usuários e produtos utiliza a API pública **DummyJSON**.
+- O frontend consome todos os dados diretamente da API desenvolvida em Node.js.
+- O banco de dados utilizado é o **MySQL**, acessado por meio do Sequelize ORM.
+- O sistema pode ser expandido para autenticação de usuários, controle de permissões e geração de relatórios avançados.
+
+---
+
+<div align="center">
+
+## ⭐ Gostou do projeto?
+
+Se este projeto foi útil para você, considere deixar uma **⭐ no repositório**.
+
+Isso ajuda a divulgar o projeto e incentiva seu desenvolvimento.
+
+---
+
+**Desenvolvido com ❤️, ☕ e muito JavaScript.**
+
+### © 2025 — Del Company | Eliel Bernardi
+
+</div>
