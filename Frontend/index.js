@@ -1,151 +1,202 @@
-const API_BASE = 'http://localhost:3000'; // URL base do backend local
+// ============================================================
+// CONFIGURAÇÕES
+// ============================================================
+const API_BASE = 'http://localhost:3000';
 
-// ---------- Mobile menu toggle ----------
+// ============================================================
+// DOM ELEMENTS
+// ============================================================
 const menuToggle = document.getElementById('menu-toggle');
 const menu = document.getElementById('menu');
+const toast = document.getElementById('toast-message');
+const searchInput = document.getElementById('search-input');
+const loadingSpinner = document.getElementById('loading-spinner');
+const productsGrid = document.getElementById('products-grid');
+const emptyState = document.getElementById('empty-state');
+const btnLoadProducts = document.getElementById('btn-load-products');
+const btnLoadUsers = document.getElementById('btn-load-users');
+
+// ============================================================
+// MENU MOBILE
+// ============================================================
 if (menuToggle && menu) {
     menuToggle.addEventListener('click', () => {
         menu.classList.toggle('hidden');
     });
+
+    // Fecha o menu ao clicar em link (mobile)
+    menu.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+            if (window.innerWidth < 768) {
+                menu.classList.add('hidden');
+            }
+        });
+    });
 }
 
-// ---------- Toast ----------
+// ============================================================
+// TOAST (notificações)
+// ============================================================
 function showToast(message, isError = false) {
-    const toast = document.getElementById('toast-message');
     if (!toast) return;
     toast.textContent = message;
-    toast.className = `mt-4 p-3 rounded-lg text-sm text-center font-semibold ${isError ? 'bg-red-500/20 text-red-400 border border-red-500/30' : 'bg-green-500/20 text-green-400 border border-green-500/30'
+    toast.className = `mt-4 p-3 rounded-lg text-sm text-center font-semibold ${isError
+            ? 'bg-red-500/20 text-red-400 border border-red-500/30'
+            : 'bg-green-500/20 text-green-400 border border-green-500/30'
         }`;
     toast.classList.remove('hidden');
-    setTimeout(() => {
-        toast.classList.add('hidden');
-    }, 5000);
+    clearTimeout(toast._timeout);
+    toast._timeout = setTimeout(() => toast.classList.add('hidden'), 5000);
 }
 
-// ---------- Load Products Grid ----------
+// ============================================================
+// DASHBOARD DE PRODUTOS
+// ============================================================
 let allProducts = [];
 
 async function loadProducts() {
-    const spinner = document.getElementById('loading-spinner');
-    const grid = document.getElementById('products-grid');
-    const emptyState = document.getElementById('empty-state');
-
     try {
-        spinner.classList.remove('hidden');
-        grid.classList.add('hidden');
+        loadingSpinner.classList.remove('hidden');
+        productsGrid.classList.add('hidden');
         emptyState.classList.add('hidden');
 
-        const response = await fetch(`${API_BASE}/produtos`);
-        if (!response.ok) throw new Error('Erro ao buscar produtos');
-        const products = await response.json();
-        allProducts = products;
+        const res = await fetch(`${API_BASE}/produtos`);
+        if (!res.ok) throw new Error('Erro ao buscar produtos');
+        const data = await res.json();
+        allProducts = data;
 
-        spinner.classList.add('hidden');
-        if (products.length === 0) {
+        loadingSpinner.classList.add('hidden');
+
+        if (data.length === 0) {
             emptyState.classList.remove('hidden');
             return;
         }
 
-        renderProducts(products);
-        grid.classList.remove('hidden');
+        renderProducts(data);
+        productsGrid.classList.remove('hidden');
     } catch (error) {
-        spinner.classList.add('hidden');
+        loadingSpinner.classList.add('hidden');
         showToast('Erro ao carregar produtos: ' + error.message, true);
     }
 }
 
 function renderProducts(products) {
-    const grid = document.getElementById('products-grid');
-    grid.innerHTML = '';
+    productsGrid.innerHTML = '';
 
     products.forEach(product => {
-        const card = document.createElement('div');
-        card.className = 'bg-white/5 rounded-xl border border-white/10 p-4 hover:border-brand/50 transition-all duration-300 flex flex-col';
-
-        const price = parseFloat(product['Preço']).toFixed(2);
+        const price = parseFloat(product['Preço'] || 0).toFixed(2);
         const discount = parseFloat(product['Percentual de desconto'] || 0).toFixed(1);
-        const stock = parseInt(product.Quantidade);
+        const stock = parseInt(product.Quantidade || 0);
 
+        const card = document.createElement('div');
+        card.className = 'card-base card-hover card-glow flex flex-col';
         card.innerHTML = `
-            <div class="flex justify-between items-start mb-3">
-                <h3 class="font-bold text-white truncate">${product.Nome}</h3>
-                <span class="text-xs bg-brand/20 text-brand px-2 py-0.5 rounded font-semibold">ID ${product.codProduto}</span>
-            </div>
-            <p class="text-gray-400 text-xs mb-4 line-clamp-2">${product.Descrição || 'Sem descrição'}</p>
-            <div class="mt-auto space-y-1 text-sm">
-                <div class="flex justify-between">
-                    <span class="text-gray-500">Preço</span>
-                    <span class="text-white font-semibold">R$ ${price}</span>
-                </div>
-                <div class="flex justify-between">
-                    <span class="text-gray-500">Desconto</span>
-                    <span class="text-white">${discount}%</span>
-                </div>
-                <div class="flex justify-between">
-                    <span class="text-gray-500">Estoque</span>
-                    <span class="${stock < 10 ? 'text-red-400' : 'text-green-400'} font-bold">${stock} unid.</span>
-                </div>
-            </div>
-        `;
-        grid.appendChild(card);
+      <div class="flex justify-between items-start mb-3">
+        <h3 class="font-bold text-white truncate">${product.Nome || 'Sem nome'}</h3>
+        <span class="text-xs bg-brand/20 text-brand px-2 py-0.5 rounded font-semibold">ID ${product.codProduto || '-'}</span>
+      </div>
+      <p class="text-gray-400 text-xs mb-4 line-clamp-2">${product.Descrição || 'Sem descrição'}</p>
+      <div class="mt-auto space-y-1 text-sm">
+        <div class="flex justify-between">
+          <span class="text-gray-500">Preço</span>
+          <span class="text-white font-semibold">R$ ${price}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-500">Desconto</span>
+          <span class="text-white">${discount}%</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-500">Estoque</span>
+          <span class="${stock < 10 ? 'text-red-400' : 'text-green-400'} font-bold">${stock} unid.</span>
+        </div>
+      </div>
+    `;
+        productsGrid.appendChild(card);
     });
 }
 
-// ---------- Search ----------
-const searchInput = document.getElementById('search-input');
+// ============================================================
+// BUSCA DE PRODUTOS
+// ============================================================
 if (searchInput) {
     searchInput.addEventListener('input', (e) => {
         const term = e.target.value.toLowerCase().trim();
+        if (!term) {
+            renderProducts(allProducts);
+            productsGrid.classList.remove('hidden');
+            emptyState.classList.add('hidden');
+            return;
+        }
+
         const filtered = allProducts.filter(p =>
-            p.Nome.toLowerCase().includes(term) ||
+            (p.Nome && p.Nome.toLowerCase().includes(term)) ||
             (p.Descrição && p.Descrição.toLowerCase().includes(term))
         );
-        renderProducts(filtered);
+
         if (filtered.length === 0) {
-            document.getElementById('empty-state').classList.remove('hidden');
-            document.getElementById('products-grid').classList.add('hidden');
+            emptyState.classList.remove('hidden');
+            productsGrid.classList.add('hidden');
         } else {
-            document.getElementById('empty-state').classList.add('hidden');
-            document.getElementById('products-grid').classList.remove('hidden');
+            emptyState.classList.add('hidden');
+            renderProducts(filtered);
+            productsGrid.classList.remove('hidden');
         }
     });
 }
 
-// ---------- Load External Data Buttons ----------
-document.getElementById('btn-load-products').addEventListener('click', async () => {
-    const btn = document.getElementById('btn-load-products');
+// ============================================================
+// IMPORTAÇÃO DE DADOS
+// ============================================================
+async function importData(endpoint, btn, successMsg) {
     btn.disabled = true;
-    btn.innerHTML = 'Carregando...';
+    const originalText = btn.textContent;
+    btn.textContent = 'Carregando...';
+
     try {
-        const response = await fetch(`${API_BASE}/produtos/importar`, { method: 'POST' });
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.error || 'Falha na importação');
-        showToast(data.message || 'Produtos importados com sucesso!');
-        await loadProducts(); // Recarrega a grid
+        const res = await fetch(`${API_BASE}/${endpoint}`, { method: 'POST' });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Falha na importação');
+        showToast(data.message || successMsg);
+        if (endpoint === 'produtos/importar') {
+            await loadProducts(); // recarrega o dashboard
+        }
     } catch (err) {
         showToast(err.message, true);
     } finally {
         btn.disabled = false;
-        btn.innerHTML = 'Carregar Produtos';
+        btn.textContent = originalText;
     }
-});
+}
 
-document.getElementById('btn-load-users').addEventListener('click', async () => {
-    const btn = document.getElementById('btn-load-users');
-    btn.disabled = true;
-    btn.innerHTML = 'Carregando...';
-    try {
-        const response = await fetch(`${API_BASE}/usuarios/importar`, { method: 'POST' });
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.error || 'Falha na importação');
-        showToast(data.message || 'Usuários importados com sucesso!');
-    } catch (err) {
-        showToast(err.message, true);
-    } finally {
-        btn.disabled = false;
-        btn.innerHTML = 'Carregar Usuários';
-    }
-});
+if (btnLoadProducts) {
+    btnLoadProducts.addEventListener('click', () => {
+        importData('produtos/importar', btnLoadProducts, 'Produtos importados com sucesso!');
+    });
+}
 
-// ---------- Initialize ----------
-loadProducts();
+if (btnLoadUsers) {
+    btnLoadUsers.addEventListener('click', () => {
+        importData('usuarios/importar', btnLoadUsers, 'Usuários importados com sucesso!');
+    });
+}
+
+// ============================================================
+// ANIMAÇÃO DE REVELAÇÃO (Intersection Observer)
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(
+        (entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        },
+        { threshold: 0.15, rootMargin: '0px 0px -50px 0px' }
+    );
+    reveals.forEach(el => observer.observe(el));
+
+    // Inicializa o dashboard
+    loadProducts();
+});
