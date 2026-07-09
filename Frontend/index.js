@@ -21,35 +21,32 @@ const btnLoadUsers = document.getElementById('btn-load-users');
 // ============================================================
 if (menuToggle && menu) {
     menuToggle.addEventListener('click', () => {
-        menu.classList.toggle('hidden');
+        menu.classList.toggle('open');
     });
 
     menu.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', () => {
             if (window.innerWidth < 768) {
-                menu.classList.add('hidden');
+                menu.classList.remove('open');
             }
         });
     });
 }
 
 // ============================================================
-// TOAST (notificações)
+// TOAST
 // ============================================================
 function showToast(message, isError = false) {
     if (!toast) return;
     toast.textContent = message;
-    toast.className = `mt-4 p-3 rounded-lg text-sm text-center font-semibold ${isError
-            ? 'bg-red-500/20 text-red-400 border border-red-500/30'
-            : 'bg-green-500/20 text-green-400 border border-green-500/30'
-        }`;
+    toast.className = `toast ${isError ? 'error' : 'success'}`;
     toast.classList.remove('hidden');
     clearTimeout(toast._timeout);
     toast._timeout = setTimeout(() => toast.classList.add('hidden'), 5000);
 }
 
 // ============================================================
-// DASHBOARD DE PRODUTOS
+// DASHBOARD
 // ============================================================
 let allProducts = [];
 
@@ -83,7 +80,6 @@ function renderProducts(products) {
     productsGrid.innerHTML = '';
 
     products.forEach(product => {
-        // Campos do backend: nome, descricao, preco, percentualDesconto, quantidade, marca, imagem
         const price = parseFloat(product.preco || 0).toFixed(2);
         const discount = parseFloat(product.percentualDesconto || 0).toFixed(1);
         const stock = parseInt(product.quantidade || 0);
@@ -91,32 +87,32 @@ function renderProducts(products) {
         const card = document.createElement('div');
         card.className = 'card-base card-hover card-glow flex flex-col';
         card.innerHTML = `
-            <div class="flex justify-between items-start mb-3">
-                <h3 class="font-bold text-white truncate">${product.nome || 'Sem nome'}</h3>
-                <span class="text-xs bg-brand/20 text-brand px-2 py-0.5 rounded font-semibold">ID ${product.codProduto || '-'}</span>
-            </div>
-            <p class="text-gray-400 text-xs mb-4 line-clamp-2">${product.descricao || 'Sem descrição'}</p>
-            <div class="mt-auto space-y-1 text-sm">
-                <div class="flex justify-between">
-                    <span class="text-gray-500">Preço</span>
-                    <span class="text-white font-semibold">R$ ${price}</span>
-                </div>
-                <div class="flex justify-between">
-                    <span class="text-gray-500">Desconto</span>
-                    <span class="text-white">${discount}%</span>
-                </div>
-                <div class="flex justify-between">
-                    <span class="text-gray-500">Estoque</span>
-                    <span class="${stock < 10 ? 'text-red-400' : 'text-green-400'} font-bold">${stock} unid.</span>
-                </div>
-            </div>
-        `;
+      <div class="flex justify-between items-start mb-3">
+        <h3 class="font-bold text-white truncate">${product.nome || 'Sem nome'}</h3>
+        <span class="text-xs bg-brand/20 text-brand px-2 py-0.5 rounded font-semibold">ID ${product.codProduto || '-'}</span>
+      </div>
+      <p class="text-gray-400 text-xs mb-4 line-clamp-2">${product.descricao || 'Sem descrição'}</p>
+      <div class="mt-auto space-y-1 text-sm">
+        <div class="flex justify-between">
+          <span class="text-gray-400">Preço</span>
+          <span class="text-white font-semibold">R$ ${price}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-400">Desconto</span>
+          <span class="text-white">${discount}%</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-400">Estoque</span>
+          <span class="${stock < 10 ? 'text-red-400' : 'text-green-400'} font-bold">${stock} unid.</span>
+        </div>
+      </div>
+    `;
         productsGrid.appendChild(card);
     });
 }
 
 // ============================================================
-// BUSCA DE PRODUTOS
+// BUSCA
 // ============================================================
 if (searchInput) {
     searchInput.addEventListener('input', (e) => {
@@ -146,7 +142,7 @@ if (searchInput) {
 }
 
 // ============================================================
-// IMPORTAÇÃO DE DADOS (BULK LOAD)
+// IMPORTAÇÃO EM LOTE
 // ============================================================
 async function importData(endpoint, btn, successMsg) {
     btn.disabled = true;
@@ -159,7 +155,7 @@ async function importData(endpoint, btn, successMsg) {
         if (!res.ok) throw new Error(data.error || 'Falha na importação');
         showToast(data.message || successMsg);
         if (endpoint === 'produtos/bulk') {
-            await loadProducts(); // recarrega o dashboard
+            await loadProducts();
         }
     } catch (err) {
         showToast(err.message, true);
@@ -182,7 +178,7 @@ if (btnLoadUsers) {
 }
 
 // ============================================================
-// ANIMAÇÃO DE REVELAÇÃO (Intersection Observer)
+// ANIMAÇÕES (REVEAL)
 // ============================================================
 document.addEventListener('DOMContentLoaded', () => {
     const reveals = document.querySelectorAll('.reveal');
@@ -198,6 +194,6 @@ document.addEventListener('DOMContentLoaded', () => {
     );
     reveals.forEach(el => observer.observe(el));
 
-    // Inicializa o dashboard
+    // Carrega os produtos
     loadProducts();
 });
