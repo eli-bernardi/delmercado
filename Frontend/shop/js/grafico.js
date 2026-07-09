@@ -1,179 +1,144 @@
-const API_URL = 'http://localhost:3000/compras/relatorios/graficos';
+// grafico.js
+const API_BASE = 'http://localhost:3000/compras/relatorios';
 const toast = document.getElementById('graphics-toast');
 
-// ---------- Mobile menu toggle ----------
-const menuToggle = document.getElementById('menu-toggle');
-const menu = document.getElementById('menu');
-if (menuToggle && menu) {
-    menuToggle.addEventListener('click', () => {
-        menu.classList.toggle('hidden');
-    });
+// ============================================================
+// TOAST
+// ============================================================
+function showToast(message, isError = false) {
+    toast.textContent = message;
+    toast.className = `mb-6 p-3 rounded-lg text-sm text-center font-semibold ${isError
+            ? 'bg-red-500/20 text-red-400 border border-red-500/30'
+            : 'bg-green-500/20 text-green-400 border border-green-500/30'
+        }`;
+    toast.classList.remove('hidden');
+    clearTimeout(toast._timeout);
+    toast._timeout = setTimeout(() => toast.classList.add('hidden'), 4000);
 }
 
-// Spinners
-const spinner1 = document.getElementById('chart-spinner-1');
-const spinner2 = document.getElementById('chart-spinner-2');
+// ============================================================
+// CARREGAR DADOS E RENDERIZAR GRÁFICOS
+// ============================================================
+async function carregarGraficos() {
+    // Spinners
+    const spinner1 = document.getElementById('chart-spinner-1');
+    const spinner2 = document.getElementById('chart-spinner-2');
+    const empty1 = document.getElementById('chart-empty-1');
+    const empty2 = document.getElementById('chart-empty-2');
 
-// Empty state labels
-const empty1 = document.getElementById('chart-empty-1');
-const empty2 = document.getElementById('chart-empty-2');
+    // Canvas
+    const ctx1 = document.getElementById('chart-estoque-critico').getContext('2d');
+    const ctx2 = document.getElementById('chart-volume-compras').getContext('2d');
 
-// Chart instances
-let chart1Instance = null;
-let chart2Instance = null;
-
-// Apply global Chart.js config overrides for dark theme
-Chart.defaults.color = 'rgba(255, 255, 255, 0.7)';
-Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.08)';
-Chart.defaults.font.family = "'Inter', sans-serif";
-
-async function loadChartData() {
     try {
-        const res = await fetch(API_URL);
-        if (!res.ok) throw new Error('Falha ao conectar com o backend.');
-        const data = await res.json();
+        // Mostra spinners
+        spinner1.classList.remove('hidden');
+        spinner2.classList.remove('hidden');
+        empty1.classList.add('hidden');
+        empty2.classList.add('hidden');
 
-        // 1. Render Estoque Físico Crítico
+        // Busca os dados
+        const response = await fetch(`${API_BASE}/graficos`);
+        if (!response.ok) throw new Error('Erro ao buscar dados para gráficos.');
+
+        const data = await response.json();
+
+        // Esconde spinners
         spinner1.classList.add('hidden');
-        if (!data.estoqueCritico || data.estoqueCritico.length === 0) {
+        spinner2.classList.add('hidden');
+
+        // ===== GRÁFICO 1: Estoque Físico Crítico (Barras Verticais) =====
+        const produtosCriticos = data.estoqueCritico || [];
+        if (produtosCriticos.length === 0) {
             empty1.classList.remove('hidden');
         } else {
-            renderEstoqueCriticoChart(data.estoqueCritico);
+            new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: produtosCriticos.map(p => p.nome),
+                    datasets: [{
+                        label: 'Quantidade em Estoque',
+                        data: produtosCriticos.map(p => p.quantidade_atual),
+                        backgroundColor: 'rgba(214, 40, 40, 0.7)',
+                        borderColor: '#d62828',
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: '#ffffff' }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { color: '#888888' },
+                            grid: { color: 'rgba(255,255,255,0.05)' }
+                        },
+                        x: {
+                            ticks: { color: '#888888' },
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
         }
 
-        // 2. Render Volume Financeiro de Compras
-        spinner2.classList.add('hidden');
-        if (!data.volumeCompras || data.volumeCompras.length === 0) {
+        // ===== GRÁFICO 2: Volume Financeiro de Compras (Barras Horizontais) =====
+        const volumeCompras = data.volumeCompras || [];
+        if (volumeCompras.length === 0) {
             empty2.classList.remove('hidden');
         } else {
-            renderVolumeComprasChart(data.volumeCompras);
+            new Chart(ctx2, {
+                type: 'bar',
+                data: {
+                    labels: volumeCompras.map(p => p.nome),
+                    datasets: [{
+                        label: 'Valor Financeiro (R$)',
+                        data: volumeCompras.map(p => p.valor_financeiro_movimentado),
+                        backgroundColor: 'rgba(214, 40, 40, 0.7)',
+                        borderColor: '#d62828',
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    indexAxis: 'y', // Barras horizontais
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: '#ffffff' }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            ticks: { color: '#888888' },
+                            grid: { color: 'rgba(255,255,255,0.05)' }
+                        },
+                        y: {
+                            ticks: { color: '#888888' },
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
         }
 
     } catch (err) {
         spinner1.classList.add('hidden');
         spinner2.classList.add('hidden');
-        toast.textContent = `Erro ao carregar gráficos: ${err.message}`;
-        toast.classList.remove('hidden');
+        showToast(err.message, true);
+        console.error('Erro ao carregar gráficos:', err);
     }
 }
 
-function renderEstoqueCriticoChart(list) {
-    const ctx = document.getElementById('chart-estoque-critico').getContext('2d');
-    const labels = list.map(item => item.title);
-    const values = list.map(item => item.stock);
-
-    chart1Instance = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Itens em Estoque',
-                data: values,
-                backgroundColor: 'rgba(214, 40, 40, 0.7)',
-                borderColor: 'rgba(214, 40, 40, 1)',
-                borderWidth: 1.5,
-                borderRadius: 6,
-                hoverBackgroundColor: 'rgba(255, 107, 107, 0.9)'
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: false
-                },
-                tooltip: {
-                    backgroundColor: 'rgba(18, 18, 18, 0.95)',
-                    borderColor: 'rgba(214, 40, 40, 0.3)',
-                    borderWidth: 1,
-                    titleColor: '#fff',
-                    bodyColor: '#ddd',
-                    padding: 10
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    grid: {
-                        color: 'rgba(255, 255, 255, 0.05)'
-                    },
-                    ticks: {
-                        precision: 0
-                    }
-                },
-                x: {
-                    grid: {
-                        display: false
-                    }
-                }
-            }
-        }
-    });
-}
-
-function renderVolumeComprasChart(list) {
-    const ctx = document.getElementById('chart-volume-compras').getContext('2d');
-    const labels = list.map(item => item.nome);
-    const values = list.map(item => parseFloat(item.valor_financeiro_movimentado));
-
-    chart2Instance = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Volume Financeiro (R$)',
-                data: values,
-                backgroundColor: 'rgba(255, 107, 107, 0.7)',
-                borderColor: 'rgba(255, 107, 107, 1)',
-                borderWidth: 1.5,
-                borderRadius: 6,
-                hoverBackgroundColor: 'rgba(214, 40, 40, 0.9)'
-            }]
-        },
-        options: {
-            indexAxis: 'y', // Horizontal bars
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: false
-                },
-                tooltip: {
-                    backgroundColor: 'rgba(18, 18, 18, 0.95)',
-                    borderColor: 'rgba(255, 107, 107, 0.3)',
-                    borderWidth: 1,
-                    titleColor: '#fff',
-                    bodyColor: '#ddd',
-                    padding: 10,
-                    callbacks: {
-                        label: function (context) {
-                            return `R$ ${context.parsed.x.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-                        }
-                    }
-                }
-            },
-            scales: {
-                x: {
-                    beginAtZero: true,
-                    grid: {
-                        color: 'rgba(255, 255, 255, 0.05)'
-                    },
-                    ticks: {
-                        callback: function (value) {
-                            return `R$ ${value}`;
-                        }
-                    }
-                },
-                y: {
-                    grid: {
-                        display: false
-                    }
-                }
-            }
-        }
-    });
-}
-
-// Load graphics on render
-loadChartData();
+// ============================================================
+// INICIALIZAR
+// ============================================================
+document.addEventListener('DOMContentLoaded', carregarGraficos);

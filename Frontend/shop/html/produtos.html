@@ -4,172 +4,158 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="../css/banco_dados.css">
+  <title>Del Mercado - Produtos (CRUD)</title>
+
+  <!-- FAVICON -->
   <link rel="shortcut icon" href="/img/dell.png" type="image/png">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="../js/produtos.js" defer></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            brand: '#d62828',
-            darkBg: '#0a0a0a',
-          }
-        }
-      }
-    }
-  </script>
-  <title>Del Company - Produtos (CRUD)</title>
+
+  <!-- FONTE -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..800&display=swap" rel="stylesheet">
+
+  <!-- CSS PERSONALIZADO -->
+  <link rel="stylesheet" href="../css/style.css">
+
+  <!-- JAVASCRIPT -->
+  <script src="../js/main.js" defer></script>
+  <script src="../js/product/produto_listar.js" defer></script>
+  <script src="../js/product/produto_cadastrar.js" defer></script>
+  <script src="../js/product/produto_consultar.js" defer></script>
+  <script src="../js/product/produto_atualizar.js" defer></script>
+  <script src="../js/product/produto_apagar.js" defer></script>
 </head>
 
-<body class="bg-[#0a0a0a] text-white">
+<body>
 
-  <header
-    class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-8 py-4 bg-[#0a0a0a]/90 backdrop-blur-md shadow-md border-b border-white/5">
-    <a href="./index.html" class="text-logo text-2xl font-black tracking-wide">Del Mercado</a>
-    <nav class="hidden md:flex items-center space-x-6 text-sm font-medium">
-      <a href="./index.html" class="hover:text-brand transition-colors">Início</a>
-      <a href="/Frontend/shop/html/produtos.html" class="hover:text-brand transition-colors">Produtos (CRUD)</a>
-      <a href="/Frontend/user/html/user.html" class="hover:text-brand transition-colors">Usuários (CRUD)</a>
-      <a href="/Frontend/move/html/index.html" class="hover:text-brand transition-colors">Movimentações</a>
-      <a href="/Frontend/shop/html/relatorios.html" class="hover:text-brand transition-colors">Relatórios</a>
-      <a href="/Frontend/shop/html/graficos.html" class="text-brand transition-colors font-semibold">Gráficos</a>
+  <!-- ===== HEADER ===== -->
+  <header class="header-principal">
+    <a href="/index.html" class="logo-gradiente">Del Mercado</a>
+
+
+    <nav id="menu" class="nav-principal">
+      <a href="/index.html">Início</a>
+      <a href="/Frontend/shop/html/produtos.html" class="ativo">Produtos (CRUD)</a>
+      <a href="/Frontend/user/html/user.html">Usuários (CRUD)</a>
+      <a href="/Frontend/move/html/index.html">Movimentações</a>
+      <a href="/Frontend/shop/html/relatorios.html">Relatórios</a>
+      <a href="/Frontend/shop/html/graficos.html">Gráficos</a>
     </nav>
-    <button class="md:hidden text-white hover:text-brand transition-colors focus:outline-none">
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-      </svg>
-    </button>
   </header>
 
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="main-content">
 
-  <!-- MAIN CONTENT -->
-  <main class="pt-24 px-6 max-w-7xl mx-auto pb-16">
-    <div class="my-8 text-center md:text-left md:flex justify-between items-center">
+    <!-- TÍTULO E BOTÃO NOVO -->
+    <div class="page-header reveal">
       <div>
-        <h1 class="text-3xl font-black text-white">Gerenciamento de Produtos</h1>
-        <p class="text-gray-400 text-sm mt-1">Crie, edite ou remova produtos do catálogo do sistema.</p>
+        <h1 class="page-title">Gerenciamento de Produtos</h1>
+        <p class="page-subtitle">Crie, edite ou remova produtos do catálogo do sistema.</p>
       </div>
-      <button id="btn-show-form"
-        class="mt-4 md:mt-0 bg-brand hover:bg-[#a51d1d] text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 flex items-center gap-2">
+      <button id="btn-show-form" class="btn-outline-brand">
         <span>+</span> Novo Produto
       </button>
     </div>
 
-    <!-- Feedback Toast -->
-    <div id="crud-toast" class="hidden mb-6 p-3 rounded-lg text-sm font-semibold text-center"></div>
+    <!-- TOAST -->
+    <div id="crud-toast" class="toast hidden"></div>
 
-    <!-- Product Form Panel (Hidden by default) -->
-    <section id="form-container" class="hidden bg-white/5 backdrop-blur-sm rounded-2xl p-6 mb-8 border border-white/10">
-      <div class="flex justify-between items-center mb-6">
-        <h2 id="form-title" class="text-xl font-bold text-white">Cadastrar Novo Produto</h2>
-        <button id="btn-cancel" class="text-gray-400 hover:text-white transition-colors text-sm">Cancelar</button>
+    <!-- FORMULÁRIO -->
+    <section id="form-container" class="glass-panel form-panel hidden reveal">
+      <div class="form-header">
+        <h2 id="form-title" class="form-title">Cadastrar Novo Produto</h2>
+        <button id="btn-cancel" class="btn-cancel">Cancelar</button>
       </div>
 
-      <form id="product-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <form id="product-form" class="form-grid">
         <input type="hidden" id="product-id">
 
-        <div>
-          <label class="block text-gray-400 text-xs font-semibold uppercase mb-1">Nome do Produto *</label>
-          <input type="text" id="prod-nome" required
-            class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-brand transition-colors text-sm">
+        <div class="form-group">
+          <label for="prod-nome" class="form-label">Nome do Produto *</label>
+          <input type="text" id="prod-nome" class="form-input" required>
         </div>
 
-        <div>
-          <label class="block text-gray-400 text-xs font-semibold uppercase mb-1">Marca</label>
-          <input type="text" id="prod-marca"
-            class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-brand transition-colors text-sm">
+        <div class="form-group">
+          <label for="prod-marca" class="form-label">Marca *</label>
+          <input type="text" id="prod-marca" class="form-input" required>
         </div>
 
-        <div class="md:col-span-2">
-          <label class="block text-gray-400 text-xs font-semibold uppercase mb-1">Descrição</label>
-          <textarea id="prod-descricao" rows="2"
-            class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-brand transition-colors text-sm"></textarea>
+        <div class="form-group full-width">
+          <label for="prod-descricao" class="form-label">Descrição *</label>
+          <textarea id="prod-descricao" rows="2" class="form-input" required></textarea>
         </div>
 
-        <div>
-          <label class="block text-gray-400 text-xs font-semibold uppercase mb-1">Categoria</label>
-          <input type="text" id="prod-categoria"
-            class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-brand transition-colors text-sm">
+        <div class="form-group">
+          <label for="prod-categoria" class="form-label">Categoria *</label>
+          <input type="text" id="prod-categoria" class="form-input" required>
         </div>
 
-        <div>
-          <label class="block text-gray-400 text-xs font-semibold uppercase mb-1">Preço Unitário (R$) *</label>
-          <input type="number" id="prod-preco" step="0.01" min="0" required
-            class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-brand transition-colors text-sm">
+        <div class="form-group">
+          <label for="prod-preco" class="form-label">Preço Unitário (R$) *</label>
+          <input type="number" id="prod-preco" class="form-input" step="0.01" min="0" required>
         </div>
 
-        <div>
-          <label class="block text-gray-400 text-xs font-semibold uppercase mb-1">Percentual de Desconto (%)</label>
-          <input type="number" id="prod-desconto" step="0.1" min="0" max="100"
-            class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-brand transition-colors text-sm">
+        <div class="form-group">
+          <label for="prod-desconto" class="form-label">Percentual de Desconto (%) *</label>
+          <input type="number" id="prod-desconto" class="form-input" step="0.1" min="0" max="100" required>
         </div>
 
-        <div>
-          <label class="block text-gray-400 text-xs font-semibold uppercase mb-1">Quantidade em Estoque *</label>
-          <input type="number" id="prod-quantidade" min="0" required
-            class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-brand transition-colors text-sm">
+        <div class="form-group">
+          <label for="prod-quantidade" class="form-label">Quantidade em Estoque *</label>
+          <input type="number" id="prod-quantidade" class="form-input" min="0" required>
         </div>
 
-        <div class="md:col-span-2">
-          <label class="block text-gray-400 text-xs font-semibold uppercase mb-1">URL da Imagem</label>
-          <input type="url" id="prod-imagem" placeholder="https://..."
-            class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-brand transition-colors text-sm">
+        <div class="form-group full-width">
+          <label for="prod-imagem" class="form-label">URL da Imagem *</label>
+          <input type="url" id="prod-imagem" class="form-input" placeholder="https://..." required>
         </div>
 
-        <div class="md:col-span-2 flex justify-end gap-2 mt-4">
-          <button type="button" id="btn-form-cancel"
-            class="bg-white/5 hover:bg-white/10 text-white font-semibold py-2 px-4 rounded-lg transition-all text-sm border border-white/10">Cancelar</button>
-          <button type="submit"
-            class="bg-brand hover:bg-[#a51d1d] text-white font-semibold py-2 px-6 rounded-lg transition-all text-sm">Salvar</button>
+        <div class="form-actions">
+          <button type="button" id="btn-form-cancel" class="btn-outline-brand btn-outline-brand-sm">Cancelar</button>
+          <button type="submit" class="btn-outline-brand">Salvar</button>
         </div>
       </form>
     </section>
 
-    <!-- Products Table -->
-    <div class="bg-white/5 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/10">
-      <div class="overflow-x-auto">
-        <table class="min-w-full text-left text-sm">
-          <thead class="bg-white/5 border-b border-white/10 text-xs font-bold uppercase text-gray-400 tracking-wider">
+    <!-- TABELA DE PRODUTOS -->
+    <section class="glass-panel table-panel reveal">
+      <div class="table-wrapper">
+        <table class="table">
+          <thead>
             <tr>
-              <th class="px-6 py-4">ID</th>
-              <th class="px-6 py-4">Imagem</th>
-              <th class="px-6 py-4">Nome / Marca</th>
-              <th class="px-6 py-4">Categoria</th>
-              <th class="px-6 py-4">Preço (R$)</th>
-              <th class="px-6 py-4">Desconto (%)</th>
-              <th class="px-6 py-4">Estoque</th>
-              <th class="px-6 py-4 text-right">Ações</th>
+              <th>ID</th>
+              <th>Imagem</th>
+              <th>Nome / Marca</th>
+              <th>Categoria</th>
+              <th>Preço (R$)</th>
+              <th>Desconto (%)</th>
+              <th>Estoque</th>
+              <th class="text-right">Ações</th>
             </tr>
           </thead>
-          <tbody id="products-table-body" class="divide-y divide-white/5">
-            <!-- Dynamic rows -->
+          <tbody id="products-table-body">
+            <!-- linhas via JS -->
           </tbody>
         </table>
       </div>
 
-      <!-- Spinner -->
-      <div id="table-spinner" class="flex justify-center items-center py-12">
-        <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-brand"></div>
+      <div id="table-spinner" class="spinner-container">
+        <div class="spinner"></div>
       </div>
 
-      <!-- Empty state inside table -->
-      <div id="table-empty" class="hidden text-center py-12 text-gray-500">
-        Nenhum produto cadastrado no banco.
-      </div>
-    </div>
+      <div id="table-empty" class="empty-state hidden">Nenhum produto cadastrado no banco.</div>
+    </section>
+
   </main>
 
-  <!-- FOOTER (modelo base Del Company) -->
-  <footer class="border-t border-white/5 py-6">
-    <div class="text-center text-gray-500 text-sm">
-      <p>&copy 2025 - Del Company | Todos os direitos reservados</p>
-      <div class="flex justify-center space-x-4 mt-2">
-        <a href="https://www.instagram.com/elielbrnrd/" target="_blank" rel="noopener" class="hover:text-brand">📷
-          Instagram</a>
-        <a href="https://wa.me/5548991013184" target="_blank" rel="noopener" class="hover:text-brand">💬 Whatsapp</a>
-        <a href="https://github.com/eli-bernardi" target="_blank" rel="noopener" class="hover:text-brand">🐙 GitHub</a>
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="footer-content">
+      <p>&copy; 2025 - Del Company | Todos os direitos reservados</p>
+      <div class="footer-links">
+        <a href="https://www.instagram.com/elielbrnrd/" target="_blank" rel="noopener">📷 Instagram</a>
+        <a href="https://wa.me/5548991013184" target="_blank" rel="noopener">💬 Whatsapp</a>
+        <a href="https://github.com/eli-bernardi" target="_blank" rel="noopener">🐙 GitHub</a>
       </div>
     </div>
   </footer>
