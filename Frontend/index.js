@@ -24,7 +24,6 @@ if (menuToggle && menu) {
         menu.classList.toggle('hidden');
     });
 
-    // Fecha o menu ao clicar em link (mobile)
     menu.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', () => {
             if (window.innerWidth < 768) {
@@ -84,33 +83,34 @@ function renderProducts(products) {
     productsGrid.innerHTML = '';
 
     products.forEach(product => {
-        const price = parseFloat(product['Preço'] || 0).toFixed(2);
-        const discount = parseFloat(product['Percentual de desconto'] || 0).toFixed(1);
-        const stock = parseInt(product.Quantidade || 0);
+        // Campos do backend: nome, descricao, preco, percentualDesconto, quantidade, marca, imagem
+        const price = parseFloat(product.preco || 0).toFixed(2);
+        const discount = parseFloat(product.percentualDesconto || 0).toFixed(1);
+        const stock = parseInt(product.quantidade || 0);
 
         const card = document.createElement('div');
         card.className = 'card-base card-hover card-glow flex flex-col';
         card.innerHTML = `
-      <div class="flex justify-between items-start mb-3">
-        <h3 class="font-bold text-white truncate">${product.Nome || 'Sem nome'}</h3>
-        <span class="text-xs bg-brand/20 text-brand px-2 py-0.5 rounded font-semibold">ID ${product.codProduto || '-'}</span>
-      </div>
-      <p class="text-gray-400 text-xs mb-4 line-clamp-2">${product.Descrição || 'Sem descrição'}</p>
-      <div class="mt-auto space-y-1 text-sm">
-        <div class="flex justify-between">
-          <span class="text-gray-500">Preço</span>
-          <span class="text-white font-semibold">R$ ${price}</span>
-        </div>
-        <div class="flex justify-between">
-          <span class="text-gray-500">Desconto</span>
-          <span class="text-white">${discount}%</span>
-        </div>
-        <div class="flex justify-between">
-          <span class="text-gray-500">Estoque</span>
-          <span class="${stock < 10 ? 'text-red-400' : 'text-green-400'} font-bold">${stock} unid.</span>
-        </div>
-      </div>
-    `;
+            <div class="flex justify-between items-start mb-3">
+                <h3 class="font-bold text-white truncate">${product.nome || 'Sem nome'}</h3>
+                <span class="text-xs bg-brand/20 text-brand px-2 py-0.5 rounded font-semibold">ID ${product.codProduto || '-'}</span>
+            </div>
+            <p class="text-gray-400 text-xs mb-4 line-clamp-2">${product.descricao || 'Sem descrição'}</p>
+            <div class="mt-auto space-y-1 text-sm">
+                <div class="flex justify-between">
+                    <span class="text-gray-500">Preço</span>
+                    <span class="text-white font-semibold">R$ ${price}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-500">Desconto</span>
+                    <span class="text-white">${discount}%</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-500">Estoque</span>
+                    <span class="${stock < 10 ? 'text-red-400' : 'text-green-400'} font-bold">${stock} unid.</span>
+                </div>
+            </div>
+        `;
         productsGrid.appendChild(card);
     });
 }
@@ -129,8 +129,9 @@ if (searchInput) {
         }
 
         const filtered = allProducts.filter(p =>
-            (p.Nome && p.Nome.toLowerCase().includes(term)) ||
-            (p.Descrição && p.Descrição.toLowerCase().includes(term))
+            (p.nome && p.nome.toLowerCase().includes(term)) ||
+            (p.descricao && p.descricao.toLowerCase().includes(term)) ||
+            (p.marca && p.marca.toLowerCase().includes(term))
         );
 
         if (filtered.length === 0) {
@@ -145,7 +146,7 @@ if (searchInput) {
 }
 
 // ============================================================
-// IMPORTAÇÃO DE DADOS
+// IMPORTAÇÃO DE DADOS (BULK LOAD)
 // ============================================================
 async function importData(endpoint, btn, successMsg) {
     btn.disabled = true;
@@ -157,7 +158,7 @@ async function importData(endpoint, btn, successMsg) {
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Falha na importação');
         showToast(data.message || successMsg);
-        if (endpoint === 'produtos/importar') {
+        if (endpoint === 'produtos/bulk') {
             await loadProducts(); // recarrega o dashboard
         }
     } catch (err) {
@@ -170,13 +171,13 @@ async function importData(endpoint, btn, successMsg) {
 
 if (btnLoadProducts) {
     btnLoadProducts.addEventListener('click', () => {
-        importData('produtos/importar', btnLoadProducts, 'Produtos importados com sucesso!');
+        importData('produtos/bulk', btnLoadProducts, 'Produtos importados com sucesso!');
     });
 }
 
 if (btnLoadUsers) {
     btnLoadUsers.addEventListener('click', () => {
-        importData('usuarios/importar', btnLoadUsers, 'Usuários importados com sucesso!');
+        importData('usuarios/bulk', btnLoadUsers, 'Usuários importados com sucesso!');
     });
 }
 
