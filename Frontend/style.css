@@ -23,27 +23,6 @@ body {
 }
 
 /* ============================================================
-   SCROLLBAR PERSONALIZADA
-   ============================================================ */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: #0a0a0a;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #2a2a2a;
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #d62828;
-}
-
-/* ============================================================
    TIPOGRAFIA
    ============================================================ */
 h1,
@@ -64,7 +43,7 @@ a {
 /* ============================================================
    LOGO GRADIENTE (estilo Del Company)
    ============================================================ */
-.logo-gradiente {
+.logo {
   font-size: 2rem;
   font-weight: 900;
   background: linear-gradient(135deg, #ff6b6b, #d62828);
@@ -75,14 +54,14 @@ a {
   transition: opacity 0.3s ease;
 }
 
-.logo-gradiente:hover {
+.logo:hover {
   opacity: 0.85;
 }
 
 /* ============================================================
    BOTÕES OUTLINE (borda vermelha, fundo transparente)
    ============================================================ */
-.btn-outline-brand {
+.botao-acao {
   background: transparent;
   color: #d62828;
   border: 1.5px solid #d62828;
@@ -99,22 +78,21 @@ a {
   background-color: transparent;
 }
 
-.btn-outline-brand:hover {
+.botao-acao:hover {
   background: #d62828;
   color: #ffffff;
   transform: translateY(-2px);
   box-shadow: 0 8px 24px rgba(214, 40, 40, 0.25);
 }
 
-.btn-outline-brand:disabled {
+.botao-acao:disabled {
   opacity: 0.5;
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
 }
 
-/* Variante pequena para mobile */
-.btn-outline-brand-sm {
+.botao-acao-pequeno {
   padding: 0.4rem 1rem;
   font-size: 0.8rem;
 }
@@ -122,267 +100,7 @@ a {
 /* ============================================================
    HEADER E NAVEGAÇÃO
    ============================================================ */
-header {
-  background: rgba(10, 10, 10, 0.9);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  padding: 0.75rem 2rem;
-  transition: padding 0.3s ease;
-}
-
-/* Menu desktop */
-nav a {
-  transition: color 0.2s ease;
-}
-
-nav a:hover {
-  color: #d62828;
-}
-
-/* Menu mobile (inicialmente oculto) */
-#menu {
-  background: rgba(10, 10, 10, 0.95);
-  backdrop-filter: blur(8px);
-  border-bottom: 2px solid rgba(214, 40, 40, 0.3);
-}
-
-#menu a {
-  padding: 0.75rem 1rem;
-  border-radius: 0.375rem;
-  transition: background 0.2s, color 0.2s;
-}
-
-#menu a:hover {
-  background: rgba(214, 40, 40, 0.1);
-  color: #d62828;
-}
-
-/* Botão hambúrguer (mobile) */
-.menu-btn-outline {
-  background: transparent;
-  border: 1.5px solid #d62828;
-  color: #d62828;
-  padding: 0.3rem 0.7rem;
-  border-radius: 0.375rem;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.menu-btn-outline:hover {
-  background: #d62828;
-  color: #ffffff;
-}
-
-/* ============================================================
-   SEÇÕES E CONTAINERS
-   ============================================================ */
-section {
-  padding: 4rem 1.5rem;
-  max-width: 1200px;
-  margin: 0 auto;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-/* Linha decorativa (igual Del Company) */
-.section-hr {
-  width: 100%;
-  max-width: 300px;
-  height: 3px;
-  background: linear-gradient(90deg, transparent, #d62828, transparent);
-  border: none;
-  margin: 1.5rem auto;
-  opacity: 0.6;
-  transition: all 0.3s ease;
-}
-
-.section-hr:hover {
-  opacity: 1;
-  max-width: 400px;
-}
-
-/* ============================================================
-   CARDS COM EFEITOS (hover, glow, elevação)
-   ============================================================ */
-.card-base {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 1rem;
-  padding: 1.25rem;
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1.2);
-  position: relative;
-  overflow: hidden;
-}
-
-/* Efeito de brilho (gradiente que desliza) */
-.card-glow::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(214, 40, 40, 0.06), transparent);
-  transition: left 0.6s ease;
-  pointer-events: none;
-}
-
-.card-glow:hover::before {
-  left: 100%;
-}
-
-/* Elevação ao hover */
-.card-hover:hover {
-  transform: translateY(-6px);
-  border-color: rgba(214, 40, 40, 0.35);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
-}
-
-/* Combinação dos dois */
-.card-base.card-hover.card-glow {
-  background: rgba(255, 255, 255, 0.03);
-}
-
-/* ============================================================
-   ANIMAÇÃO DE REVELAÇÃO (Intersection Observer)
-   ============================================================ */
-.reveal {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.8s ease, transform 0.8s ease;
-}
-
-.reveal.active {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* ============================================================
-   GLASSMORPHISM (opcional)
-   ============================================================ */
-.glass-panel {
-  background: rgba(26, 26, 26, 0.45);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 1rem;
-  padding: 1.5rem;
-}
-
-.glass-panel-heavy {
-  background: rgba(18, 18, 18, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 1rem;
-  padding: 1.5rem;
-}
-
-/* ============================================================
-   RODAPÉ
-   ============================================================ */
-footer {
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-  padding: 2rem 1.5rem;
-  text-align: center;
-  color: #666;
-  font-size: 0.9rem;
-}
-
-footer a {
-  color: #888;
-  transition: color 0.3s ease;
-}
-
-footer a:hover {
-  color: #d62828;
-}
-
-/* ============================================================
-   UTILITÁRIOS
-   ============================================================ */
-.text-brand {
-  color: #d62828;
-}
-
-.bg-brand\/10 {
-  background: rgba(214, 40, 40, 0.1);
-}
-
-.border-brand\/30 {
-  border-color: rgba(214, 40, 40, 0.3);
-}
-
-.border-brand\/50 {
-  border-color: rgba(214, 40, 40, 0.5);
-}
-
-/* Esconder elementos (usado pelo menu mobile) */
-.hidden {
-  display: none !important;
-}
-
-/* Flex utilities (para menu mobile) */
-.flex {
-  display: flex;
-}
-
-.flex-col {
-  flex-direction: column;
-}
-
-/* 
-/* ============================================================
-   RESPONSIVIDADE
-   ============================================================ */
-@media (max-width: 768px) {
-  header {
-    padding: 0.75rem 1rem;
-  }
-
-  .logo-gradiente {
-    font-size: 1.5rem;
-  }
-
-  section {
-    padding: 2.5rem 1rem;
-  }
-
-  .btn-outline-brand {
-    padding: 0.5rem 1rem;
-    font-size: 0.85rem;
-    width: 100%;
-  }
-
-  #menu {
-    border-radius: 0 0 0.75rem 0.75rem;
-    padding: 0.5rem 1rem;
-  }
-}
-
-@media (min-width: 769px) {
-  #menu {
-    background: transparent !important;
-    backdrop-filter: none !important;
-    border-bottom: none !important;
-    padding: 0 !important;
-    position: static !important;
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: center !important;
-    gap: 1.5rem;
-  }
-}
-
-/* ============================================================
-   CLASSES ESPECÍFICAS PARA A HOME (sem Tailwind)
-   ============================================================ */
-
-/* Header */
-.header-principal {
+.cabecalho {
   position: fixed;
   top: 0;
   left: 0;
@@ -400,13 +118,12 @@ footer a:hover {
 }
 
 @media (max-width: 768px) {
-  .header-principal {
+  .cabecalho {
     padding: 0.75rem 1rem;
   }
 }
 
-/* Navegação */
-.nav-principal {
+.navegacao {
   display: none;
   flex-direction: column;
   position: absolute;
@@ -421,7 +138,7 @@ footer a:hover {
   z-index: 50;
 }
 
-.nav-principal a {
+.navegacao a {
   display: block;
   padding: 0.75rem 1rem;
   border-radius: 0.375rem;
@@ -431,18 +148,18 @@ footer a:hover {
   transition: background 0.2s, color 0.2s;
 }
 
-.nav-principal a:hover {
+.navegacao a:hover {
   background: rgba(214, 40, 40, 0.1);
   color: #d62828;
 }
 
-.nav-principal a.ativo {
+.navegacao a.ativo {
   color: #d62828;
   font-weight: 600;
 }
 
 @media (min-width: 769px) {
-  .nav-principal {
+  .navegacao {
     display: flex !important;
     flex-direction: row !important;
     align-items: center !important;
@@ -456,17 +173,207 @@ footer a:hover {
     border-radius: 0 !important;
   }
 
-  .nav-principal a {
+  .navegacao a {
     padding: 0.5rem 0;
   }
 }
 
-.nav-principal.open {
+.navegacao.aberto {
   display: flex;
 }
 
-/* Main */
-.main-content {
+/* ============================================================
+   SEÇÕES E CONTAINERS
+   ============================================================ */
+section {
+  padding: 4rem 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Linha decorativa (igual Del Company) */
+.divisoria {
+  width: 100%;
+  max-width: 300px;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #d62828, transparent);
+  border: none;
+  margin: 1.5rem auto;
+  opacity: 0.6;
+  transition: all 0.3s ease;
+}
+
+.divisoria:hover {
+  opacity: 1;
+  max-width: 400px;
+}
+
+/* ============================================================
+   CARDS COM EFEITOS (hover, glow, elevação)
+   ============================================================ */
+.cartao-base {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 1rem;
+  padding: 1.25rem;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1.2);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Efeito de brilho (gradiente que desliza) */
+.cartao-brilho::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(214, 40, 40, 0.06), transparent);
+  transition: left 0.6s ease;
+  pointer-events: none;
+}
+
+.cartao-brilho:hover::before {
+  left: 100%;
+}
+
+/* Elevação ao hover */
+.cartao-elevacao:hover {
+  transform: translateY(-6px);
+  border-color: rgba(214, 40, 40, 0.35);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* Combinação dos dois */
+.cartao-base.cartao-elevacao.cartao-brilho {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* ============================================================
+   ANIMAÇÃO DE REVELAÇÃO (Intersection Observer)
+   ============================================================ */
+.revelar {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.revelar.ativo {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ============================================================
+   GLASSMORPHISM (opcional)
+   ============================================================ */
+.painel-vidro {
+  background: rgba(26, 26, 26, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 1rem;
+  padding: 1.5rem;
+}
+
+.painel-vidro-pesado {
+  background: rgba(18, 18, 18, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1rem;
+  padding: 1.5rem;
+}
+
+/* ============================================================
+   RODAPÉ
+   ============================================================ */
+.rodape {
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 2rem 1.5rem;
+  text-align: center;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.rodape-conteudo {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .rodape-conteudo {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+.rodape-links {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.rodape-links a {
+  color: #888;
+  transition: color 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.rodape-links a:hover {
+  color: #d62828;
+}
+
+/* ============================================================
+   UTILITÁRIOS
+   ============================================================ */
+.texto-marca {
+  color: #d62828;
+}
+
+.fundo-marca\/10 {
+  background: rgba(214, 40, 40, 0.1);
+}
+
+.borda-marca\/30 {
+  border-color: rgba(214, 40, 40, 0.3);
+}
+
+.borda-marca\/50 {
+  border-color: rgba(214, 40, 40, 0.5);
+}
+
+/* Esconder elementos (usado pelo menu mobile) */
+.oculto {
+  display: none !important;
+}
+
+.hidden {
+  /* fallback para compatibilidade */
+  display: none !important;
+}
+
+/* Flex utilities (para menu mobile) */
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+/* ============================================================
+   MAIN CONTENT
+   ============================================================ */
+.conteudo-principal {
   padding-top: 6rem;
   padding-left: 1.5rem;
   padding-right: 1.5rem;
@@ -476,43 +383,53 @@ footer a:hover {
 }
 
 @media (min-width: 768px) {
-  .main-content {
+  .conteudo-principal {
     padding-left: 2rem;
     padding-right: 2rem;
   }
 }
 
-/* Hero */
-.hero-section {
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero {
   text-align: center;
   margin: 3rem 0;
 }
 
-.hero-title {
+.hero-titulo {
   font-size: 3rem;
   font-weight: 900;
   margin-bottom: 0.5rem;
 }
 
 @media (min-width: 768px) {
-  .hero-title {
+  .hero-titulo {
     font-size: 3.75rem;
   }
 }
 
-.hero-subtitle {
+.hero-subtitulo {
   color: #9ca3af;
   font-size: 1.125rem;
   max-width: 42rem;
   margin: 0 auto;
 }
 
-/* Painel de Carga */
-.carga-panel {
+/* ============================================================
+   PAINEL DE CARGA
+   ============================================================ */
+.painel-carga {
   margin-bottom: 3rem;
+  background: rgba(26, 26, 26, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 1rem;
+  padding: 1.5rem;
 }
 
-.panel-title {
+.painel-titulo {
   font-size: 1.25rem;
   font-weight: 700;
   display: flex;
@@ -521,13 +438,13 @@ footer a:hover {
   margin-bottom: 1rem;
 }
 
-.panel-desc {
+.painel-descricao {
   color: #9ca3af;
   font-size: 0.875rem;
   margin-bottom: 1.5rem;
 }
 
-.destaque-code {
+.destaque {
   color: #d62828;
   font-weight: 700;
   font-family: monospace;
@@ -536,19 +453,19 @@ footer a:hover {
   border-radius: 0.25rem;
 }
 
-.carga-grid {
+.grade-carga {
   display: grid;
   grid-template-columns: 1fr;
   gap: 1rem;
 }
 
 @media (min-width: 640px) {
-  .carga-grid {
+  .grade-carga {
     grid-template-columns: 1fr 1fr;
   }
 }
 
-.carga-card {
+.cartao-carga {
   background: rgba(255, 255, 255, 0.05);
   padding: 1rem;
   border-radius: 0.75rem;
@@ -558,24 +475,26 @@ footer a:hover {
   justify-content: space-between;
 }
 
-.carga-card-title {
+.cartao-titulo {
   font-weight: 700;
   color: #fff;
   margin-bottom: 0.5rem;
 }
 
-.carga-card-desc {
+.cartao-descricao {
   color: #9ca3af;
   font-size: 0.75rem;
   margin-bottom: 1rem;
 }
 
-/* Dashboard */
-.dashboard-section {
+/* ============================================================
+   DASHBOARD
+   ============================================================ */
+.dashboard {
   margin-top: 2rem;
 }
 
-.dashboard-header {
+.dashboard-cabecalho {
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -583,35 +502,35 @@ footer a:hover {
 }
 
 @media (min-width: 640px) {
-  .dashboard-header {
+  .dashboard-cabecalho {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
   }
 }
 
-.dashboard-title {
+.dashboard-titulo {
   font-size: 1.875rem;
   font-weight: 800;
   letter-spacing: -0.025em;
 }
 
-.dashboard-subtitle {
+.dashboard-subtitulo {
   color: #9ca3af;
   font-size: 0.875rem;
 }
 
-.dashboard-search {
+.dashboard-busca {
   width: 100%;
 }
 
 @media (min-width: 640px) {
-  .dashboard-search {
+  .dashboard-busca {
     width: auto;
   }
 }
 
-.search-input {
+.campo-busca {
   width: 100%;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -624,40 +543,42 @@ footer a:hover {
 }
 
 @media (min-width: 640px) {
-  .search-input {
+  .campo-busca {
     width: 16rem;
   }
 }
 
-.search-input:focus {
+.campo-busca:focus {
   border-color: #d62828;
 }
 
-.products-grid {
+.grade-produtos {
   display: grid;
   grid-template-columns: 1fr;
   gap: 1.5rem;
 }
 
 @media (min-width: 640px) {
-  .products-grid {
+  .grade-produtos {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (min-width: 768px) {
-  .products-grid {
+  .grade-produtos {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
 @media (min-width: 1024px) {
-  .products-grid {
+  .grade-produtos {
     grid-template-columns: repeat(4, 1fr);
   }
 }
 
-/* Spinner */
+/* ============================================================
+   SPINNER
+   ============================================================ */
 .spinner-container {
   display: flex;
   justify-content: center;
@@ -680,23 +601,27 @@ footer a:hover {
   }
 }
 
-/* Empty State */
-.empty-state {
+/* ============================================================
+   EMPTY STATE
+   ============================================================ */
+.estado-vazio {
   text-align: center;
   padding: 4rem 0;
   color: #6b7280;
 }
 
-.empty-state p {
+.estado-vazio p {
   margin-bottom: 0.5rem;
 }
 
-.empty-hint {
+.dica-vazio {
   font-size: 0.75rem;
   color: #4b5563;
 }
 
-/* Toast */
+/* ============================================================
+   TOAST
+   ============================================================ */
 .toast {
   margin-top: 1rem;
   padding: 0.75rem;
@@ -706,68 +631,66 @@ footer a:hover {
   text-align: center;
 }
 
-.toast.success {
+.toast.sucesso {
   background: rgba(34, 197, 94, 0.2);
   color: #4ade80;
   border: 1px solid rgba(34, 197, 94, 0.3);
 }
 
-.toast.error {
+.toast.erro {
   background: rgba(239, 68, 68, 0.2);
   color: #f87171;
   border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
-/* Utilitários extras */
-.w-full {
+/* ============================================================
+   UTILITÁRIOS ADICIONAIS (mantidos para compatibilidade)
+   ============================================================ */
+.largura-total {
   width: 100%;
 }
 
-.hidden {
-  display: none !important;
-}
-
-.text-brand {
+.texto-marca {
   color: #d62828;
 }
 
-.bg-brand\/20 {
+.fundo-marca\/20 {
   background: rgba(214, 40, 40, 0.2);
 }
 
-.text-red-400 {
+.texto-vermelho-400 {
   color: #f87171;
 }
 
-.text-green-400 {
+.texto-verde-400 {
   color: #4ade80;
 }
 
-.text-gray-400 {
+.texto-cinza-400 {
   color: #9ca3af;
 }
 
-.text-gray-500 {
+.texto-cinza-500 {
   color: #6b7280;
 }
 
-.text-white {
+.texto-branco {
   color: #ffffff;
 }
 
-.font-bold {
+.fonte-negrito {
   font-weight: 700;
 }
 
-.font-semibold {
+.fonte-semi-negrito {
   font-weight: 600;
 }
 
-.text-xs {
+.texto-xs {
   font-size: 0.75rem;
 }
 
-.text-sm {
+.texto-sm {
   font-size: 0.875rem;
 }
 
@@ -781,28 +704,27 @@ footer a:hover {
   padding-bottom: 0.125rem;
 }
 
-.rounded {
+.arredondado {
   border-radius: 0.25rem;
 }
 
-.line-clamp-2 {
+.linha-clamp-2 {
   display: -webkit-box;
-  /* -webkit-line-clamp: 2; */
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-.truncate {
+.truncar {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.justify-between {
+.justificar-entre {
   justify-content: space-between;
 }
 
-.items-start {
+.itens-inicio {
   align-items: flex-start;
 }
 
@@ -818,6 +740,48 @@ footer a:hover {
   margin-top: auto;
 }
 
-.space-y-1>*+* {
+.espaco-y-1>*+* {
   margin-top: 0.25rem;
+}
+
+/* ============================================================
+   RESPONSIVIDADE GERAL
+   ============================================================ */
+@media (max-width: 768px) {
+  .cabecalho {
+    padding: 0.75rem 1rem;
+  }
+
+  .logo {
+    font-size: 1.5rem;
+  }
+
+  section {
+    padding: 2.5rem 1rem;
+  }
+
+  .botao-acao {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    width: 100%;
+  }
+
+  .navegacao {
+    border-radius: 0 0 0.75rem 0.75rem;
+    padding: 0.5rem 1rem;
+  }
+}
+
+@media (min-width: 769px) {
+  .navegacao {
+    background: transparent !important;
+    backdrop-filter: none !important;
+    border-bottom: none !important;
+    padding: 0 !important;
+    position: static !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 1.5rem;
+  }
 }

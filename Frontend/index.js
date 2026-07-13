@@ -1,199 +1,195 @@
 // ============================================================
 // CONFIGURAÇÕES
 // ============================================================
-const API_BASE = 'http://localhost:3000';
+const API = 'http://localhost:3000';
 
 // ============================================================
-// DOM ELEMENTS
+// ELEMENTOS DO DOM
 // ============================================================
-const menuToggle = document.getElementById('menu-toggle');
+const botaoMenu = document.getElementById('menu-toggle');
 const menu = document.getElementById('menu');
 const toast = document.getElementById('toast-message');
-const searchInput = document.getElementById('search-input');
-const loadingSpinner = document.getElementById('loading-spinner');
-const productsGrid = document.getElementById('products-grid');
-const emptyState = document.getElementById('empty-state');
-const btnLoadProducts = document.getElementById('btn-load-products');
-const btnLoadUsers = document.getElementById('btn-load-users');
+const busca = document.getElementById('search-input');
+const spinner = document.getElementById('loading-spinner');
+const grade = document.getElementById('products-grid');
+const vazio = document.getElementById('empty-state');
+const btnProdutos = document.getElementById('btn-load-products');
+const btnUsuarios = document.getElementById('btn-load-users');
 
 // ============================================================
 // MENU MOBILE
 // ============================================================
-if (menuToggle && menu) {
-    menuToggle.addEventListener('click', () => {
-        menu.classList.toggle('open');
+if (botaoMenu && menu) {
+    botaoMenu.addEventListener('click', () => {
+        menu.classList.toggle('aberto');
     });
 
     menu.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', () => {
-            if (window.innerWidth < 768) {
-                menu.classList.remove('open');
-            }
+            if (window.innerWidth < 768) menu.classList.remove('aberto');
         });
     });
 }
 
 // ============================================================
-// TOAST
+// TOAST (notificação)
 // ============================================================
-function showToast(message, isError = false) {
+function mostrarToast(mensagem, erro = false) {
     if (!toast) return;
-    toast.textContent = message;
-    toast.className = `toast ${isError ? 'error' : 'success'}`;
-    toast.classList.remove('hidden');
+    toast.textContent = mensagem;
+    toast.className = `toast ${erro ? 'erro' : 'sucesso'}`;
+    toast.classList.remove('oculto');
     clearTimeout(toast._timeout);
-    toast._timeout = setTimeout(() => toast.classList.add('hidden'), 5000);
+    toast._timeout = setTimeout(() => toast.classList.add('oculto'), 5000);
 }
 
 // ============================================================
-// DASHBOARD
+// DASHBOARD – produtos
 // ============================================================
-let allProducts = [];
+let todosProdutos = [];
 
-async function loadProducts() {
+async function carregarProdutos() {
     try {
-        loadingSpinner.classList.remove('hidden');
-        productsGrid.classList.add('hidden');
-        emptyState.classList.add('hidden');
+        spinner.classList.remove('oculto');
+        grade.classList.add('oculto');
+        vazio.classList.add('oculto');
 
-        const res = await fetch(`${API_BASE}/produtos`);
-        if (!res.ok) throw new Error('Erro ao buscar produtos');
-        const data = await res.json();
-        allProducts = data;
+        const resp = await fetch(`${API}/produtos`);
+        if (!resp.ok) throw new Error('Erro ao buscar produtos');
+        const dados = await resp.json();
+        todosProdutos = dados;
 
-        loadingSpinner.classList.add('hidden');
+        spinner.classList.add('oculto');
 
-        if (data.length === 0) {
-            emptyState.classList.remove('hidden');
+        if (dados.length === 0) {
+            vazio.classList.remove('oculto');
             return;
         }
 
-        renderProducts(data);
-        productsGrid.classList.remove('hidden');
-    } catch (error) {
-        loadingSpinner.classList.add('hidden');
-        showToast('Erro ao carregar produtos: ' + error.message, true);
+        renderizarProdutos(dados);
+        grade.classList.remove('oculto');
+    } catch (erro) {
+        spinner.classList.add('oculto');
+        mostrarToast('Erro ao carregar produtos: ' + erro.message, true);
     }
 }
 
-function renderProducts(products) {
-    productsGrid.innerHTML = '';
+function renderizarProdutos(produtos) {
+    grade.innerHTML = '';
 
-    products.forEach(product => {
-        const price = parseFloat(product.preco || 0).toFixed(2);
-        const discount = parseFloat(product.percentualDesconto || 0).toFixed(1);
-        const stock = parseInt(product.quantidade || 0);
+    produtos.forEach(prod => {
+        const preco = parseFloat(prod.preco || 0).toFixed(2);
+        const desconto = parseFloat(prod.percentualDesconto || 0).toFixed(1);
+        const estoque = parseInt(prod.quantidade || 0);
 
         const card = document.createElement('div');
-        card.className = 'card-base card-hover card-glow flex flex-col';
+        card.className = 'cartao-base cartao-elevacao cartao-brilho flex flex-col';
         card.innerHTML = `
-      <div class="flex justify-between items-start mb-3">
-        <h3 class="font-bold text-white truncate">${product.nome || 'Sem nome'}</h3>
-        <span class="text-xs bg-brand/20 text-brand px-2 py-0.5 rounded font-semibold">ID ${product.codProduto || '-'}</span>
+      <div class="flex justificar-entre itens-inicio mb-3">
+        <h3 class="fonte-negrito texto-branco truncar">${prod.nome || 'Sem nome'}</h3>
+        <span class="texto-xs fundo-marca/20 texto-marca px-2 py-0.5 arredondado fonte-semi-negrito">ID ${prod.codProduto || '-'}</span>
       </div>
-      <p class="text-gray-400 text-xs mb-4 line-clamp-2">${product.descricao || 'Sem descrição'}</p>
-      <div class="mt-auto space-y-1 text-sm">
-        <div class="flex justify-between">
-          <span class="text-gray-400">Preço</span>
-          <span class="text-white font-semibold">R$ ${price}</span>
+      <p class="texto-cinza-400 texto-xs mb-4 linha-clamp-2">${prod.descricao || 'Sem descrição'}</p>
+      <div class="mt-auto espaco-y-1 texto-sm">
+        <div class="flex justificar-entre">
+          <span class="texto-cinza-400">Preço</span>
+          <span class="texto-branco fonte-semi-negrito">R$ ${preco}</span>
         </div>
-        <div class="flex justify-between">
-          <span class="text-gray-400">Desconto</span>
-          <span class="text-white">${discount}%</span>
+        <div class="flex justificar-entre">
+          <span class="texto-cinza-400">Desconto</span>
+          <span class="texto-branco">${desconto}%</span>
         </div>
-        <div class="flex justify-between">
-          <span class="text-gray-400">Estoque</span>
-          <span class="${stock < 10 ? 'text-red-400' : 'text-green-400'} font-bold">${stock} unid.</span>
+        <div class="flex justificar-entre">
+          <span class="texto-cinza-400">Estoque</span>
+          <span class="${estoque < 10 ? 'texto-vermelho-400' : 'texto-verde-400'} fonte-negrito">${estoque} unid.</span>
         </div>
       </div>
     `;
-        productsGrid.appendChild(card);
+        grade.appendChild(card);
     });
 }
 
 // ============================================================
-// BUSCA
+// BUSCA DE PRODUTOS
 // ============================================================
-if (searchInput) {
-    searchInput.addEventListener('input', (e) => {
-        const term = e.target.value.toLowerCase().trim();
-        if (!term) {
-            renderProducts(allProducts);
-            productsGrid.classList.remove('hidden');
-            emptyState.classList.add('hidden');
+if (busca) {
+    busca.addEventListener('input', (e) => {
+        const termo = e.target.value.toLowerCase().trim();
+
+        if (!termo) {
+            renderizarProdutos(todosProdutos);
+            grade.classList.remove('oculto');
+            vazio.classList.add('oculto');
             return;
         }
 
-        const filtered = allProducts.filter(p =>
-            (p.nome && p.nome.toLowerCase().includes(term)) ||
-            (p.descricao && p.descricao.toLowerCase().includes(term)) ||
-            (p.marca && p.marca.toLowerCase().includes(term))
+        const filtrados = todosProdutos.filter(p =>
+            (p.nome && p.nome.toLowerCase().includes(termo)) ||
+            (p.descricao && p.descricao.toLowerCase().includes(termo)) ||
+            (p.marca && p.marca.toLowerCase().includes(termo))
         );
 
-        if (filtered.length === 0) {
-            emptyState.classList.remove('hidden');
-            productsGrid.classList.add('hidden');
+        if (filtrados.length === 0) {
+            vazio.classList.remove('oculto');
+            grade.classList.add('oculto');
         } else {
-            emptyState.classList.add('hidden');
-            renderProducts(filtered);
-            productsGrid.classList.remove('hidden');
+            vazio.classList.add('oculto');
+            renderizarProdutos(filtrados);
+            grade.classList.remove('oculto');
         }
     });
 }
 
 // ============================================================
-// IMPORTAÇÃO EM LOTE
+// IMPORTAÇÃO EM LOTE (bulk)
 // ============================================================
-async function importData(endpoint, btn, successMsg) {
-    btn.disabled = true;
-    const originalText = btn.textContent;
-    btn.textContent = 'Carregando...';
+async function importar(endpoint, botao, mensagemSucesso) {
+    botao.disabled = true;
+    const textoOriginal = botao.textContent;
+    botao.textContent = 'Carregando...';
 
     try {
-        const res = await fetch(`${API_BASE}/${endpoint}`, { method: 'POST' });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || 'Falha na importação');
-        showToast(data.message || successMsg);
-        if (endpoint === 'produtos/bulk') {
-            await loadProducts();
-        }
-    } catch (err) {
-        showToast(err.message, true);
+        const resp = await fetch(`${API}/${endpoint}`, { method: 'POST' });
+        const dados = await resp.json();
+        if (!resp.ok) throw new Error(dados.error || 'Falha na importação');
+        mostrarToast(dados.message || mensagemSucesso);
+        if (endpoint === 'produtos/bulk') await carregarProdutos();
+    } catch (erro) {
+        mostrarToast(erro.message, true);
     } finally {
-        btn.disabled = false;
-        btn.textContent = originalText;
+        botao.disabled = false;
+        botao.textContent = textoOriginal;
     }
 }
 
-if (btnLoadProducts) {
-    btnLoadProducts.addEventListener('click', () => {
-        importData('produtos/bulk', btnLoadProducts, 'Produtos importados com sucesso!');
+if (btnProdutos) {
+    btnProdutos.addEventListener('click', () => {
+        importar('produtos/bulk', btnProdutos, 'Produtos importados com sucesso!');
     });
 }
 
-if (btnLoadUsers) {
-    btnLoadUsers.addEventListener('click', () => {
-        importData('usuarios/bulk', btnLoadUsers, 'Usuários importados com sucesso!');
+if (btnUsuarios) {
+    btnUsuarios.addEventListener('click', () => {
+        importar('usuarios/bulk', btnUsuarios, 'Usuários importados com sucesso!');
     });
 }
 
 // ============================================================
-// ANIMAÇÕES (REVEAL)
+// ANIMAÇÃO REVELAR E CARREGAMENTO INICIAL
 // ============================================================
 document.addEventListener('DOMContentLoaded', () => {
-    const reveals = document.querySelectorAll('.reveal');
-    const observer = new IntersectionObserver(
+    const elementos = document.querySelectorAll('.revelar');
+    const observador = new IntersectionObserver(
         (entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
+                    entry.target.classList.add('ativo');
                 }
             });
         },
         { threshold: 0.15, rootMargin: '0px 0px -50px 0px' }
     );
-    reveals.forEach(el => observer.observe(el));
+    elementos.forEach(el => observador.observe(el));
 
-    // Carrega os produtos
-    loadProducts();
+    carregarProdutos();
 });

@@ -16,10 +16,9 @@
 
 <body>
 
-  <header class="header-principal">
-    <a href="./index.html" class="logo-gradiente">Del Mercado</a>
-
-    <nav id="menu" class="nav-principal">
+  <header class="cabecalho">
+    <a href="./index.html" class="logo">Del Mercado</a>
+    <nav id="menu" class="navegacao">
       <a href="./index.html" class="ativo">Início</a>
       <a href="/Frontend/shop/html/produtos.html">Produtos</a>
       <a href="/Frontend/user/html/user.html">Usuários</a>
@@ -29,52 +28,50 @@
     </nav>
   </header>
 
-  <main class="main-content">
+  <main class="conteudo-principal">
 
-    <div class="hero-section reveal">
-      <h1 class="hero-title">Del Mercado</h1>
-      <p class="hero-subtitle">Sistema de Compras Interno para unificar operações de estoque, vendas e relatórios
+    <div class="hero">
+      <h1 class="hero-titulo">Del Mercado</h1>
+      <p class="hero-subtitulo">Sistema de Compras Interno para unificar operações de estoque, vendas e relatórios
         analíticos.</p>
-      <hr class="section-hr">
+      <hr class="divisoria">
     </div>
-    <section class="glass-panel carga-panel reveal">
-      <h2 class="panel-title">
-        Integração e Carga de Dados
-      </h2>
-      <p class="panel-desc">
-        Alimente as tabelas locais do banco de dados <code class="destaque-code">db_compras</code> consumindo APIs
-        externas.
+
+    <section class="painel-carga">
+      <h2 class="painel-titulo">Integração e Carga de Dados</h2>
+      <p class="painel-descricao">
+        Alimente as tabelas locais do banco de dados <code class="destaque">db_compras</code> consumindo APIs externas.
       </p>
 
-      <div class="carga-grid">
-        <div class="carga-card card-base card-hover">
+      <div class="grade-carga">
+        <div class="cartao-carga">
           <div>
-            <h3 class="carga-card-title">Importar Catálogo de Produtos</h3>
-            <p class="carga-card-desc">Consome a API DummyJSON (/products) e mapeia no banco local.</p>
+            <h3 class="cartao-titulo">Importar Catálogo de Produtos</h3>
+            <p class="cartao-descricao">Consome a API DummyJSON (/products) e mapeia no banco local.</p>
           </div>
-          <button id="btn-load-products" class="btn-outline-brand w-full">Carregar Produtos</button>
+          <button id="btn-load-products" class="botao-acao">Carregar Produtos</button>
         </div>
 
-        <div class="carga-card card-base card-hover">
+        <div class="cartao-carga">
           <div>
-            <h3 class="carga-card-title">Importar Usuários Demo</h3>
-            <p class="carga-card-desc">Consome a API DummyJSON (/users) e mapeia no banco local.</p>
+            <h3 class="cartao-titulo">Importar Usuários Demo</h3>
+            <p class="cartao-descricao">Consome a API DummyJSON (/users) e mapeia no banco local.</p>
           </div>
-          <button id="btn-load-users" class="btn-outline-brand w-full">Carregar Usuários</button>
+          <button id="btn-load-users" class="botao-acao">Carregar Usuários</button>
         </div>
       </div>
 
-      <div id="toast-message" class="toast hidden"></div>
+      <div id="toast-message" class="toast oculto"></div>
     </section>
 
-    <section class="dashboard-section reveal">
-      <div class="dashboard-header">
+    <section class="dashboard">
+      <div class="dashboard-cabecalho">
         <div>
-          <h2 class="dashboard-title">Dashboard de Produtos</h2>
-          <p class="dashboard-subtitle">Visualização do catálogo e nível de estoque atual.</p>
+          <h2 class="dashboard-titulo">Dashboard de Produtos</h2>
+          <p class="dashboard-subtitulo">Visualização do catálogo e nível de estoque atual.</p>
         </div>
-        <div class="dashboard-search">
-          <input type="text" id="search-input" class="search-input" placeholder="Buscar produto...">
+        <div class="dashboard-busca">
+          <input type="text" id="search-input" class="campo-busca" placeholder="Buscar produto...">
         </div>
       </div>
 
@@ -82,36 +79,31 @@
         <div class="spinner"></div>
       </div>
 
-      <div id="products-grid" class="products-grid hidden">
-      </div>
+      <div id="products-grid" class="grade-produtos oculto"></div>
 
-      <div id="empty-state" class="empty-state hidden">
+      <div id="empty-state" class="estado-vazio oculto">
         <p>Nenhum produto cadastrado no banco de dados.</p>
-        <p class="empty-hint">Use os botões de carga de dados acima ou vá em Produtos (CRUD) para adicionar manualmente.
+        <p class="dica-vazio">Use os botões de carga de dados acima ou vá em Produtos (CRUD) para adicionar manualmente.
         </p>
       </div>
     </section>
 
   </main>
-  <footer class="footer">
-    <div class="footer-content">
+
+  <footer class="rodape">
+    <div class="rodape-conteudo">
       <p>&copy; 2026 - Del Company | Todos os direitos reservados</p>
-      <div class="footer-links">
+      <div class="rodape-links">
         <a href="https://www.instagram.com/elielbrnrd/" target="_blank" rel="noopener"><i
-            class="fa-brands fa-instagram"></i> Instagram
-        </a>
-
-        <a href="https://wa.me/5548991013184" target="_blank" rel="noopener">
-          <i class="fa-brands fa-whatsapp"></i> Whatsapp
-        </a>
-
-        <a href="https://github.com/eli-bernardi" target="_blank" rel="noopener">
-          <i class="fa-brands fa-github"></i> GitHub
-        </a>
-
+            class="fa-brands fa-instagram"></i> Instagram</a>
+        <a href="https://wa.me/5548991013184" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i>
+          Whatsapp</a>
+        <a href="https://github.com/eli-bernardi" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i>
+          GitHub</a>
       </div>
     </div>
   </footer>
+
 </body>
 
 </html>
