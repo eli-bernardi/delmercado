@@ -1,22 +1,26 @@
-const { DataTypes } = require('sequelize');
-const { sequelize } = require('../db/conn');
+const { DataTypes } = require('sequelize')
+const db = require('../db/conn')
 
-// Read-only model mapping to the database view vw_volume_compras (or VwHistoricoSaida)
-const VwHistoricoSaida = sequelize.define('VwHistoricoSaida', {
-  nome: {
-    type: DataTypes.STRING,
-    primaryKey: true // Sequelize requires a primary key, so we treat product name/ID as PK
+const VwHistoricoSaidas = db.define('VwHistoricoSaidas', {
+  codMovimento: {
+    type: DataTypes.INTEGER,
+    primaryKey: true, // sequelize precisa da chave primária para o mapeamento
   },
-  quantidade_total_movimentada: {
-    type: DataTypes.INTEGER
+  nome_produto: {
+    type: DataTypes.STRING(40),
   },
-  valor_financeiro_movimentado: {
-    type: DataTypes.DECIMAL(15, 2)
+  categoria: {
+    type: DataTypes.STRING(40),
+  },
+  qtdeMov: {
+    type: DataTypes.INTEGER,
+  },
+  data: {
+    type: DataTypes.DATEONLY
   }
 }, {
-  tableName: 'vw_volume_compras', // maps to vw_volume_compras
   timestamps: false,
-  freezeTableName: true
-});
+  tableName: 'vw_historico_saidas'
+})
 
-module.exports = VwHistoricoSaida;
+module.exports = VwHistoricoSaidas
