@@ -104,7 +104,7 @@ const bulkLoad = async (req, res) => {
       preco: p.price,
       percentualDesconto: p.discountPercentage,
       quantidade: p.stock,
-      marca: p.brand,
+      marca: p.brand || 'Sem marca',
       imagem: p.thumbnail
     }));
     const result = await Produto.bulkCreate(productsToInsert, {

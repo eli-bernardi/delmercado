@@ -1,23 +1,25 @@
-const VwHistoricoSaidas = require('../models/VwHistoricoSaidas')
-const VwTotalCategoria = require('../models/VwTotalCategoria')
+const VwProdutosCriticos = require('../models/Vw_produtos_criticos')
+const VwVolumeCompras = require('../models/Vw_volume_compras')
 
 const listarPorCategorias = async (req, res) => {
       try {
-            const dados = await VwTotalCategoria.findAll()
+            const dados = await VwVolumeCompras.findAll({
+                  order: [['valor_financeiro_movimentado', 'DESC']]
+            })
             res.status(200).json(dados)
       } catch (err) {
-            console.error('Não foi possível listar por Categorias', err)
-            res.status(500).json({ message: 'Não foi possível listar por Categorias' })
+            console.error('Não foi possível listar por Volume de Compras', err)
+            res.status(500).json({ message: 'Não foi possível listar por Volume de Compras' })
       }
 }
 
 const listarHistoricoSaidas = async (req, res) => {
       try {
-            const dados = await VwHistoricoSaidas.findAll()
+            const dados = await VwProdutosCriticos.findAll()
             res.status(200).json(dados)
       } catch (err) {
-            console.error('Não foi possível listar o histórico das Saídas', err)
-            res.status(500).json({ message: 'Não foi possível listar o histórico das Saídas' })
+            console.error('Não foi possível listar os Produtos Críticos', err)
+            res.status(500).json({ message: 'Não foi possível listar os Produtos Críticos' })
       }
 }
 

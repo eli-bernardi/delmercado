@@ -4,7 +4,11 @@ const cadastrar = async (req, res) => {
   const valores = req.body
   console.log(valores)
 
-  if (!valores.nome || !valores.sobrenome || !valores.idade || !valores.email || !valores.telefone || !valores.endereço || !valores.cidade || !valores.estado) {
+  // Normaliza o campo endereco/endereço para bater com o model do banco
+  const endereco = valores.endereco || valores.endereço
+  valores.endereco = endereco
+
+  if (!valores.nome || !valores.sobrenome || !valores.idade || !valores.email || !valores.telefone || !valores.endereco || !valores.cidade || !valores.estado) {
     return res.status(400).json({ message: 'Todos os campos são obrigatórios!' })
   }
   try {
@@ -33,7 +37,7 @@ const buscarPorCod = async (req, res) => {
     if (!dados) {
       res.status(404).json({ message: 'Usuário não encontrado!' })
     } else {
-      res.status(200).json(dados)
+      res.status(200).json(dados) 
     }
   } catch (err) {
     console.error('Não foi possível encontrar o Usuário', err)
@@ -75,6 +79,11 @@ const excluir = async (req, res) => {
 const atualizar = async (req, res) => {
   const id = req.params.id
   const valores = req.body
+
+  // Normaliza o campo endereco
+  const endereco = valores.endereco || valores.endereço
+  valores.endereco = endereco
+
   try {
     let dados = await Usuario.findByPk(id)
     if (!dados) {
@@ -100,17 +109,17 @@ const bulkLoad = async (req, res) => {
     const data = await response.json()
     const usersToInsert = data.users.map(u => ({
       codUsuario: u.id,
-      Nome: u.firstName,
-      Sobrenome: u.lastName,
-      Idade: u.age,
-      'E-mail': u.email,
-      Telefone: u.phone,
-      Endereço: u.address ? u.address.address : '',
-      Cidade: u.address ? u.address.city : '',
-      Estado: u.address ? u.address.state : ''
+      nome: u.firstName,
+      sobrenome: u.lastName,
+      idade: u.age,
+      email: u.email,
+      telefone: u.phone,
+      endereco: u.address ? u.address.address : '',
+      cidade: u.address ? u.address.city : '',
+      estado: u.address ? u.address.state : ''
     }))
     const result = await Usuario.bulkCreate(usersToInsert, {
-      updateOnDuplicate: ['Nome', 'Sobrenome', 'Idade', 'E-mail', 'Telefone', 'Endereço', 'Cidade', 'Estado']
+      updateOnDuplicate: ['nome', 'sobrenome', 'idade', 'email', 'telefone', 'endereco', 'cidade', 'estado']
     })
     res.status(200).json({
       message: `${result.length} usuários carregados com sucesso em lote.`,

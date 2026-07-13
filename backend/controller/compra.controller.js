@@ -1,48 +1,56 @@
-const { sequelize } = require('../db/conn');
+const sequelize = require('../db/conn');
 const Compra = require('../models/Compra');
 const Produto = require('../models/Produto');
 const Usuario = require('../models/Usuario');
-const VwHistoricoSaida = require('../models/VwHistoricoSaida');
+const VwProdutosCriticos = require('../models/Vw_produtos_criticos');
+const VwVolumeCompras = require('../models/Vw_volume_compras');
 
 const cadastrar = async (req, res) => {
   const valores = req.body;
 
-  // Valida campos obrigatórios de acordo com o modelo
-  if (!valores.idUsuario || !valores.idProduto || !valores.tipo ||
-    !valores.qtdeMov || !valores.formaPagamento || !valores.statusCompra) {
+  // Normaliza os campos que o frontend envia
+  const idUsuario = valores.idUsuario || valores.codUsuario;
+  const idProduto = valores.idProduto || valores.codProduto;
+  const tipo = valores.tipo || valores.tipoMovimento;
+  const qtdeMov = valores.qtdeMov || valores.quantidadeMovimentada;
+  const formaPagamento = valores.formaPagamento;
+  const statusCompra = valores.statusCompra;
+
+  // Valida campos obrigatórios
+  if (!idUsuario || !idProduto || !tipo || !qtdeMov || !formaPagamento || !statusCompra) {
     return res.status(400).json({ message: 'Campos obrigatórios: idUsuario, idProduto, tipo, qtdeMov, formaPagamento, statusCompra.' });
   }
 
-  if (valores.qtdeMov <= 0) {
+  if (qtdeMov <= 0) {
     return res.status(400).json({ message: 'Quantidade movimentada deve ser maior que zero.' });
   }
 
   const transaction = await sequelize.transaction();
   try {
-    const usuario = await Usuario.findByPk(valores.idUsuario, { transaction });
+    const usuario = await Usuario.findByPk(idUsuario, { transaction });
     if (!usuario) {
       await transaction.rollback();
       return res.status(404).json({ message: 'Usuário não encontrado.' });
     }
 
-    const produto = await Produto.findByPk(valores.idProduto, { transaction });
+    const produto = await Produto.findByPk(idProduto, { transaction });
     if (!produto) {
       await transaction.rollback();
       return res.status(404).json({ message: 'Produto não encontrado.' });
     }
 
-    const precoUnitario = parseFloat(produto['Preço']);
-    const desconto = parseFloat(produto['Percentual de desconto']) || 0;
-    const precoFinal = (precoUnitario * (1 - desconto / 100)) * valores.qtdeMov;
+    const precoUnitario = parseFloat(produto.preco);
+    const desconto = parseFloat(produto.percentualDesconto) || 0;
+    const precoFinal = (precoUnitario * (1 - desconto / 100)) * qtdeMov;
 
-    if (valores.tipo === 'SAIDA') {
-      if (produto.Quantidade < valores.qtdeMov) {
+    if (tipo === 'SAIDA') {
+      if (produto.quantidade < qtdeMov) {
         await transaction.rollback();
         return res.status(400).json({ message: 'Saldo insuficiente em estoque.' });
       }
-      produto.Quantidade -= parseInt(valores.qtdeMov, 10);
-    } else if (valores.tipo === 'ENTRADA') {
-      produto.Quantidade += parseInt(valores.qtdeMov, 10);
+      produto.quantidade -= parseInt(qtdeMov, 10);
+    } else if (tipo === 'ENTRADA') {
+      produto.quantidade += parseInt(qtdeMov, 10);
     } else {
       await transaction.rollback();
       return res.status(400).json({ message: 'Tipo de movimento inválido. Use ENTRADA ou SAIDA.' });
@@ -51,20 +59,28 @@ const cadastrar = async (req, res) => {
     await produto.save({ transaction });
 
     const novaCompra = await Compra.create({
-      idUsuario: valores.idUsuario,
-      idProduto: valores.idProduto,
-      tipo: valores.tipo,
-      qtdeMov: valores.qtdeMov,
+      idUsuario: idUsuario,
+      idProduto: idProduto,
+      tipo: tipo,
+      qtdeMov: qtdeMov,
       precoUnit: precoUnitario,
       descAplicado: desconto,
       precoFinal,
-      formaPagamento: valores.formaPagamento,
-      statusCompra: valores.statusCompra,
+      formaPagamento: formaPagamento,
+      statusCompra: statusCompra,
       dataCompra: new Date()
     }, { transaction });
 
     await transaction.commit();
-    res.status(201).json({ message: 'Compra registrada com sucesso!', dados: novaCompra });
+
+    const retornoFormatado = {
+      ...novaCompra.toJSON(),
+      tipoMovimento: novaCompra.tipo,
+      quantidadeMovimentada: novaCompra.qtdeMov,
+      status: novaCompra.statusCompra
+    };
+
+    res.status(201).json({ message: 'Compra registrada com sucesso!', dados: retornoFormatado });
   } catch (err) {
     await transaction.rollback();
     console.error('Não foi possível registrar a compra', err);
@@ -76,12 +92,23 @@ const listar = async (req, res) => {
   try {
     const dados = await Compra.findAll({
       include: [
-        { model: Usuario, as: 'usuario', attributes: ['Nome', 'Sobrenome'] },
-        { model: Produto, as: 'produto', attributes: ['Nome'] }
+        { model: Usuario, as: 'usuario', attributes: ['nome', 'sobrenome'] },
+        { model: Produto, as: 'produto', attributes: ['nome'] }
       ],
       order: [['dataCompra', 'DESC']]
     });
-    res.status(200).json(dados);
+
+    const dadosFormatados = dados.map(compra => {
+      const c = compra.toJSON();
+      return {
+        ...c,
+        tipoMovimento: c.tipo,
+        quantidadeMovimentada: c.qtdeMov,
+        status: c.statusCompra
+      };
+    });
+
+    res.status(200).json(dadosFormatados);
   } catch (err) {
     console.error('Não foi possível listar as compras', err);
     res.status(500).json({ message: 'Não foi possível listar as compras' });
@@ -93,24 +120,30 @@ const buscarPorCod = async (req, res) => {
   try {
     const dados = await Compra.findByPk(id, {
       include: [
-        { model: Usuario, as: 'usuario', attributes: ['Nome', 'Sobrenome'] },
-        { model: Produto, as: 'produto', attributes: ['Nome'] }
+        { model: Usuario, as: 'usuario', attributes: ['nome', 'sobrenome'] },
+        { model: Produto, as: 'produto', attributes: ['nome'] }
       ]
     });
     if (!dados) {
       return res.status(404).json({ message: 'Compra não encontrada!' });
     }
-    res.status(200).json(dados);
+    const c = dados.toJSON();
+    const cFormatada = {
+      ...c,
+      tipoMovimento: c.tipo,
+      quantidadeMovimentada: c.qtdeMov,
+      status: c.statusCompra
+    };
+    res.status(200).json(cFormatada);
   } catch (err) {
     console.error('Não foi possível encontrar a compra', err);
     res.status(500).json({ message: 'Não foi possível encontrar a compra' });
   }
 };
 
-// Relatório de produtos com estoque crítico
 const relatorioProdutosCriticos = async (req, res) => {
   try {
-    const [results] = await sequelize.query('SELECT * FROM vw_produtos_criticos');
+    const results = await VwProdutosCriticos.findAll();
     res.status(200).json(results);
   } catch (err) {
     console.error('Erro ao buscar produtos críticos', err);
@@ -118,10 +151,9 @@ const relatorioProdutosCriticos = async (req, res) => {
   }
 };
 
-// Relatório de volume financeiro movimentado por produto
 const relatorioVolumeCompras = async (req, res) => {
   try {
-    const results = await VwHistoricoSaida.findAll({
+    const results = await VwVolumeCompras.findAll({
       order: [['valor_financeiro_movimentado', 'DESC']]
     });
     res.status(200).json(results);
@@ -131,21 +163,16 @@ const relatorioVolumeCompras = async (req, res) => {
   }
 };
 
-// Dados para gráficos (estoque crítico e top 5 financeiro)
 const relatorioGraficos = async (req, res) => {
   try {
-    const [estoqueCritico] = await sequelize.query(
-      'SELECT Nome as title, Quantidade as stock FROM produtos WHERE Quantidade < 10'
-    );
-
-    const volumeComprasTop5 = await VwHistoricoSaida.findAll({
+    const estoqueCritico = await VwProdutosCriticos.findAll();
+    const volumeCompras = await VwVolumeCompras.findAll({
       limit: 5,
       order: [['valor_financeiro_movimentado', 'DESC']]
     });
-
     res.status(200).json({
       estoqueCritico,
-      volumeCompras: volumeComprasTop5
+      volumeCompras
     });
   } catch (err) {
     console.error('Erro ao gerar dados para gráficos', err);

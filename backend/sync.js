@@ -1,44 +1,44 @@
 const conn = require('./db/conn')
-const { Usuario, Produto, Movimento } = require('./models/rel')
+const { Usuario, Produto, Compra } = require('./models/rel')
 
 async function syncDataBase(){
     try{
         await conn.sync({force: true})
         console.log('Tabelas sincronizadas')
 
-    // Injetar a criação da view vw_hostorico_saidas
-    const queryViewSaidas = `
-        CREATE OR REPLACE VIEW vw_historico_saidas AS
-        SELECT
-	        m.codMovimento,
-            p.nome AS nome_produto,
-            p.categoria,
-            m.qtdeMov,
-            m.data
-            FROM movimentos m 
-        INNER JOIN produtos p ON m.idProduto = p.codProduto
-        WHERE m.tipo = 'SAIDA'
-        ORDER BY m.data DESC;
-    `
-        await conn.query(queryViewSaidas)
-        console.log('histórico de saídas criado com sucesso!')
+        // Injetar a criação da view vw_produtos_criticos
+        const queryViewCriticos = `
+            CREATE OR REPLACE VIEW vw_produtos_criticos AS
+            SELECT
+                codProduto AS codigo_produto,
+                nome AS nome,
+                categoria AS categoria,
+                quantidade AS quantidade_atual
+            FROM produtos
+            WHERE quantidade < 10;
+        `
+        await conn.query(queryViewCriticos)
+        console.log('view vw_produtos_criticos criada com sucesso!')
 
-    const querView = `
-        CREATE OR REPLACE VIEW vw_total_por_categoria AS
-        SELECT
-	        categoria,
-            SUM(quantidade) AS total_pares,
-            SUM(quantidade * precoUnit) AS valor_total_financeiro
-        FROM produtos
-        GROUP BY categoria;
-    `
-        await conn.query(querView)
-        console.log('total por categoria criado com sucesso!')
+        // Injetar a criação da view vw_volume_compras
+        const queryViewVolume = `
+            CREATE OR REPLACE VIEW vw_volume_compras AS
+            SELECT
+                p.nome AS nome,
+                SUM(c.qtdeMov) AS quantidade_total_movimentada,
+                SUM(c.qtdeMov * c.precoUnit) AS valor_financeiro_movimentado
+            FROM compras c
+            INNER JOIN produtos p ON c.idProduto = p.codProduto
+            WHERE c.tipo = 'SAIDA'
+            GROUP BY p.codProduto, p.nome;
+        `
+        await conn.query(queryViewVolume)
+        console.log('view vw_volume_compras criada com sucesso!')
     }catch(err){
         console.error('Erro ao sincronizar as tabelas',err)
     }finally{
-       await conn.close()
-       console.log('Fechando a conexão com o banco de dados') 
+        await conn.close()
+        console.log('Fechando a conexão com o banco de dados') 
     }
 }
 
