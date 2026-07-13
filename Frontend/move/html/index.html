@@ -9,132 +9,131 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
-
-
   <script src="../js/main.js" defer></script>
   <script src="../js/lister_mov.js" defer></script>
   <script src="../js/register_mov.js" defer></script>
   <script src="../js/check_mov.js" defer></script>
   <script src="../js/update_mov.js" defer></script>
-
   <title>Del Mercado - Movimentação & Vendas</title>
 </head>
 
 <body>
-  <header class="header-principal">
-    <a href="/index.html" class="logo-gradiente">Del Mercado</a>
 
-    <button id="menu-toggle" class="menu-btn-outline" aria-label="Abrir menu">
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <header class="cabecalho">
+    <a href="/index.html" class="logo">Del Mercado</a>
+
+    <button id="menu-toggle" class="botao-menu" aria-label="Abrir menu">
+      <svg class="icone-menu" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
       </svg>
     </button>
 
-    <nav id="menu" class="nav-principal">
+    <nav id="menu" class="navegacao">
       <a href="/index.html">Início</a>
-      <a href="/Frontend/shop/html/produtos.html">Produtos</a>
-      <a href="/Frontend/user/html/user.html">Usuários</a>
-      <a href="/Frontend/move/html/index.html" class="ativo">Movimentações</a>
-      <a href="/Frontend/shop/html/relatorios.html">Relatórios</a>
-      <a href="/Frontend/shop/html/graficos.html">Gráficos</a>
+      <a href="/frontend/shop/html/produtos.html">Produtos</a>
+      <a href="/frontend/user/html/user.html">Usuários</a>
+      <a href="/frontend/move/html/index.html" class="ativo">Movimentações</a>
+      <a href="/frontend/shop/html/relatorios.html">Relatórios</a>
+      <a href="/frontend/shop/html/graficos.html">Gráficos</a>
     </nav>
   </header>
 
-  <main class="main-content">
-    <div class="page-header reveal">
-      <h1 class="page-title">Movimentação e Vendas</h1>
-      <p class="page-subtitle">Registre entradas (cargas no estoque) ou saídas (compras/vendas) e veja o histórico
+  <main class="conteudo-principal">
+    <div class="cabecalho-pagina revelar">
+      <h1 class="titulo-pagina">Movimentação e Vendas</h1>
+      <p class="subtitulo-pagina">Registre entradas (cargas no estoque) ou saídas (compras/vendas) e veja o histórico
         completo.</p>
     </div>
+
     <div id="move-toast" class="toast"></div>
 
-    <div class="movimentacao-grid">
+    <div class="grade-movimentacao">
 
-      <section class="glass-panel form-panel reveal">
-        <h2 class="form-title">
-          <span class="text-brand">📝</span> Registrar Movimentação
+      <!-- Formulário -->
+      <section class="painel-formulario revelar">
+        <h2 class="titulo-formulario">
+          <span class="marca">📝</span> Registrar Movimentação
         </h2>
 
         <form id="movement-form">
-          <div class="form-group">
-            <label class="form-label">Usuário / Comprador *</label>
-            <select id="move-usuario" class="form-select" required>
+          <div class="campo">
+            <label class="rotulo">Usuário / Comprador *</label>
+            <select id="move-usuario" class="selecao" required>
               <option value="">Selecione um usuário...</option>
             </select>
           </div>
 
-          <div class="form-group">
-            <label class="form-label">Produto *</label>
-            <select id="move-produto" class="form-select" required>
+          <div class="campo">
+            <label class="rotulo">Produto *</label>
+            <select id="move-produto" class="selecao" required>
               <option value="">Selecione um produto...</option>
             </select>
-            <span id="product-stock-hint" class="stock-hint"></span>
+            <span id="product-stock-hint" class="dica-estoque"></span>
           </div>
 
-          <div class="form-group">
-            <label class="form-label">Tipo de Movimento *</label>
-            <div class="radio-group">
-              <label class="radio-label">
+          <div class="campo">
+            <label class="rotulo">Tipo de Movimento *</label>
+            <div class="grupo-radio">
+              <label class="radio">
                 <input type="radio" name="tipoMovimento" value="SAIDA" checked>
-                <span class="text-saida">Saída (Venda)</span>
+                <span class="texto-saida">Saída (Venda)</span>
               </label>
-              <label class="radio-label">
+              <label class="radio">
                 <input type="radio" name="tipoMovimento" value="ENTRADA">
-                <span class="text-entrada">Entrada (Carga)</span>
+                <span class="texto-entrada">Entrada (Carga)</span>
               </label>
             </div>
           </div>
 
-          <div class="form-group">
-            <label class="form-label">Quantidade Movimentada *</label>
-            <input type="number" id="move-quantidade" class="form-input" min="1" required>
+          <div class="campo">
+            <label class="rotulo">Quantidade Movimentada *</label>
+            <input type="number" id="move-quantidade" class="entrada" min="1" required>
           </div>
 
-          <div class="form-group">
-            <label class="form-label">Forma de Pagamento *</label>
-            <select id="move-pagamento" class="form-select" required>
+          <div class="campo">
+            <label class="rotulo">Forma de Pagamento *</label>
+            <select id="move-pagamento" class="selecao" required>
               <option value="DEBITO">Cartão de Débito</option>
               <option value="CREDITO">Cartão de Crédito</option>
               <option value="DINHEIRO">Dinheiro</option>
             </select>
           </div>
 
-          <div class="form-group">
-            <label class="form-label">Status da Compra *</label>
-            <select id="move-status" class="form-select" required>
+          <div class="campo">
+            <label class="rotulo">Status da Compra *</label>
+            <select id="move-status" class="selecao" required>
               <option value="PAGA">PAGA</option>
               <option value="PENDENTE">PENDENTE</option>
             </select>
           </div>
 
-          <div class="preview-panel">
-            <div class="preview-item">
+          <div class="previa">
+            <div class="item-previa">
               <span>Preço unitário:</span>
-              <span id="preview-preco" class="value">-</span>
+              <span id="preview-preco" class="valor">-</span>
             </div>
-            <div class="preview-item">
+            <div class="item-previa">
               <span>Desconto aplicado:</span>
-              <span id="preview-desconto" class="value">-</span>
+              <span id="preview-desconto" class="valor">-</span>
             </div>
-            <div class="preview-total">
+            <div class="total-previa">
               <span class="label">Valor Final Estimado:</span>
-              <span id="preview-final" class="value">-</span>
+              <span id="preview-final" class="valor">-</span>
             </div>
           </div>
 
-          <button type="submit" class="btn-submit">
-            Registrar Movimentação
-          </button>
+          <button type="submit" class="botao-enviar">Registrar Movimentação</button>
         </form>
       </section>
 
-      <section class="glass-panel table-panel reveal">
-        <div class="table-header">
-          <span class="text-brand">📋</span> Histórico Geral de Movimentação
+      <!-- Tabela -->
+      <section class="painel-tabela revelar">
+        <div class="cabecalho-tabela">
+          <span class="marca">📋</span> Histórico Geral de Movimentação
         </div>
 
-        <div class="table-wrapper">
-          <table class="table">
+        <div class="envolucro-tabela">
+          <table class="tabela">
             <thead>
               <tr>
                 <th>Data</th>
@@ -147,17 +146,15 @@
                 <th>Status</th>
               </tr>
             </thead>
-            <tbody id="movements-table-body">
-
-            </tbody>
+            <tbody id="movements-table-body"></tbody>
           </table>
         </div>
 
-        <div id="table-spinner" class="spinner-container">
+        <div id="table-spinner" class="carregando">
           <div class="spinner"></div>
         </div>
 
-        <div id="table-empty" class="empty-state">
+        <div id="table-empty" class="vazio">
           Nenhuma movimentação de estoque registrada.
         </div>
       </section>
@@ -165,25 +162,20 @@
     </div>
   </main>
 
-  <footer class="footer">
-    <div class="footer-content">
+  <footer class="rodape">
+    <div class="conteudo-rodape">
       <p>&copy; 2026 - Del Company | Todos os direitos reservados</p>
-      <div class="footer-links">
+      <div class="links-rodape">
         <a href="https://www.instagram.com/elielbrnrd/" target="_blank" rel="noopener"><i
-            class="fa-brands fa-instagram"></i> Instagram
-        </a>
-
-        <a href="https://wa.me/5548991013184" target="_blank" rel="noopener">
-          <i class="fa-brands fa-whatsapp"></i> Whatsapp
-        </a>
-
-        <a href="https://github.com/eli-bernardi" target="_blank" rel="noopener">
-          <i class="fa-brands fa-github"></i> GitHub
-        </a>
-
+            class="fa-brands fa-instagram"></i> Instagram</a>
+        <a href="https://wa.me/5548991004282" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i>
+          Whatsapp</a>
+        <a href="https://github.com/eli-bernardi" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i>
+          GitHub</a>
       </div>
     </div>
   </footer>
+
 </body>
 
 </html>

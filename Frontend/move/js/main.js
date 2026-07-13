@@ -1,13 +1,15 @@
 // main.js
 const menuToggle = document.getElementById('menu-toggle');
 const menu = document.getElementById('menu');
+
 if (menuToggle && menu) {
       menuToggle.addEventListener('click', () => {
-            menu.classList.toggle('hidden');
+            menu.classList.toggle('aberto');
       });
+
       menu.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
-                  if (window.innerWidth < 768) menu.classList.add('hidden');
+                  if (window.innerWidth < 768) menu.classList.remove('aberto');
             });
       });
 }
@@ -18,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const observer = new IntersectionObserver(
             (entries) => {
                   entries.forEach(entry => {
-                        if (entry.isIntersecting) entry.target.classList.add('active');
+                        if (entry.isIntersecting) entry.target.classList.add('ativo');
                   });
             },
             { threshold: 0.15, rootMargin: '0px 0px -50px 0px' }
