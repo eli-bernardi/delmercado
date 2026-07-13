@@ -4,199 +4,188 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="../css/banco_dados.css">
+  <title>Del Mercado - Movimentação & Vendas</title>
+
+  <!-- FAVICON -->
   <link rel="shortcut icon" href="/img/dell.png" type="image/png">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            brand: '#d62828',
-            darkBg: '#0a0a0a',
-          }
-        }
-      }
-    }
-  </script>
-  <title>Del Company - Movimentação & Vendas</title>
+
+  <!-- FONTE -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
 </head>
 
-<body class="bg-[#0a0a0a] text-white">
+<body>
 
- 
-  <header
-    class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-8 py-4 bg-[#0a0a0a]/90 backdrop-blur-md shadow-md border-b border-white/5">
-    <a href="/index.html" class="text-logo text-2xl font-black tracking-wide">Del Mercado</a>
-    <nav class="hidden md:flex items-center space-x-6 text-sm font-medium">
-      <a href="/index.html" class="hover:text-brand transition-colors">Início</a>
-      <a href="/Frontend/shop/html/produtos.html" class="hover:text-brand transition-colors">Produtos (CRUD)</a>
-      <a href="/Frontend/user/html/user.html" class="hover:text-brand transition-colors">Usuários (CRUD)</a>
-      <a href="/Frontend/move/html/index.html" class="hover:text-brand transition-colors">Movimentações</a>
-      <a href="/Frontend/shop/html/relatorios.html" class="hover:text-brand transition-colors">Relatórios</a>
-      <a href="/Frontend/shop/html/graficos.html" class="text-brand transition-colors font-semibold">Gráficos</a>
-    </nav>
-    <button class="md:hidden text-white hover:text-brand transition-colors focus:outline-none">
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+  <!-- ===== HEADER ===== -->
+  <header class="header-principal">
+    <a href="/index.html" class="logo-gradiente">Del Mercado</a>
+
+    <button id="menu-toggle" class="menu-btn-outline" aria-label="Abrir menu">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
       </svg>
     </button>
+
+    <nav id="menu" class="nav-principal">
+      <a href="/index.html">Início</a>
+      <a href="/Frontend/shop/html/produtos.html">Produtos (CRUD)</a>
+      <a href="/Frontend/user/html/user.html">Usuários (CRUD)</a>
+      <a href="/Frontend/move/html/index.html" class="ativo">Movimentações</a>
+      <a href="/Frontend/shop/html/relatorios.html">Relatórios</a>
+      <a href="/Frontend/shop/html/graficos.html">Gráficos</a>
+    </nav>
   </header>
 
-  <!-- MAIN CONTENT -->
-  <main class="pt-24 px-6 max-w-7xl mx-auto pb-16">
-    <div class="my-8 text-center md:text-left">
-      <h1 class="text-3xl font-black text-white">Movimentação e Vendas</h1>
-      <p class="text-gray-400 text-sm mt-1">Registre entradas (cargas no estoque) ou saídas (compras/vendas) e veja o
-        histórico completo.</p>
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="main-content">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header reveal">
+      <h1 class="page-title">Movimentação e Vendas</h1>
+      <p class="page-subtitle">Registre entradas (cargas no estoque) ou saídas (compras/vendas) e veja o histórico
+        completo.</p>
     </div>
 
-    <!-- Toast message area -->
-    <div id="move-toast" class="hidden mb-6 p-3 rounded-lg text-sm font-semibold text-center"></div>
+    <!-- TOAST -->
+    <div id="move-toast" class="toast"></div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      <!-- Form Panel -->
-      <section class="lg:col-span-1 bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 h-fit">
-        <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+    <!-- GRID PRINCIPAL -->
+    <div class="movimentacao-grid">
+
+      <!-- FORMULÁRIO -->
+      <section class="glass-panel form-panel reveal">
+        <h2 class="form-title">
           <span class="text-brand">📝</span> Registrar Movimentação
         </h2>
 
-        <form id="movement-form" class="space-y-4">
-          <div>
-            <label class="block text-gray-400 text-xs font-semibold uppercase mb-1">Usuário / Comprador *</label>
-            <select id="move-usuario" required
-              class="w-full bg-neutral-900 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-brand text-sm">
+        <form id="movement-form">
+          <div class="form-group">
+            <label class="form-label">Usuário / Comprador *</label>
+            <select id="move-usuario" class="form-select" required>
               <option value="">Selecione um usuário...</option>
             </select>
           </div>
 
-          <div>
-            <label class="block text-gray-400 text-xs font-semibold uppercase mb-1">Produto *</label>
-            <select id="move-produto" required
-              class="w-full bg-neutral-900 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-brand text-sm">
+          <div class="form-group">
+            <label class="form-label">Produto *</label>
+            <select id="move-produto" class="form-select" required>
               <option value="">Selecione um produto...</option>
             </select>
-            <span id="product-stock-hint" class="text-xs text-gray-500 mt-1 block"></span>
+            <span id="product-stock-hint" class="stock-hint"></span>
           </div>
 
-          <div>
-            <label class="block text-gray-400 text-xs font-semibold uppercase mb-1">Tipo de Movimento *</label>
-            <div class="flex gap-4 mt-1">
-              <label class="inline-flex items-center text-sm cursor-pointer">
-                <input type="radio" name="tipoMovimento" value="SAIDA" checked
-                  class="text-brand focus:ring-brand bg-neutral-900 border-white/10">
-                <span class="ml-2 text-red-400 font-semibold uppercase">Saída (Venda)</span>
+          <div class="form-group">
+            <label class="form-label">Tipo de Movimento *</label>
+            <div class="radio-group">
+              <label class="radio-label">
+                <input type="radio" name="tipoMovimento" value="SAIDA" checked>
+                <span class="text-saida">Saída (Venda)</span>
               </label>
-              <label class="inline-flex items-center text-sm cursor-pointer">
-                <input type="radio" name="tipoMovimento" value="ENTRADA"
-                  class="text-brand focus:ring-brand bg-neutral-900 border-white/10">
-                <span class="ml-2 text-green-400 font-semibold uppercase">Entrada (Carga)</span>
+              <label class="radio-label">
+                <input type="radio" name="tipoMovimento" value="ENTRADA">
+                <span class="text-entrada">Entrada (Carga)</span>
               </label>
             </div>
           </div>
 
-          <div>
-            <label class="block text-gray-400 text-xs font-semibold uppercase mb-1">Quantidade Movimentada *</label>
-            <input type="number" id="move-quantidade" min="1" required
-              class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-brand text-sm">
+          <div class="form-group">
+            <label class="form-label">Quantidade Movimentada *</label>
+            <input type="number" id="move-quantidade" class="form-input" min="1" required>
           </div>
 
-          <div>
-            <label class="block text-gray-400 text-xs font-semibold uppercase mb-1">Forma de Pagamento *</label>
-            <select id="move-pagamento" required
-              class="w-full bg-neutral-900 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-brand text-sm">
+          <div class="form-group">
+            <label class="form-label">Forma de Pagamento *</label>
+            <select id="move-pagamento" class="form-select" required>
               <option value="DEBITO">Cartão de Débito</option>
               <option value="CREDITO">Cartão de Crédito</option>
               <option value="DINHEIRO">Dinheiro</option>
             </select>
           </div>
 
-          <div>
-            <label class="block text-gray-400 text-xs font-semibold uppercase mb-1">Status da Compra *</label>
-            <select id="move-status" required
-              class="w-full bg-neutral-900 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-brand text-sm">
+          <div class="form-group">
+            <label class="form-label">Status da Compra *</label>
+            <select id="move-status" class="form-select" required>
               <option value="PAGA">PAGA</option>
               <option value="PENDENTE">PENDENTE</option>
             </select>
           </div>
 
-          <!-- Calculated values preview -->
-          <div class="bg-white/5 p-4 rounded-xl border border-white/5 space-y-1.5 text-xs text-gray-400">
-            <div class="flex justify-between">
+          <!-- PREVIEW -->
+          <div class="preview-panel">
+            <div class="preview-item">
               <span>Preço unitário:</span>
-              <span id="preview-preco" class="text-white">-</span>
+              <span id="preview-preco" class="value">-</span>
             </div>
-            <div class="flex justify-between">
+            <div class="preview-item">
               <span>Desconto aplicado:</span>
-              <span id="preview-desconto" class="text-white">-</span>
+              <span id="preview-desconto" class="value">-</span>
             </div>
-            <div class="flex justify-between text-sm font-bold border-t border-white/5 pt-2">
-              <span class="text-gray-300">Valor Final Estimado:</span>
-              <span id="preview-final" class="text-brand">-</span>
+            <div class="preview-total">
+              <span class="label">Valor Final Estimado:</span>
+              <span id="preview-final" class="value">-</span>
             </div>
           </div>
 
-          <button type="submit"
-            class="w-full bg-brand hover:bg-[#a51d1d] text-white font-semibold py-2.5 px-4 rounded-lg transition-all duration-300">
+          <button type="submit" class="btn-submit">
             Registrar Movimentação
           </button>
         </form>
       </section>
 
-      <!-- History Table List -->
-      <div
-        class="lg:col-span-2 bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 flex flex-col justify-between">
-        <div>
-          <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
-            <span class="text-brand">📋</span> Histórico Geral de Movimentação
-          </h2>
-
-          <div class="overflow-x-auto">
-            <table class="min-w-full text-left text-xs">
-              <thead class="bg-white/5 border-b border-white/10 text-gray-400 font-bold uppercase tracking-wider">
-                <tr>
-                  <th class="px-4 py-3">Data</th>
-                  <th class="px-4 py-3">Movimento</th>
-                  <th class="px-4 py-3">Usuário</th>
-                  <th class="px-4 py-3">Produto</th>
-                  <th class="px-4 py-3">Qtd</th>
-                  <th class="px-4 py-3">Preço Final</th>
-                  <th class="px-4 py-3">Pagamento</th>
-                  <th class="px-4 py-3">Status</th>
-                </tr>
-              </thead>
-              <tbody id="movements-table-body" class="divide-y divide-white/5">
-                <!-- Dynamic rows -->
-              </tbody>
-            </table>
-          </div>
-
-          <div id="table-spinner" class="flex justify-center items-center py-12">
-            <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-brand"></div>
-          </div>
-
-          <div id="table-empty" class="hidden text-center py-12 text-gray-500">
-            Nenhuma movimentação de estoque registrada.
-          </div>
+      <!-- HISTÓRICO -->
+      <section class="glass-panel table-panel reveal">
+        <div class="table-header">
+          <span class="text-brand">📋</span> Histórico Geral de Movimentação
         </div>
-      </div>
+
+        <div class="table-wrapper">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>Movimento</th>
+                <th>Usuário</th>
+                <th>Produto</th>
+                <th>Qtd</th>
+                <th>Preço Final</th>
+                <th>Pagamento</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="movements-table-body">
+              <!-- Dynamic rows via JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <div id="table-spinner" class="spinner-container">
+          <div class="spinner"></div>
+        </div>
+
+        <div id="table-empty" class="empty-state">
+          Nenhuma movimentação de estoque registrada.
+        </div>
+      </section>
+
     </div>
   </main>
 
-  <!-- FOOTER -->
-  <footer class="border-t border-white/5 py-6">
-    <div class="text-center text-gray-500 text-sm">
-      <p>&copy 2025 - Del Company | Todos os direitos reservados</p>
-      <div class="flex justify-center space-x-4 mt-2">
-        <a href="https://www.instagram.com/elielbrnrd/" target="_blank" rel="noopener" class="hover:text-brand">📷
-          Instagram</a>
-        <a href="https://wa.me/5548991013184" target="_blank" rel="noopener" class="hover:text-brand">💬 Whatsapp</a>
-        <a href="https://github.com/eli-bernardi" target="_blank" rel="noopener" class="hover:text-brand">🐙 GitHub</a>
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="footer-content">
+      <p>&copy; 2025 - Del Company | Todos os direitos reservados</p>
+      <div class="footer-links">
+        <a href="https://www.instagram.com/elielbrnrd/" target="_blank" rel="noopener">📷 Instagram</a>
+        <a href="https://wa.me/5548991013184" target="_blank" rel="noopener">💬 Whatsapp</a>
+        <a href="https://github.com/eli-bernardi" target="_blank" rel="noopener">🐙 GitHub</a>
       </div>
     </div>
   </footer>
 
-  <script src="./movimentacao.js"></script>
+  <script src="../js/main.js" defer></script>
+  <script src="../js/movimentacao.js" defer></script>
 </body>
 
 </html>
