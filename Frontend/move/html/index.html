@@ -4,21 +4,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Del Mercado - Movimentação & Vendas</title>
-
-  <!-- FAVICON -->
   <link rel="shortcut icon" href="/img/dell.png" type="image/png">
-
-  <!-- FONTE -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
+
+
+  <script src="../js/main.js" defer></script>
+  <script src="../js/lister_mov.js" defer></script>
+  <script src="../js/register_mov.js" defer></script>
+  <script src="../js/check_mov.js" defer></script>
+  <script src="../js/update_mov.js" defer></script>
+
+  <title>Del Mercado - Movimentação & Vendas</title>
 </head>
 
 <body>
-
-  <!-- ===== HEADER ===== -->
   <header class="header-principal">
     <a href="/index.html" class="logo-gradiente">Del Mercado</a>
 
@@ -30,31 +32,24 @@
 
     <nav id="menu" class="nav-principal">
       <a href="/index.html">Início</a>
-      <a href="/Frontend/shop/html/produtos.html">Produtos (CRUD)</a>
-      <a href="/Frontend/user/html/user.html">Usuários (CRUD)</a>
+      <a href="/Frontend/shop/html/produtos.html">Produtos</a>
+      <a href="/Frontend/user/html/user.html">Usuários</a>
       <a href="/Frontend/move/html/index.html" class="ativo">Movimentações</a>
       <a href="/Frontend/shop/html/relatorios.html">Relatórios</a>
       <a href="/Frontend/shop/html/graficos.html">Gráficos</a>
     </nav>
   </header>
 
-  <!-- ===== MAIN CONTENT ===== -->
   <main class="main-content">
-
-    <!-- PAGE HEADER -->
     <div class="page-header reveal">
       <h1 class="page-title">Movimentação e Vendas</h1>
       <p class="page-subtitle">Registre entradas (cargas no estoque) ou saídas (compras/vendas) e veja o histórico
         completo.</p>
     </div>
-
-    <!-- TOAST -->
     <div id="move-toast" class="toast"></div>
 
-    <!-- GRID PRINCIPAL -->
     <div class="movimentacao-grid">
 
-      <!-- FORMULÁRIO -->
       <section class="glass-panel form-panel reveal">
         <h2 class="form-title">
           <span class="text-brand">📝</span> Registrar Movimentação
@@ -112,7 +107,6 @@
             </select>
           </div>
 
-          <!-- PREVIEW -->
           <div class="preview-panel">
             <div class="preview-item">
               <span>Preço unitário:</span>
@@ -134,7 +128,6 @@
         </form>
       </section>
 
-      <!-- HISTÓRICO -->
       <section class="glass-panel table-panel reveal">
         <div class="table-header">
           <span class="text-brand">📋</span> Histórico Geral de Movimentação
@@ -155,7 +148,7 @@
               </tr>
             </thead>
             <tbody id="movements-table-body">
-              <!-- Dynamic rows via JS -->
+
             </tbody>
           </table>
         </div>
@@ -172,20 +165,25 @@
     </div>
   </main>
 
-  <!-- ===== FOOTER ===== -->
   <footer class="footer">
     <div class="footer-content">
-      <p>&copy; 2025 - Del Company | Todos os direitos reservados</p>
+      <p>&copy; 2026 - Del Company | Todos os direitos reservados</p>
       <div class="footer-links">
-        <a href="https://www.instagram.com/elielbrnrd/" target="_blank" rel="noopener">📷 Instagram</a>
-        <a href="https://wa.me/5548991013184" target="_blank" rel="noopener">💬 Whatsapp</a>
-        <a href="https://github.com/eli-bernardi" target="_blank" rel="noopener">🐙 GitHub</a>
+        <a href="https://www.instagram.com/elielbrnrd/" target="_blank" rel="noopener"><i
+            class="fa-brands fa-instagram"></i> Instagram
+        </a>
+
+        <a href="https://wa.me/5548991013184" target="_blank" rel="noopener">
+          <i class="fa-brands fa-whatsapp"></i> Whatsapp
+        </a>
+
+        <a href="https://github.com/eli-bernardi" target="_blank" rel="noopener">
+          <i class="fa-brands fa-github"></i> GitHub
+        </a>
+
       </div>
     </div>
   </footer>
-
-  <script src="../js/main.js" defer></script>
-  <script src="../js/movimentacao.js" defer></script>
 </body>
 
 </html>

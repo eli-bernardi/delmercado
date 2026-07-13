@@ -5,19 +5,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Del Mercado - Produtos (CRUD)</title>
-
-  <!-- FAVICON -->
   <link rel="shortcut icon" href="/img/dell.png" type="image/png">
-
-  <!-- FONTE -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..800&display=swap" rel="stylesheet">
-
-  <!-- CSS PERSONALIZADO -->
   <link rel="stylesheet" href="../css/style.css">
-
-  <!-- JAVASCRIPT -->
   <script src="../js/main.js" defer></script>
   <script src="../js/product/produto_listar.js" defer></script>
   <script src="../js/product/produto_cadastrar.js" defer></script>
@@ -27,8 +19,6 @@
 </head>
 
 <body>
-
-  <!-- ===== HEADER ===== -->
   <header class="header-principal">
     <a href="/index.html" class="logo-gradiente">Del Mercado</a>
 
@@ -43,10 +33,7 @@
     </nav>
   </header>
 
-  <!-- ===== MAIN CONTENT ===== -->
   <main class="main-content">
-
-    <!-- TÍTULO E BOTÃO NOVO -->
     <div class="page-header reveal">
       <div>
         <h1 class="page-title">Gerenciamento de Produtos</h1>
@@ -57,10 +44,8 @@
       </button>
     </div>
 
-    <!-- TOAST -->
     <div id="crud-toast" class="toast hidden"></div>
 
-    <!-- FORMULÁRIO -->
     <section id="form-container" class="glass-panel form-panel hidden reveal">
       <div class="form-header">
         <h2 id="form-title" class="form-title">Cadastrar Novo Produto</h2>
@@ -117,7 +102,6 @@
       </form>
     </section>
 
-    <!-- TABELA DE PRODUTOS -->
     <section class="glass-panel table-panel reveal">
       <div class="table-wrapper">
         <table class="table">
@@ -134,7 +118,6 @@
             </tr>
           </thead>
           <tbody id="products-table-body">
-            <!-- linhas via JS -->
           </tbody>
         </table>
       </div>
@@ -148,14 +131,22 @@
 
   </main>
 
-  <!-- ===== FOOTER ===== -->
   <footer class="footer">
     <div class="footer-content">
-      <p>&copy; 2025 - Del Company | Todos os direitos reservados</p>
+      <p>&copy; 2026 - Del Company | Todos os direitos reservados</p>
       <div class="footer-links">
-        <a href="https://www.instagram.com/elielbrnrd/" target="_blank" rel="noopener">📷 Instagram</a>
-        <a href="https://wa.me/5548991013184" target="_blank" rel="noopener">💬 Whatsapp</a>
-        <a href="https://github.com/eli-bernardi" target="_blank" rel="noopener">🐙 GitHub</a>
+        <a href="https://www.instagram.com/elielbrnrd/" target="_blank" rel="noopener"><i
+            class="fa-brands fa-instagram"></i> Instagram
+        </a>
+
+        <a href="https://wa.me/5548991013184" target="_blank" rel="noopener">
+          <i class="fa-brands fa-whatsapp"></i> Whatsapp
+        </a>
+
+        <a href="https://github.com/eli-bernardi" target="_blank" rel="noopener">
+          <i class="fa-brands fa-github"></i> GitHub
+        </a>
+
       </div>
     </div>
   </footer>
