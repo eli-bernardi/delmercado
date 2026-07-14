@@ -6,46 +6,46 @@ btn_consultar.addEventListener('click', (e) => {
     e.preventDefault()
     const codProduto = document.getElementById('codProduto').value
     fetch(`http://localhost:3000/produtos/${codProduto}`)
-    .then(res => res.json())
-    .then(dados => {
-        if (!dados || dados.message) {
-            resposta.innerHTML = `<p>${dados.message || 'Produto não encontrado!'}</p>`
-            return
-        }
-        resposta.innerHTML = `
+        .then(res => res.json())
+        .then(dados => {
+            if (!dados || dados.message) {
+                resposta.innerHTML = `<p>${dados.message || 'Produto não encontrado!'}</p>`
+                return
+            }
+            resposta.innerHTML = `
             <table>
                 ${criarThead()}
                 ${criarTbody([dados])}
             </table>
         `
-    })
-    .catch((err) => {
-        console.error('Erro ao consultar', err)
-        resposta.innerHTML = '<p>Erro ao consultar o produto.</p>'
-    })
+        })
+        .catch((err) => {
+            console.error('Erro ao consultar', err)
+            resposta.innerHTML = '<p>Erro ao consultar o produto.</p>'
+        })
 })
 
 btn_consultar_nome.addEventListener('click', (e) => {
     e.preventDefault()
     const nome = document.getElementById('nome').value
     fetch(`http://localhost:3000/produtos/buscar/${nome}`)
-    .then(res => res.json())
-    .then(dados => {
-        if (!dados || dados.message) {
-            resposta.innerHTML = `<p>${dados.message || 'Produto não encontrado!'}</p>`
-            return
-        }
-        resposta.innerHTML = `
+        .then(res => res.json())
+        .then(dados => {
+            if (!dados || dados.message) {
+                resposta.innerHTML = `<p>${dados.message || 'Produto não encontrado!'}</p>`
+                return
+            }
+            resposta.innerHTML = `
             <table>
                 ${criarThead()}
                 ${criarTbody([dados])}
             </table>
         `
-    })
-    .catch((err) => {
-        console.error('Erro ao consultar por nome', err)
-        resposta.innerHTML = '<p>Erro ao consultar o produto.</p>'
-    })
+        })
+        .catch((err) => {
+            console.error('Erro ao consultar por nome', err)
+            resposta.innerHTML = '<p>Erro ao consultar o produto.</p>'
+        })
 })
 
 function criarTbody(dados) {

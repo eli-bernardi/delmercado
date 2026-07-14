@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Del Mercado - Gráficos Analíticos</title>
+
+  <link rel="shortcut icon" href="/img/dell.png" type="image/png">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..800&display=swap" rel="stylesheet">
+
+  <script src="../js/main.js" defer></script>
+  <script src="../js/grafico.js" defer></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+  <header class="cabecalho">
+    <a href="/index.html" class="logo">Del Mercado</a>
+
+    <nav id="menu" class="navegacao-principal">
+      <a href="/index.html">Início</a>
+      <a href="/frontend/shop/html/product.html">Produtos</a>
+      <a href="/frontend/user/html/user.html">Usuários</a>
+      <a href="/frontend/buy/html/buy.html">Compras</a>
+      <a href="/frontend/shop/html/reports.html">Relatórios</a>
+      <a href="/frontend/shop/html/grafic.html" class="ativo">Gráficos</a>
+    </nav>
+  </header>
+
+  <main class="conteudo-principal">
+
+    <div class="cabecalho-pagina revelar">
+      <div class="texto-centro">
+        <h1 class="titulo-pagina">Gráficos Analíticos</h1>
+        <p class="subtitulo-pagina">Visões gerenciais e dinâmicas alimentadas em tempo real pelas compras do estoque.
+        </p>
+        <hr class="section-hr">
+      </div>
+    </div>
+
+    <div id="graphics-toast" class="toast oculto"></div>
+
+    <div class="grid-2">
+
+      <div class="painel-vidro revelar">
+        <div class="cabecalho-grafico">
+          <h2 class="titulo-grafico">
+            <span class="texto-cor-marca">📊</span> Estoque Físico Crítico
+          </h2>
+          <p class="subtitulo-grafico">Saldo de produtos abaixo de 10 unidades. Eixo X: Produto, Eixo Y: Qtd.</p>
+        </div>
+        <div class="container-grafico">
+          <canvas id="chart-estoque-critico"></canvas>
+          <div id="chart-spinner-1" class="spinner-grafico"></div>
+          <div id="chart-empty-1" class="vazio-grafico oculto">Sem dados críticos de estoque.</div>
+        </div>
+      </div>
+
+      <div class="painel-vidro revelar">
+        <div class="cabecalho-grafico">
+          <h2 class="titulo-grafico">
+            <span class="texto-cor-marca">📈</span> Volume Financeiro de Compras (Top 5)
+          </h2>
+          <p class="subtitulo-grafico">Top 5 produtos com maior volume de capital em compras (saídas). Eixo X: Capital
+            (R$), Eixo Y: Produto.</p>
+        </div>
+        <div class="container-grafico">
+          <canvas id="chart-volume-compras"></canvas>
+          <div id="chart-spinner-2" class="spinner-grafico"></div>
+          <div id="chart-empty-2" class="vazio-grafico oculto">Nenhuma compra registrada.</div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="rodape">
+    <div class="conteudo-rodape">
+      <p>&copy; 2026 - Del Company | Todos os direitos reservados</p>
+      <div class="links-rodape">
+        <a href="https://www.instagram.com/elielbrnrd/" target="_blank" rel="noopener">
+          <i class="fa-brands fa-instagram"></i> Instagram
+        </a>
+        <a href="https://wa.me/5548991004282" target="_blank" rel="noopener">
+          <i class="fa-brands fa-whatsapp"></i> Whatsapp
+        </a>
+        <a href="https://github.com/eli-bernardi" target="_blank" rel="noopener">
+          <i class="fa-brands fa-github"></i> GitHub
+        </a>
+      </div>
+    </div>
+  </footer>
+
+
+</body>
+
+</html>

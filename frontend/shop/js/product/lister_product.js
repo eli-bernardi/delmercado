@@ -4,7 +4,7 @@ let btn_listar = document.getElementById('btn_listar')
 btn_listar.addEventListener('click', (e) => {
     e.preventDefault()
 
-    fetch('http://localhost:3000/usuarios')
+    fetch('http://localhost:3000/produtos')
         .then(res => res.json())
         .then(dados => {
             resposta.innerHTML = ''
@@ -17,7 +17,7 @@ btn_listar.addEventListener('click', (e) => {
         })
         .catch((err) => {
             console.error('Erro ao listar os dados', err)
-            resposta.innerHTML = '<p>Erro ao tentar listar os usuários.</p>'
+            resposta.innerHTML = '<p>Erro ao tentar listar os produtos.</p>'
         })
 })
 
@@ -26,15 +26,14 @@ function criarTbody(dados) {
     corpo += `<tbody>`
     dados.forEach(el => {
         corpo += `<tr>`
-        corpo += `<td>${el.codUsuario}</td>`
+        corpo += `<td>${el.codProduto}</td>`
+        corpo += `<td><img src="${el.imagem}" alt="${el.nome}" style="width:50px;height:50px;object-fit:cover;border-radius:8px;"></td>`
         corpo += `<td>${el.nome}</td>`
-        corpo += `<td>${el.sobrenome}</td>`
-        corpo += `<td>${el.idade}</td>`
-        corpo += `<td>${el.email}</td>`
-        corpo += `<td>${el.telefone}</td>`
-        corpo += `<td>${el.endereco}</td>`
-        corpo += `<td>${el.cidade}</td>`
-        corpo += `<td>${el.estado}</td>`
+        corpo += `<td>${el.marca}</td>`
+        corpo += `<td>${el.categoria}</td>`
+        corpo += `<td>R$ ${parseFloat(el.preco).toFixed(2)}</td>`
+        corpo += `<td>${el.percentualDesconto}%</td>`
+        corpo += `<td>${el.quantidade}</td>`
         corpo += `</tr>`
     })
     corpo += `</tbody>`
@@ -47,14 +46,13 @@ function criarThead() {
         <thead>
             <tr>
                 <th>Código</th>
+                <th>Imagem</th>
                 <th>Nome</th>
-                <th>Sobrenome</th>
-                <th>Idade</th>
-                <th>Email</th>
-                <th>Telefone</th>
-                <th>Endereço</th>
-                <th>Cidade</th>
-                <th>Estado</th>
+                <th>Marca</th>
+                <th>Categoria</th>
+                <th>Preço (R$)</th>
+                <th>Desconto (%)</th>
+                <th>Estoque</th>
             </tr>
         </thead>
     `

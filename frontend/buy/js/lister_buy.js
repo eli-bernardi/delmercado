@@ -14,7 +14,7 @@ async function listarCompras() {
 
     try {
         const res = await fetch(`${API_BASE_LIST}/compras`);
-        if (!res.ok) throw new Error('Erro ao carregar movimentações');
+        if (!res.ok) throw new Error('Erro ao carregar compras');
         const dados = await res.json();
 
         if (spinner) spinner.classList.add('oculto');
@@ -51,7 +51,7 @@ async function listarCompras() {
             tbody.appendChild(row);
         });
     } catch (err) {
-        console.error('Erro ao listar as movimentações', err);
+        console.error('Erro ao listar as compras', err);
         if (spinner) spinner.classList.add('oculto');
         if (emptyState) {
             emptyState.textContent = 'Erro ao carregar o histórico.';

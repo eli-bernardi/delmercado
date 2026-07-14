@@ -136,9 +136,9 @@ if (form) {
             });
 
             const data = await res.json();
-            if (!res.ok) throw new Error(data.message || 'Erro ao registrar movimentação.');
+            if (!res.ok) throw new Error(data.message || 'Erro ao registrar compra.');
 
-            showToast('Movimentação registrada com sucesso!');
+            showToast('Compra registrada com sucesso!');
             form.reset();
             atualizarPrevia();
             

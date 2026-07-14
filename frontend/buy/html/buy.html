@@ -12,7 +12,7 @@
   <script src="../js/main.js" defer></script>
   <script src="../js/lister_buy.js" defer></script>
   <script src="../js/register_buy.js" defer></script>
-  <title>Del Mercado - Movimentação & Vendas</title>
+  <title>Del Mercado - Compras & Vendas</title>
 </head>
 
 <body>
@@ -20,25 +20,19 @@
   <header class="cabecalho">
     <a href="/index.html" class="logo">Del Mercado</a>
 
-    <button id="menu-toggle" class="botao-menu" aria-label="Abrir menu">
-      <svg class="icone-menu" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
-      </svg>
-    </button>
-
     <nav id="menu" class="navegacao">
       <a href="/index.html">Início</a>
-      <a href="/frontend/shop/html/produtos.html">Produtos</a>
+      <a href="/frontend/shop/html/product.html">Produtos</a>
       <a href="/frontend/user/html/user.html">Usuários</a>
-      <a href="/frontend/buy/html/buy.html" class="ativo">Movimentações</a>
-      <a href="/frontend/shop/html/relatorios.html">Relatórios</a>
-      <a href="/frontend/shop/html/graficos.html">Gráficos</a>
+      <a href="/frontend/buy/html/buy.html" class="ativo">Compras</a>
+      <a href="/frontend/shop/html/reports.html">Relatórios</a>
+      <a href="/frontend/shop/html/grafic.html">Gráficos</a>
     </nav>
   </header>
 
   <main class="conteudo-principal">
     <div class="cabecalho-pagina revelar">
-      <h1 class="titulo-pagina">Movimentação e Vendas</h1>
+      <h1 class="titulo-pagina">Compras e Vendas</h1>
       <p class="subtitulo-pagina">Registre entradas (cargas no estoque) ou saídas (compras/vendas) e veja o histórico
         completo.</p>
     </div>
@@ -47,10 +41,9 @@
 
     <div class="grade-movimentacao">
 
-      <!-- Formulário -->
       <section class="painel-formulario revelar">
         <h2 class="titulo-formulario">
-          <span class="marca">📝</span> Registrar Movimentação
+          <span class="marca">📝</span> Registrar Compra
         </h2>
 
         <form id="movement-form">
@@ -70,7 +63,7 @@
           </div>
 
           <div class="campo">
-            <label class="rotulo">Tipo de Movimento *</label>
+            <label class="rotulo">Tipo da Compra *</label>
             <div class="grupo-radio">
               <label class="radio">
                 <input type="radio" name="tipoMovimento" value="SAIDA" checked>
@@ -84,7 +77,7 @@
           </div>
 
           <div class="campo">
-            <label class="rotulo">Quantidade Movimentada *</label>
+            <label class="rotulo">Quantidade *</label>
             <input type="number" id="move-quantidade" class="entrada" min="1" required>
           </div>
 
@@ -120,14 +113,13 @@
             </div>
           </div>
 
-          <button type="submit" class="botao-enviar">Registrar Movimentação</button>
+          <button type="submit" class="botao-enviar">Registrar Compra</button>
         </form>
       </section>
 
-      <!-- Tabela -->
       <section class="painel-tabela revelar">
         <div class="cabecalho-tabela">
-          <span class="marca">📋</span> Histórico Geral de Movimentação
+          <span class="marca">📋</span> Histórico Geral de Compras
         </div>
 
         <div class="envolucro-tabela">
@@ -135,7 +127,7 @@
             <thead>
               <tr>
                 <th>Data</th>
-                <th>Movimento</th>
+                <th>Tipo</th>
                 <th>Usuário</th>
                 <th>Produto</th>
                 <th>Qtd</th>
@@ -153,7 +145,7 @@
         </div>
 
         <div id="table-empty" class="vazio">
-          Nenhuma movimentação de estoque registrada.
+          Nenhuma compra registrada.
         </div>
       </section>
 

@@ -4,14 +4,14 @@ let btn_apagar = document.getElementById('btn_apagar')
 btn_apagar.addEventListener('click', (e) => {
     e.preventDefault()
 
-    const codUsuario = document.getElementById('codUsuario').value
+    const codProduto = document.getElementById('codProduto').value
 
-    if (!codUsuario) {
-        resposta.innerHTML = '<p>Por favor, informe o Código do Usuário!</p>'
+    if (!codProduto) {
+        resposta.innerHTML = '<p>Por favor, informe o Código do Produto!</p>'
         return
     }
 
-    fetch(`http://localhost:3000/usuarios/${codUsuario}`, {
+    fetch(`http://localhost:3000/produtos/${codProduto}`, {
         method: 'DELETE'
     })
         .then(res => res.json())
@@ -23,6 +23,6 @@ btn_apagar.addEventListener('click', (e) => {
         })
         .catch((err) => {
             console.error('Erro ao apagar os dados', err)
-            resposta.innerHTML = '<p>Erro ao tentar apagar o registro.</p>'
+            resposta.innerHTML = '<p>Erro ao tentar apagar o produto.</p>'
         })
 })

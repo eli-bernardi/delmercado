@@ -17,8 +17,8 @@ const volumeEmpty = document.getElementById('volume-empty');
 function showToast(message, isError = false) {
     toast.textContent = message;
     toast.className = `mb-6 p-3 rounded-lg text-sm text-center font-semibold ${isError
-            ? 'bg-red-500/20 text-red-400 border border-red-500/30'
-            : 'bg-green-500/20 text-green-400 border border-green-500/30'
+        ? 'bg-red-500/20 text-red-400 border border-red-500/30'
+        : 'bg-green-500/20 text-green-400 border border-green-500/30'
         }`;
     toast.classList.remove('hidden');
     clearTimeout(toast._timeout);
