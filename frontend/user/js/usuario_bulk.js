@@ -1,29 +1,36 @@
-let resposta = document.getElementById('resposta')
-let btn_bulk = document.getElementById('btn_bulk')
+// usuario_bulk.js — Importação em Lote de Usuários
+(function() {
+  const btnBulk = document.getElementById('btn-bulk');
 
-if (btn_bulk) {
-    btn_bulk.addEventListener('click', (e) => {
-        e.preventDefault()
-        
-        btn_bulk.disabled = true
-        btn_bulk.textContent = 'Carregando...'
+  if (btnBulk) {
+    btnBulk.addEventListener('click', async () => {
+      btnBulk.disabled = true;
+      const textoOriginal = btnBulk.textContent;
+      btnBulk.textContent = 'Carregando...';
+      try {
+        const res = await fetch(`${window.API || 'http://localhost:3000'}/usuarios/bulk`, {
+          method: 'POST'
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message);
 
-        fetch('http://localhost:3000/usuarios/bulk', {
-            method: 'POST'
-        })
-        .then(res => res.json())
-        .then(dados => {
-            console.log(dados.message)
-            resposta.innerHTML = ''
-            resposta.innerHTML += `<p>${dados.message}</p>`
-            btn_bulk.disabled = false
-            btn_bulk.textContent = 'Carregar Usuários'
-        })
-        .catch((err) => {
-            console.error('Erro ao carregar usuários em lote', err)
-            resposta.innerHTML = '<p>Erro ao tentar carregar usuários em lote.</p>'
-            btn_bulk.disabled = false
-            btn_bulk.textContent = 'Carregar Usuários'
-        })
-    })
-}
+        if (window.showToast) {
+          window.showToast(data.message);
+        } else {
+          alert(data.message);
+        }
+
+        if (window.listarUsuarios) window.listarUsuarios();
+      } catch (err) {
+        if (window.showToast) {
+          window.showToast(err.message, true);
+        } else {
+          alert(err.message);
+        }
+      } finally {
+        btnBulk.disabled = false;
+        btnBulk.textContent = textoOriginal;
+      }
+    });
+  }
+})();

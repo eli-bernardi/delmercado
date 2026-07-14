@@ -1,45 +1,62 @@
-let resposta = document.getElementById('resposta')
-let btn_cadastrar = document.getElementById('btn_cadastrar')
+// register_user.js — Cadastro e Edição (Submissão) de Usuários
+(function() {
+  const form        = document.getElementById('user-form');
+  const hiddenId    = document.getElementById('user-id');
+  const fNome       = document.getElementById('nome');
+  const fSobrenome  = document.getElementById('sobrenome');
+  const fIdade      = document.getElementById('idade');
+  const fEmail      = document.getElementById('email');
+  const fTelefone   = document.getElementById('telefone');
+  const fEndereco   = document.getElementById('endereco');
+  const fCidade     = document.getElementById('cidade');
+  const fEstado     = document.getElementById('estado');
 
-btn_cadastrar.addEventListener('click', (e) => {
-      e.preventDefault()
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = hiddenId.value;
+      const payload = {
+        nome:      fNome.value,
+        sobrenome: fSobrenome.value,
+        idade:     parseInt(fIdade.value) || 0,
+        email:     fEmail.value,
+        telefone:  fTelefone.value,
+        endereco:  fEndereco.value,
+        cidade:    fCidade.value,
+        estado:    fEstado.value
+      };
 
-      const nome = document.getElementById('nome').value
-      const sobrenome = document.getElementById('sobrenome').value
-      const idade = document.getElementById('idade').value
-      const email = document.getElementById('email').value
-      const telefone = document.getElementById('telefone').value
-      const endereco = document.getElementById('endereco').value
-      const cidade = document.getElementById('cidade').value
-      const estado = document.getElementById('estado').value
+      try {
+        const res = id
+          ? await fetch(`${window.API || 'http://localhost:3000'}/usuarios/${id}`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload)
+            })
+          : await fetch(`${window.API || 'http://localhost:3000'}/usuarios`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload)
+            });
 
-      const usuario = {
-            nome: nome,
-            sobrenome: sobrenome,
-            idade: parseInt(idade),
-            email: email,
-            telefone: telefone,
-            endereco: endereco,
-            cidade: cidade,
-            estado: estado
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || 'Erro ao salvar usuário');
+
+        if (window.showToast) {
+          window.showToast(id ? 'Usuário atualizado com sucesso!' : 'Usuário cadastrado com sucesso!');
+        } else {
+          alert(id ? 'Usuário atualizado!' : 'Usuário cadastrado!');
+        }
+
+        if (window.fecharForm) window.fecharForm();
+        if (window.listarUsuarios) window.listarUsuarios();
+      } catch (err) {
+        if (window.showToast) {
+          window.showToast(err.message, true);
+        } else {
+          alert(err.message);
+        }
       }
-
-      fetch('http://localhost:3000/usuarios', {
-            method: 'POST',
-            headers: {
-                  'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(usuario)
-      })
-            .then(res => res.json())
-            .then(dados => {
-                  console.log(dados.message)
-                  resposta.innerHTML = ''
-                  resposta.innerHTML += `<p>${dados.message}</p>`
-                  document.querySelector('form').reset()
-            })
-            .catch((err) => {
-                  console.error('Erro ao cadastrar o usuário', err)
-                  resposta.innerHTML = '<p>Erro ao tentar cadastrar o usuário.</p>'
-            })
-})
+    });
+  }
+})();

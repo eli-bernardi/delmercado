@@ -1,66 +1,63 @@
-let resposta = document.getElementById('resposta')
-let btn_listar = document.getElementById('btn_listar')
+// list_user.js — Listagem de Usuários
+(function() {
+  const tbody       = document.getElementById('users-table-body');
+  const spinner     = document.getElementById('table-spinner');
+  const emptyState  = document.getElementById('table-empty');
 
-btn_listar.addEventListener('click', (e) => {
-      e.preventDefault()
+  async function listarUsuarios() {
+    if (!tbody) return;
+    tbody.innerHTML = '';
+    if (spinner) spinner.classList.remove('oculto');
+    if (emptyState) {
+      emptyState.classList.add('oculto');
+      emptyState.classList.remove('visivel');
+    }
 
-      fetch('http://localhost:3000/usuarios')
-            .then(res => res.json())
-            .then(dados => {
-                  resposta.innerHTML = ''
-                  if (dados.length === 0) {
-                        resposta.innerHTML = '<p>Nenhum usuário cadastrado.</p>'
-                        return
-                  }
-                  resposta.innerHTML += `
-            <table>
-                ${criarThead()}
-                ${criarTbody(dados)}
-            </table>
-        `
-            })
-            .catch((err) => {
-                  console.error('Erro ao listar os dados', err)
-                  resposta.innerHTML = '<p>Erro ao tentar listar os usuários.</p>'
-            })
-})
+    try {
+      const res = await fetch(`${window.API || 'http://localhost:3000'}/usuarios`);
+      if (!res.ok) throw new Error('Falha ao carregar usuários');
+      const dados = await res.json();
 
-function criarTbody(dados) {
-      let corpo = ''
-      corpo += `<tbody>`
-      dados.forEach(el => {
-            corpo += `<tr>`
-            corpo += `<td>${el.codUsuario}</td>`
-            corpo += `<td>${el.nome}</td>`
-            corpo += `<td>${el.sobrenome}</td>`
-            corpo += `<td>${el.idade}</td>`
-            corpo += `<td>${el.email}</td>`
-            corpo += `<td>${el.telefone}</td>`
-            corpo += `<td>${el.endereco}</td>`
-            corpo += `<td>${el.cidade}</td>`
-            corpo += `<td>${el.estado}</td>`
-            corpo += `</tr>`
-      })
-      corpo += `</tbody>`
-      return corpo
-}
+      if (spinner) spinner.classList.add('oculto');
 
-function criarThead() {
-      let cabecalho = ''
-      cabecalho += `
-        <thead>
-            <tr>
-                <th>Código</th>
-                <th>Nome</th>
-                <th>Sobrenome</th>
-                <th>Idade</th>
-                <th>Email</th>
-                <th>Telefone</th>
-                <th>Endereço</th>
-                <th>Cidade</th>
-                <th>Estado</th>
-            </tr>
-        </thead>
-    `
-      return cabecalho
-}
+      if (!dados.length) {
+        if (emptyState) {
+          emptyState.classList.remove('oculto');
+          emptyState.classList.add('visivel');
+        }
+        return;
+      }
+
+      dados.forEach(u => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-white/5 transition-colors border-b border-white/5';
+        tr.innerHTML = `
+          <td class="px-6 py-4 font-mono text-gray-400">${u.codUsuario}</td>
+          <td class="px-6 py-4 font-semibold text-white">${u.nome || '-'}</td>
+          <td class="px-6 py-4 text-gray-300">${u.sobrenome || '-'}</td>
+          <td class="px-6 py-4 text-gray-300">${u.idade || '-'}</td>
+          <td class="px-6 py-4 text-gray-300">${u.email || '-'}</td>
+          <td class="px-6 py-4 text-gray-300">${u.telefone || '-'}</td>
+          <td class="px-6 py-4 text-gray-300">${u.cidade || '-'}/${u.estado || '-'}</td>
+          <td class="px-6 py-4 text-right">
+            <button onclick="editarUsuario(${u.codUsuario})" class="text-brand hover:text-white transition-colors text-sm mr-3" style="background: none; border: none; cursor: pointer;">Editar</button>
+            <button onclick="excluirUsuario(${u.codUsuario})" class="text-red-400 hover:text-red-200 transition-colors text-sm" style="background: none; border: none; cursor: pointer;">Excluir</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    } catch (err) {
+      if (spinner) spinner.classList.add('oculto');
+      if (window.showToast) {
+        window.showToast(err.message, true);
+      } else {
+        alert(err.message);
+      }
+    }
+  }
+
+  // Expor globalmente para atualização após ações
+  window.listarUsuarios = listarUsuarios;
+
+  document.addEventListener('DOMContentLoaded', listarUsuarios);
+})();
