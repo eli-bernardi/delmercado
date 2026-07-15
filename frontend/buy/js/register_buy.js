@@ -39,7 +39,7 @@ async function carregarOpcoes() {
         users.forEach(u => {
             const opt = document.createElement('option');
             opt.value = u.codUsuario;
-            opt.textContent = `${u.nome} ${u.sobrenome} (ID: ${u.codUsuario})`;
+            opt.textContent = `${u.Nome || u.nome} ${u.Sobrenome || u.sobrenome} (ID: ${u.codUsuario})`;
             userSelect.appendChild(opt);
         });
 
@@ -51,11 +51,16 @@ async function carregarOpcoes() {
         prods.forEach(p => {
             const opt = document.createElement('option');
             opt.value = p.codProduto;
-            opt.textContent = `${p.nome} (Qtd: ${p.quantidade}) - R$ ${p.preco.toFixed(2)}`;
+            const nome = p.Nome || p.nome;
+            const quantidade = p.Quantidade !== undefined ? p.Quantidade : p.quantidade;
+            const preco = p.Preco !== undefined ? p.Preco : p.preco;
+            const desconto = p.PercentualDesconto !== undefined ? p.PercentualDesconto : p.percentualDesconto;
+
+            opt.textContent = `${nome} (Qtd: ${quantidade}) - R$ ${parseFloat(preco).toFixed(2)}`;
             // Armazena dados extras para o cálculo da prévia
-            opt.dataset.preco = p.preco;
-            opt.dataset.desconto = p.percentualDesconto;
-            opt.dataset.quantidade = p.quantidade;
+            opt.dataset.preco = preco;
+            opt.dataset.desconto = desconto;
+            opt.dataset.quantidade = quantidade;
             prodSelect.appendChild(opt);
         });
     } catch (err) {

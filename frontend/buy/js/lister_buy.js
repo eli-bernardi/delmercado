@@ -26,7 +26,7 @@ async function listarCompras() {
 
         dados.forEach(el => {
             const row = document.createElement('tr');
-            
+
             const dataFormatada = new Date(el.dataCompra).toLocaleString('pt-BR');
             const tipoBadge = el.tipoMovimento === 'SAIDA'
                 ? '<span style="color:#f87171;font-weight:700;">SAÍDA</span>'
@@ -35,8 +35,8 @@ async function listarCompras() {
                 ? '<span style="color:#4ade80;font-weight:700;">PAGA</span>'
                 : '<span style="color:#facc15;font-weight:700;">PENDENTE</span>';
 
-            const userNome = el.usuario ? `${el.usuario.nome} ${el.usuario.sobrenome}` : 'Desconhecido';
-            const prodNome = el.produto ? el.produto.nome : 'Desconhecido';
+            const userNome = el.usuario ? `${el.usuario.Nome || el.usuario.nome} ${el.usuario.Sobrenome || el.usuario.sobrenome}` : 'Desconhecido';
+            const prodNome = el.produto ? (el.produto.Nome || el.produto.nome) : 'Desconhecido';
 
             row.innerHTML = `
                 <td>${dataFormatada}</td>

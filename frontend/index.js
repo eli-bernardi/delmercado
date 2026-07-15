@@ -78,18 +78,20 @@ function renderizarProdutos(produtos) {
     grade.innerHTML = '';
 
     produtos.forEach(prod => {
-        const preco = parseFloat(prod.preco || 0).toFixed(2);
-        const desconto = parseFloat(prod.percentualDesconto || 0).toFixed(1);
-        const estoque = parseInt(prod.quantidade || 0);
+        const nome = prod.Nome || prod.nome || 'Sem nome';
+        const preco = parseFloat(prod.Preco !== undefined ? prod.Preco : (prod.preco || 0)).toFixed(2);
+        const desconto = parseFloat(prod.PercentualDesconto !== undefined ? prod.PercentualDesconto : (prod.percentualDesconto || 0)).toFixed(1);
+        const estoque = parseInt(prod.Quantidade !== undefined ? prod.Quantidade : (prod.quantidade || 0));
+        const descricao = prod.Descricao || prod.descricao || 'Sem descrição';
 
         const card = document.createElement('div');
         card.className = 'cartao-base cartao-elevacao cartao-brilho flex flex-col';
         card.innerHTML = `
       <div class="flex justificar-entre itens-inicio mb-3">
-        <h3 class="fonte-negrito texto-branco truncar">${prod.nome || 'Sem nome'}</h3>
+        <h3 class="fonte-negrito texto-branco truncar">${nome}</h3>
         <span class="texto-xs fundo-marca/20 texto-marca px-2 py-0.5 arredondado fonte-semi-negrito">ID ${prod.codProduto || '-'}</span>
       </div>
-      <p class="texto-cinza-400 texto-xs mb-4 linha-clamp-2">${prod.descricao || 'Sem descrição'}</p>
+      <p class="texto-cinza-400 texto-xs mb-4 linha-clamp-2">${descricao}</p>
       <div class="mt-auto espaco-y-1 texto-sm">
         <div class="flex justificar-entre">
           <span class="texto-cinza-400">Preço</span>
@@ -123,11 +125,12 @@ if (busca) {
             return;
         }
 
-        const filtrados = todosProdutos.filter(p =>
-            (p.nome && p.nome.toLowerCase().includes(termo)) ||
-            (p.descricao && p.descricao.toLowerCase().includes(termo)) ||
-            (p.marca && p.marca.toLowerCase().includes(termo))
-        );
+        const filtrados = todosProdutos.filter(p => {
+            const nome = (p.Nome || p.nome || '').toLowerCase();
+            const descricao = (p.Descricao || p.descricao || '').toLowerCase();
+            const marca = (p.Marca || p.marca || '').toLowerCase();
+            return nome.includes(termo) || descricao.includes(termo) || marca.includes(termo);
+        });
 
         if (filtrados.length === 0) {
             vazio.classList.remove('oculto');
