@@ -4,11 +4,16 @@ const cadastrar = async (req, res) => {
   const valores = req.body
   console.log(valores)
 
-  // Normaliza o campo endereco/endereço para bater com o model do banco
-  const endereco = valores.endereco || valores.endereço
-  valores.endereco = endereco
+  const Nome = valores.Nome || valores.nome
+  const Sobrenome = valores.Sobrenome || valores.sobrenome
+  const Idade = valores.Idade || valores.idade
+  const Email = valores.Email || valores.email || valores['E-mail'] || valores['e-mail']
+  const Telefone = valores.Telefone || valores.telefone
+  const Endereco = valores.Endereco || valores.endereco || valores.endereço || valores.Endereço
+  const Cidade = valores.Cidade || valores.cidade
+  const Estado = valores.Estado || valores.estado
 
-  if (!valores.nome || !valores.sobrenome || !valores.idade || !valores.email || !valores.telefone || !valores.endereco || !valores.cidade || !valores.estado) {
+  if (!Nome || !Sobrenome || !Idade || !Email || !Telefone || !Endereco || !Cidade || !Estado) {
     return res.status(400).json({ message: 'Todos os campos são obrigatórios!' })
   }
   try {
@@ -37,7 +42,7 @@ const buscarPorCod = async (req, res) => {
     if (!dados) {
       res.status(404).json({ message: 'Usuário não encontrado!' })
     } else {
-      res.status(200).json(dados) 
+      res.status(200).json(dados)
     }
   } catch (err) {
     console.error('Não foi possível encontrar o Usuário', err)
@@ -48,7 +53,7 @@ const buscarPorCod = async (req, res) => {
 const buscarPorNome = async (req, res) => {
   const nome = req.params.nome
   try {
-    const dados = await Usuario.findOne({ where: { nome: nome } })
+    const dados = await Usuario.findOne({ where: { Nome: nome } })
     if (!dados) {
       res.status(404).json({ message: 'Nome do Usuário não encontrado!' })
     } else {
@@ -80,16 +85,23 @@ const atualizar = async (req, res) => {
   const id = req.params.id
   const valores = req.body
 
-  // Normaliza o campo endereco
-  const endereco = valores.endereco || valores.endereço
-  valores.endereco = endereco
+  const Nome = valores.Nome || valores.nome
+  const Sobrenome = valores.Sobrenome || valores.sobrenome
+  const Idade = valores.Idade || valores.idade
+  const Email = valores.Email || valores.email || valores['E-mail'] || valores['e-mail']
+  const Telefone = valores.Telefone || valores.telefone
+  const Endereco = valores.Endereco || valores.endereco || valores.endereço || valores.Endereço
+  const Cidade = valores.Cidade || valores.cidade
+  const Estado = valores.Estado || valores.estado
 
   try {
     let dados = await Usuario.findByPk(id)
     if (!dados) {
       res.status(404).json({ message: 'Usuário não encontrado no banco de dados!' })
     } else {
-      await Usuario.update(valores, { where: { codUsuario: id } })
+      await Usuario.update({
+        Nome, Sobrenome, Idade, Email, Telefone, Endereco, Cidade, Estado
+      }, { where: { codUsuario: id } })
       dados = await Usuario.findByPk(id)
       res.status(200).json(dados)
     }
@@ -109,17 +121,17 @@ const bulkLoad = async (req, res) => {
     const data = await response.json()
     const usersToInsert = data.users.map(u => ({
       codUsuario: u.id,
-      nome: u.firstName,
-      sobrenome: u.lastName,
-      idade: u.age,
-      email: u.email,
-      telefone: u.phone,
-      endereco: u.address ? u.address.address : '',
-      cidade: u.address ? u.address.city : '',
-      estado: u.address ? u.address.state : ''
+      Nome: u.firstName,
+      Sobrenome: u.lastName,
+      Idade: u.age,
+      Email: u.email,
+      Telefone: u.phone,
+      Endereco: u.address ? u.address.address : '',
+      Cidade: u.address ? u.address.city : '',
+      Estado: u.address ? u.address.state : ''
     }))
     const result = await Usuario.bulkCreate(usersToInsert, {
-      updateOnDuplicate: ['nome', 'sobrenome', 'idade', 'email', 'telefone', 'endereco', 'cidade', 'estado']
+      updateOnDuplicate: ['Nome', 'Sobrenome', 'Idade', 'Email', 'Telefone', 'Endereco', 'Cidade', 'Estado']
     })
     res.status(200).json({
       message: `${result.length} usuários carregados com sucesso em lote.`,

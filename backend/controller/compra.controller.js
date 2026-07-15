@@ -9,48 +9,48 @@ const cadastrar = async (req, res) => {
   const valores = req.body;
 
   // Normaliza os campos que o frontend envia
-  const idUsuario = valores.idUsuario || valores.codUsuario;
-  const idProduto = valores.idProduto || valores.codProduto;
-  const tipo = valores.tipo || valores.tipoMovimento;
-  const qtdeMov = valores.qtdeMov || valores.quantidadeMovimentada;
+  const codUsuario = valores.codUsuario || valores.idUsuario;
+  const codProduto = valores.codProduto || valores.idProduto;
+  const tipoMovimento = valores.tipoMovimento || valores.tipo;
+  const quantidadeMovimentada = valores.quantidadeMovimentada || valores.qtdeMov;
   const formaPagamento = valores.formaPagamento;
   const statusCompra = valores.statusCompra;
 
   // Valida campos obrigatórios
-  if (!idUsuario || !idProduto || !tipo || !qtdeMov || !formaPagamento || !statusCompra) {
-    return res.status(400).json({ message: 'Campos obrigatórios: idUsuario, idProduto, tipo, qtdeMov, formaPagamento, statusCompra.' });
+  if (!codUsuario || !codProduto || !tipoMovimento || !quantidadeMovimentada || !formaPagamento || !statusCompra) {
+    return res.status(400).json({ message: 'Campos obrigatórios: codUsuario, codProduto, tipoMovimento, quantidadeMovimentada, formaPagamento, statusCompra.' });
   }
 
-  if (qtdeMov <= 0) {
+  if (quantidadeMovimentada <= 0) {
     return res.status(400).json({ message: 'Quantidade movimentada deve ser maior que zero.' });
   }
 
   const transaction = await sequelize.transaction();
   try {
-    const usuario = await Usuario.findByPk(idUsuario, { transaction });
+    const usuario = await Usuario.findByPk(codUsuario, { transaction });
     if (!usuario) {
       await transaction.rollback();
       return res.status(404).json({ message: 'Usuário não encontrado.' });
     }
 
-    const produto = await Produto.findByPk(idProduto, { transaction });
+    const produto = await Produto.findByPk(codProduto, { transaction });
     if (!produto) {
       await transaction.rollback();
       return res.status(404).json({ message: 'Produto não encontrado.' });
     }
 
-    const precoUnitario = parseFloat(produto.preco);
-    const desconto = parseFloat(produto.percentualDesconto) || 0;
-    const precoFinal = (precoUnitario * (1 - desconto / 100)) * qtdeMov;
+    const precoUnitario = parseFloat(produto.Preco);
+    const desconto = parseFloat(produto.PercentualDesconto) || 0;
+    const precoFinal = (precoUnitario * (1 - desconto / 100)) * quantidadeMovimentada;
 
-    if (tipo === 'SAIDA') {
-      if (produto.quantidade < qtdeMov) {
+    if (tipoMovimento === 'SAIDA') {
+      if (produto.Quantidade < quantidadeMovimentada) {
         await transaction.rollback();
         return res.status(400).json({ message: 'Saldo insuficiente em estoque.' });
       }
-      produto.quantidade -= parseInt(qtdeMov, 10);
-    } else if (tipo === 'ENTRADA') {
-      produto.quantidade += parseInt(qtdeMov, 10);
+      produto.Quantidade -= parseInt(quantidadeMovimentada, 10);
+    } else if (tipoMovimento === 'ENTRADA') {
+      produto.Quantidade += parseInt(quantidadeMovimentada, 10);
     } else {
       await transaction.rollback();
       return res.status(400).json({ message: 'Tipo de movimento inválido. Use ENTRADA ou SAIDA.' });
@@ -59,13 +59,13 @@ const cadastrar = async (req, res) => {
     await produto.save({ transaction });
 
     const novaCompra = await Compra.create({
-      idUsuario: idUsuario,
-      idProduto: idProduto,
-      tipo: tipo,
-      qtdeMov: qtdeMov,
-      precoUnit: precoUnitario,
-      descAplicado: desconto,
-      precoFinal,
+      codUsuario: codUsuario,
+      codProduto: codProduto,
+      tipoMovimento: tipoMovimento,
+      quantidadeMovimentada: quantidadeMovimentada,
+      precoUnitario: precoUnitario,
+      descontoAplicado: desconto,
+      precoFinal: precoFinal,
       formaPagamento: formaPagamento,
       statusCompra: statusCompra,
       dataCompra: new Date()
@@ -75,8 +75,8 @@ const cadastrar = async (req, res) => {
 
     const retornoFormatado = {
       ...novaCompra.toJSON(),
-      tipoMovimento: novaCompra.tipo,
-      quantidadeMovimentada: novaCompra.qtdeMov,
+      tipoMovimento: novaCompra.tipoMovimento,
+      quantidadeMovimentada: novaCompra.quantidadeMovimentada,
       status: novaCompra.statusCompra
     };
 
@@ -92,8 +92,8 @@ const listar = async (req, res) => {
   try {
     const dados = await Compra.findAll({
       include: [
-        { model: Usuario, as: 'usuario', attributes: ['nome', 'sobrenome'] },
-        { model: Produto, as: 'produto', attributes: ['nome'] }
+        { model: Usuario, as: 'usuario', attributes: ['Nome', 'Sobrenome'] },
+        { model: Produto, as: 'produto', attributes: ['Nome'] }
       ],
       order: [['dataCompra', 'DESC']]
     });
@@ -102,8 +102,8 @@ const listar = async (req, res) => {
       const c = compra.toJSON();
       return {
         ...c,
-        tipoMovimento: c.tipo,
-        quantidadeMovimentada: c.qtdeMov,
+        tipoMovimento: c.tipoMovimento,
+        quantidadeMovimentada: c.quantidadeMovimentada,
         status: c.statusCompra
       };
     });
@@ -120,8 +120,8 @@ const buscarPorCod = async (req, res) => {
   try {
     const dados = await Compra.findByPk(id, {
       include: [
-        { model: Usuario, as: 'usuario', attributes: ['nome', 'sobrenome'] },
-        { model: Produto, as: 'produto', attributes: ['nome'] }
+        { model: Usuario, as: 'usuario', attributes: ['Nome', 'Sobrenome'] },
+        { model: Produto, as: 'produto', attributes: ['Nome'] }
       ]
     });
     if (!dados) {
@@ -130,8 +130,8 @@ const buscarPorCod = async (req, res) => {
     const c = dados.toJSON();
     const cFormatada = {
       ...c,
-      tipoMovimento: c.tipo,
-      quantidadeMovimentada: c.qtdeMov,
+      tipoMovimento: c.tipoMovimento,
+      quantidadeMovimentada: c.quantidadeMovimentada,
       status: c.statusCompra
     };
     res.status(200).json(cFormatada);

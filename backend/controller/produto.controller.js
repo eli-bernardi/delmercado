@@ -7,7 +7,9 @@ const cadastrar = async (req, res) => {
   }
 
   try {
-    await Produto.create(valores)
+    await Produto.create({
+      Nome, Descricao, Categoria, Preco, PercentualDesconto, Quantidade, Marca, Imagem
+    })
     res.status(201).json({ message: 'Produto Cadastrado com sucesso!' })
   } catch (err) {
     console.error('Não foi possível cadastrar o Produto', err)
@@ -43,7 +45,7 @@ const buscarPorCod = async (req, res) => {
 const buscarPorNome = async (req, res) => {
   const nome = req.params.nome
   try {
-    const dados = await Produto.findOne({ where: { nome: nome } })
+    const dados = await Produto.findOne({ where: { Nome: nome } })
     if (!dados) {
       res.status(404).json({ message: 'Nome do Produto não encontrado!' })
     } else {
@@ -74,12 +76,24 @@ const excluir = async (req, res) => {
 const atualizar = async (req, res) => {
   const id = req.params.id
   const valores = req.body
+
+  const Nome = valores.Nome || valores.nome || valores.title;
+  const Descricao = valores.Descricao || valores.descricao || valores.description;
+  const Categoria = valores.Categoria || valores.categoria || valores.category;
+  const Preco = valores.Preco !== undefined ? valores.Preco : (valores.preco !== undefined ? valores.preco : valores.precoUnit);
+  const PercentualDesconto = valores.PercentualDesconto !== undefined ? valores.PercentualDesconto : (valores.percentualDesconto !== undefined ? valores.percentualDesconto : valores.discountPercentage);
+  const Quantidade = valores.Quantidade !== undefined ? valores.Quantidade : (valores.quantidade !== undefined ? valores.quantidade : valores.stock);
+  const Marca = valores.Marca || valores.marca || valores.brand;
+  const Imagem = valores.Imagem || valores.imagem || valores.thumbnail;
+
   try {
     let dados = await Produto.findByPk(id)
     if (!dados) {
       res.status(404).json({ message: 'Produto não encontrado no banco de dados!' })
     } else {
-      await Produto.update(valores, { where: { codProduto: id } })
+      await Produto.update({
+        Nome, Descricao, Categoria, Preco, PercentualDesconto, Quantidade, Marca, Imagem
+      }, { where: { codProduto: id } })
       dados = await Produto.findByPk(id)
       res.status(200).json(dados)
     }
@@ -98,17 +112,17 @@ const bulkLoad = async (req, res) => {
     const data = await response.json();
     const productsToInsert = data.products.map(p => ({
       codProduto: p.id,
-      nome: p.title,
-      descricao: p.description,
-      categoria: p.category,
-      preco: p.price,
-      percentualDesconto: p.discountPercentage,
-      quantidade: p.stock,
-      marca: p.brand || 'Sem marca',
-      imagem: p.thumbnail
+      Nome: p.title,
+      Descricao: p.description,
+      Categoria: p.category,
+      Preco: p.price,
+      PercentualDesconto: p.discountPercentage,
+      Quantidade: p.stock,
+      Marca: p.brand || 'Sem marca',
+      Imagem: p.thumbnail
     }));
     const result = await Produto.bulkCreate(productsToInsert, {
-      updateOnDuplicate: ['nome', 'descricao', 'categoria', 'preco', 'percentualDesconto', 'quantidade', 'marca', 'imagem']
+      updateOnDuplicate: ['Nome', 'Descricao', 'Categoria', 'Preco', 'PercentualDesconto', 'Quantidade', 'Marca', 'Imagem']
     });
     res.status(200).json({
       message: `${result.length} produtos carregados com sucesso em lote.`,
