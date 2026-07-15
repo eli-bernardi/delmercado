@@ -11,11 +11,11 @@ async function syncDataBase(){
             CREATE OR REPLACE VIEW vw_produtos_criticos AS
             SELECT
                 codProduto AS codigo_produto,
-                nome AS nome,
-                categoria AS categoria,
-                quantidade AS quantidade_atual
+                Nome AS nome,
+                Categoria AS categoria,
+                Quantidade AS quantidade_atual
             FROM produtos
-            WHERE quantidade < 10;
+            WHERE Quantidade < 10;
         `
         await conn.query(queryViewCriticos)
         console.log('view vw_produtos_criticos criada com sucesso!')
@@ -24,13 +24,13 @@ async function syncDataBase(){
         const queryViewVolume = `
             CREATE OR REPLACE VIEW vw_volume_compras AS
             SELECT
-                p.nome AS nome,
-                SUM(c.qtdeMov) AS quantidade_total_movimentada,
-                SUM(c.qtdeMov * c.precoUnit) AS valor_financeiro_movimentado
+                p.Nome AS nome,
+                SUM(c.quantidadeMovimentada) AS quantidade_total_movimentada,
+                SUM(c.quantidadeMovimentada * c.precoUnitario) AS valor_financeiro_movimentado
             FROM compras c
-            INNER JOIN produtos p ON c.idProduto = p.codProduto
-            WHERE c.tipo = 'SAIDA'
-            GROUP BY p.codProduto, p.nome;
+            INNER JOIN produtos p ON c.codProduto = p.codProduto
+            WHERE c.tipoMovimento = 'SAIDA'
+            GROUP BY p.codProduto, p.Nome;
         `
         await conn.query(queryViewVolume)
         console.log('view vw_volume_compras criada com sucesso!')

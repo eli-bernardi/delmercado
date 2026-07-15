@@ -7,35 +7,35 @@ const Produto = db.define('produto', {
         primaryKey: true,
         autoIncrement: true
     },
-    nome: {
+    Nome: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    descricao: {
+    Descricao: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    categoria: {
+    Categoria: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    preco: {
+    Preco: {
         type: DataTypes.FLOAT,
         allowNull: false
     },
-    percentualDesconto: {
+    PercentualDesconto: {
         type: DataTypes.FLOAT,
         allowNull: false
     },
-    quantidade: {
+    Quantidade: {
         type: DataTypes.INTEGER,
         allowNull: false
     },
-    marca: {
+    Marca: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    imagem: {
+    Imagem: {
         type: DataTypes.STRING,
         allowNull: false
     }

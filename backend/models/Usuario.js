@@ -7,35 +7,35 @@ const Usuario = db.define('usuario', {
         primaryKey: true,
         autoIncrement: true
     },
-    nome: {
+    Nome: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    sobrenome: {
+    Sobrenome: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    idade: {
+    Idade: {
         type: DataTypes.INTEGER,
         allowNull: false
     },
-    email: {
+    Email: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    telefone: {
+    Telefone: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    endereco: {
+    Endereco: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    cidade: {
+    Cidade: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    estado: {
+    Estado: {
         type: DataTypes.STRING,
         allowNull: false
     }

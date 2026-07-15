@@ -2,12 +2,12 @@ const { DataTypes } = require('sequelize')
 const db = require('../db/conn')
 
 const Compra = db.define('compra', {
-  codCompra: {
+  idCompra: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true
   },
-  idUsuario: {
+  codUsuario: {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
@@ -15,7 +15,7 @@ const Compra = db.define('compra', {
       key: 'codUsuario'
     }
   },
-  idProduto: {
+  codProduto: {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
@@ -23,19 +23,19 @@ const Compra = db.define('compra', {
       key: 'codProduto'
     }
   },
-  tipo: {
+  tipoMovimento: {
     type: DataTypes.ENUM('ENTRADA', 'SAIDA'),
     allowNull: false
   },
-  qtdeMov: {
+  quantidadeMovimentada: {
     type: DataTypes.INTEGER,
     allowNull: false
   },
-  precoUnit: {
+  precoUnitario: {
     type: DataTypes.FLOAT,
     allowNull: false
   },
-  descAplicado: {
+  descontoAplicado: {
     type: DataTypes.FLOAT,
     allowNull: false
   },
