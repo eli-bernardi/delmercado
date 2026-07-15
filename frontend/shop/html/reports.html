@@ -4,18 +4,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Del Mercado - Gráficos Analíticos</title>
+  <title>Del Mercado - Relatórios Analíticos</title>
 
   <link rel="shortcut icon" href="/img/dell.png" type="image/png">
   <link rel="stylesheet" href="../css/style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
   <script src="../js/main.js" defer></script>
-  <script src="../js/grafico.js" defer></script>
-
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="../js/reports.js" defer></script>
 </head>
 
 <body>
@@ -28,8 +27,8 @@
       <a href="/frontend/shop/html/product.html">Produtos</a>
       <a href="/frontend/user/html/user.html">Usuários</a>
       <a href="/frontend/buy/html/buy.html">Compras</a>
-      <a href="/frontend/shop/html/reports.html">Relatórios</a>
-      <a href="/frontend/shop/html/grafic.html" class="ativo">Gráficos</a>
+      <a href="/frontend/shop/html/reports.html" class="ativo">Relatórios</a>
+      <a href="/frontend/shop/html/grafic.html">Gráficos</a>
     </nav>
   </header>
 
@@ -37,47 +36,63 @@
 
     <div class="cabecalho-pagina revelar">
       <div class="texto-centro">
-        <h1 class="titulo-pagina">Gráficos Analíticos</h1>
-        <p class="subtitulo-pagina">Visões gerenciais e dinâmicas alimentadas em tempo real pelas compras do estoque.
-        </p>
+        <h1 class="titulo-pagina">Relatórios Analíticos</h1>
+        <p class="subtitulo-pagina">Visões gerenciais consolidadas diretamente das Views do banco de dados.</p>
         <hr class="section-hr">
       </div>
     </div>
 
-    <div id="graphics-toast" class="toast oculto"></div>
+    <div id="reports-toast" class="toast oculto"></div>
 
-    <div class="grid-2">
-
-      <div class="painel-vidro revelar">
-        <div class="cabecalho-grafico">
-          <h2 class="titulo-grafico">
-            <span class="texto-cor-marca">📊</span> Estoque Físico Crítico
-          </h2>
-          <p class="subtitulo-grafico">Saldo de produtos abaixo de 10 unidades. Eixo X: Produto, Eixo Y: Qtd.</p>
-        </div>
-        <div class="container-grafico">
-          <canvas id="chart-estoque-critico"></canvas>
-          <div id="chart-spinner-1" class="spinner-grafico"></div>
-          <div id="chart-empty-1" class="vazio-grafico oculto">Sem dados críticos de estoque.</div>
-        </div>
+    <section class="painel-vidro tabela-container revelar" style="margin-bottom: 40px;">
+      <div class="dashboard-cabecalho" style="margin-bottom: 20px;">
+        <h2 class="dashboard-titulo">⚠️ Produtos Críticos</h2>
+        <p class="dashboard-subtitulo">Produtos com quantidade em estoque abaixo de 10 unidades (Extraído de vw_produtos_criticos).</p>
       </div>
-
-      <div class="painel-vidro revelar">
-        <div class="cabecalho-grafico">
-          <h2 class="titulo-grafico">
-            <span class="texto-cor-marca">📈</span> Volume Financeiro de Compras (Top 5)
-          </h2>
-          <p class="subtitulo-grafico">Top 5 produtos com maior volume de capital em compras (saídas). Eixo X: Capital
-            (R$), Eixo Y: Produto.</p>
-        </div>
-        <div class="container-grafico">
-          <canvas id="chart-volume-compras"></canvas>
-          <div id="chart-spinner-2" class="spinner-grafico"></div>
-          <div id="chart-empty-2" class="vazio-grafico oculto">Nenhuma compra registrada.</div>
-        </div>
+      <div class="tabela-wrapper">
+        <table class="tabela">
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Nome</th>
+              <th>Categoria</th>
+              <th>Quantidade Atual</th>
+            </tr>
+          </thead>
+          <tbody id="criticos-table-body">
+          </tbody>
+        </table>
       </div>
+      <div id="criticos-spinner" class="carregando">
+        <div class="spinner"></div>
+      </div>
+      <div id="criticos-empty" class="vazio oculto">Nenhum produto crítico em estoque.</div>
+    </section>
 
-    </div>
+    <section class="painel-vidro tabela-container revelar">
+      <div class="dashboard-cabecalho" style="margin-bottom: 20px;">
+        <h2 class="dashboard-titulo">💰 Volume Financeiro por Produto</h2>
+        <p class="dashboard-subtitulo">Valor total movimentado em saídas de compras acumuladas por produto (Extraído de vw_volume_compras).</p>
+      </div>
+      <div class="tabela-wrapper">
+        <table class="tabela">
+          <thead>
+            <tr>
+              <th>Nome do Produto</th>
+              <th>Quantidade Total Movimentada</th>
+              <th>Valor Financeiro Acumulado</th>
+            </tr>
+          </thead>
+          <tbody id="volume-table-body">
+          </tbody>
+        </table>
+      </div>
+      <div id="volume-spinner" class="carregando">
+        <div class="spinner"></div>
+      </div>
+      <div id="volume-empty" class="vazio oculto">Nenhuma compra registrada.</div>
+    </section>
+
   </main>
 
   <footer class="rodape">
@@ -96,7 +111,6 @@
       </div>
     </div>
   </footer>
-
 
 </body>
 

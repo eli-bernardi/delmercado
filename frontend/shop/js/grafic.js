@@ -6,14 +6,17 @@ const toast = document.getElementById('graphics-toast');
 // TOAST
 // ============================================================
 function showToast(message, isError = false) {
+    if (!toast) return;
     toast.textContent = message;
-    toast.className = `mb-6 p-3 rounded-lg text-sm text-center font-semibold ${isError
-        ? 'bg-red-500/20 text-red-400 border border-red-500/30'
-        : 'bg-green-500/20 text-green-400 border border-green-500/30'
-        }`;
-    toast.classList.remove('hidden');
+    if (isError) {
+        toast.className = 'toast erro';
+    } else {
+        toast.className = 'toast sucesso';
+    }
     clearTimeout(toast._timeout);
-    toast._timeout = setTimeout(() => toast.classList.add('hidden'), 4000);
+    toast._timeout = setTimeout(() => {
+        toast.className = 'toast oculto';
+    }, 4500);
 }
 
 // ============================================================
@@ -27,15 +30,18 @@ async function carregarGraficos() {
     const empty2 = document.getElementById('chart-empty-2');
 
     // Canvas
-    const ctx1 = document.getElementById('chart-estoque-critico').getContext('2d');
-    const ctx2 = document.getElementById('chart-volume-compras').getContext('2d');
+    const canvas1 = document.getElementById('chart-estoque-critico');
+    const canvas2 = document.getElementById('chart-volume-compras');
+    if (!canvas1 || !canvas2) return;
+    const ctx1 = canvas1.getContext('2d');
+    const ctx2 = canvas2.getContext('2d');
 
     try {
         // Mostra spinners
-        spinner1.classList.remove('hidden');
-        spinner2.classList.remove('hidden');
-        empty1.classList.add('hidden');
-        empty2.classList.add('hidden');
+        if (spinner1) spinner1.classList.remove('oculto');
+        if (spinner2) spinner2.classList.remove('oculto');
+        if (empty1) empty1.classList.add('oculto');
+        if (empty2) empty2.classList.add('oculto');
 
         // Busca os dados
         const response = await fetch(`${API_BASE}/graficos`);
@@ -44,13 +50,13 @@ async function carregarGraficos() {
         const data = await response.json();
 
         // Esconde spinners
-        spinner1.classList.add('hidden');
-        spinner2.classList.add('hidden');
+        if (spinner1) spinner1.classList.add('oculto');
+        if (spinner2) spinner2.classList.add('oculto');
 
         // ===== GRÁFICO 1: Estoque Físico Crítico (Barras Verticais) =====
         const produtosCriticos = data.estoqueCritico || [];
         if (produtosCriticos.length === 0) {
-            empty1.classList.remove('hidden');
+            if (empty1) empty1.classList.remove('oculto');
         } else {
             new Chart(ctx1, {
                 type: 'bar',
@@ -63,7 +69,7 @@ async function carregarGraficos() {
                         borderColor: '#d62828',
                         borderWidth: 1,
                         borderRadius: 4
-                    }]
+                     }]
                 },
                 options: {
                     responsive: true,
@@ -91,7 +97,7 @@ async function carregarGraficos() {
         // ===== GRÁFICO 2: Volume Financeiro de Compras (Barras Horizontais) =====
         const volumeCompras = data.volumeCompras || [];
         if (volumeCompras.length === 0) {
-            empty2.classList.remove('hidden');
+            if (empty2) empty2.classList.remove('oculto');
         } else {
             new Chart(ctx2, {
                 type: 'bar',
@@ -131,8 +137,8 @@ async function carregarGraficos() {
         }
 
     } catch (err) {
-        spinner1.classList.add('hidden');
-        spinner2.classList.add('hidden');
+        if (spinner1) spinner1.classList.add('oculto');
+        if (spinner2) spinner2.classList.add('oculto');
         showToast(err.message, true);
         console.error('Erro ao carregar gráficos:', err);
     }
