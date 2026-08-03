@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Del Mercado - Dashboard</title>
+  <link rel="shortcut icon" href="/img/dell.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="./css/style.css">
+  <script src="./js/index.js" defer></script>
+</head>
+
+<body>
+
+  <header class="cabecalho">
+    <a href="./index.html" class="logo">Del Mercado</a>
+    <nav id="menu" class="navegacao-principal aberto">
+      <a href="./index.html" class="ativo">Início</a>
+      <a href="./html/produto_cadastrar.html">Produtos</a>
+      <a href="./html/usuario_cadastrar.html">Usuários</a>
+      <a href="./html/compra_cadastrar.html">Compras</a>
+      <a href="./html/relatorio_produtos_criticos.html">Relatórios</a>
+      <a href="./html/grafico_analitico.html">Gráficos</a>
+    </nav>
+  </header>
+
+  <main class="conteudo-principal">
+
+    <div class="hero">
+      <h1 class="hero-titulo">Del Mercado</h1>
+      <p class="hero-subtitulo">Sistema de Compras Interno para unificar operações de estoque, vendas e relatórios analíticos.</p>
+      <hr class="divisoria">
+    </div>
+
+    <section class="painel-carga">
+      <h2 class="painel-titulo">Integração e Carga de Dados</h2>
+      <p class="painel-descricao">
+        Alimente as tabelas locais do banco de dados <code class="destaque">delmercado</code> consumindo APIs externas.
+      </p>
+
+      <div class="grade-carga">
+        <div class="cartao-carga">
+          <div>
+            <h3 class="cartao-titulo">Importar Catálogo de Produtos</h3>
+            <p class="cartao-descricao">Consome a API DummyJSON (/products) e mapeia no banco local.</p>
+          </div>
+          <button id="btn-load-products" class="botao-outline">Carregar Produtos</button>
+        </div>
+
+        <div class="cartao-carga">
+          <div>
+            <h3 class="cartao-titulo">Importar Usuários Demo</h3>
+            <p class="cartao-descricao">Consome a API DummyJSON (/users) e mapeia no banco local.</p>
+          </div>
+          <button id="btn-load-users" class="botao-outline">Carregar Usuários</button>
+        </div>
+      </div>
+
+      <div id="toast-message" class="toast"></div>
+    </section>
+
+    <section class="dashboard">
+      <div class="dashboard-cabecalho">
+        <div>
+          <h2 class="dashboard-titulo">Dashboard de Produtos</h2>
+          <p class="dashboard-subtitulo">Visualização do catálogo e nível de estoque atual.</p>
+        </div>
+        <div class="dashboard-busca">
+          <input type="text" id="search-input" class="campo-busca" placeholder="Buscar produto...">
+        </div>
+      </div>
+
+      <div id="loading-spinner" class="spinner-container">
+        <div class="spinner"></div>
+      </div>
+
+      <div id="products-grid" class="grade-produtos oculto"></div>
+
+      <div id="empty-state" class="estado-vazio oculto">
+        <p>Nenhum produto cadastrado no banco de dados.</p>
+        <p class="dica-vazio">Use os botões de carga de dados acima ou vá em Produtos para adicionar manualmente.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="rodape">
+    <div class="rodape-conteudo">
+      <p>&copy; 2026 - Del Company | Todos os direitos reservados</p>
+    </div>
+  </footer>
+
+</body>
+
+</html>
