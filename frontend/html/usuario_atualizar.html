@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Del Mercado - Atualizar Usuário</title>
+  <link rel="shortcut icon" href="/img/dell.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/style_cad.css">
+  <script src="../js/usuario_atualizar.js" defer></script>
+</head>
+
+<body>
+
+  <header class="cabecalho">
+    <a href="../index.html" class="logo">Del Mercado</a>
+    <nav class="navegacao-principal aberto">
+      <a href="../index.html">Início</a>
+      <a href="usuario_cadastrar.html">Cadastrar</a>
+      <a href="usuario_listar.html">Listar</a>
+      <a href="usuario_consultar.html">Consultar</a>
+      <a href="usuario_atualizar.html" class="ativo">Atualizar</a>
+      <a href="usuario_apagar.html">Apagar</a>
+    </nav>
+  </header>
+
+  <main class="conteudo-principal">
+
+    <div class="cabecalho-pagina revelar ativo">
+      <div>
+        <h1 class="titulo-pagina">Atualizar Usuário</h1>
+        <p class="subtitulo-pagina">Insira o Código do usuário para carregar os dados e atualizá-los.</p>
+        <hr class="divisoria">
+      </div>
+    </div>
+
+    <div id="resposta" class="toast"></div>
+
+    <!-- Carregar Usuário -->
+    <section class="painel-vidro revelar ativo margem-fundo-6">
+      <h2 class="titulo-formulario margem-fundo-4">Carregar Usuário por ID</h2>
+      <div class="formulario" style="display: flex; gap: 1rem; align-items: flex-end;">
+        <div class="campo-formulario" style="flex: 1;">
+          <label class="rotulo-formulario">Código do Usuário *</label>
+          <input type="number" id="codUsuario" class="entrada-formulario" required placeholder="Ex: 1">
+        </div>
+        <button id="btn_carregar" class="botao-outline" style="height: 42px;">Buscar Usuário</button>
+      </div>
+    </section>
+
+    <!-- Formulário de Edição -->
+    <section class="painel-vidro formulario-container revelar ativo">
+      <h2 class="titulo-formulario margem-fundo-4">Editar Informações</h2>
+      <form id="user-form" class="formulario">
+        <div class="campo-formulario">
+          <label class="rotulo-formulario">Nome *</label>
+          <input type="text" id="nome" class="entrada-formulario" required>
+        </div>
+
+        <div class="campo-formulario">
+          <label class="rotulo-formulario">Sobrenome *</label>
+          <input type="text" id="sobrenome" class="entrada-formulario" required>
+        </div>
+
+        <div class="campo-formulario">
+          <label class="rotulo-formulario">Idade *</label>
+          <input type="number" id="idade" class="entrada-formulario" min="1" required>
+        </div>
+
+        <div class="campo-formulario">
+          <label class="rotulo-formulario">E-mail *</label>
+          <input type="email" id="email" class="entrada-formulario" required>
+        </div>
+
+        <div class="campo-formulario">
+          <label class="rotulo-formulario">Telefone</label>
+          <input type="text" id="telefone" class="entrada-formulario" placeholder="(XX) XXXXX-XXXX">
+        </div>
+
+        <div class="campo-formulario">
+          <label class="rotulo-formulario">Endereço</label>
+          <input type="text" id="endereco" class="entrada-formulario">
+        </div>
+
+        <div class="campo-formulario">
+          <label class="rotulo-formulario">Cidade</label>
+          <input type="text" id="cidade" class="entrada-formulario">
+        </div>
+
+        <div class="campo-formulario">
+          <label class="rotulo-formulario">Estado</label>
+          <input type="text" id="estado" class="entrada-formulario" placeholder="SC, SP...">
+        </div>
+
+        <div class="acoes-formulario">
+          <button type="submit" class="botao-outline" id="btn_atualizar">Atualizar Dados</button>
+        </div>
+      </form>
+    </section>
+
+  </main>
+
+  <footer class="rodape">
+    <div class="conteudo-rodape">
+      <p>&copy; 2026 - Del Company | Todos os direitos reservados</p>
+    </div>
+  </footer>
+
+</body>
+</html>
