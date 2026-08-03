@@ -13,33 +13,33 @@ POST http://localhost:3000/produtos/bulk
 Content-Type: application/json
 
 ### - Teste para Cadastrar o Usuário
-POST http://localhost:3000/usuarios
+POST http://localhost:3000/usuario
 Content-Type: application/json
 
 {
-    "Nome": "Maria",
-    "Sobrenome": "Silva",
-    "Idade": 28,
-    "Email": "maria.silva@exemplo.com",
-    "Telefone": "(48) 99999-1111",
-    "Endereco": "Rua Central, 100",
-    "Cidade": "Florianópolis",
-    "Estado": "SC"
+    "nome": "Maria",
+    "sobrenome": "Silva",
+    "idade": 28,
+    "email": "maria.silva@exemplo.com",
+    "telefone": "(48) 99999-1111",
+    "endereco": "Rua Central, 100",
+    "cidade": "Florianópolis",
+    "estado": "SC"
 }
 
 ### - Teste para Cadastrar Outro Usuário
-POST http://localhost:3000/usuarios
+POST http://localhost:3000/usuario
 Content-Type: application/json
 
 {
-    "Nome": "Carlos",
-    "Sobrenome": "Oliveira",
-    "Idade": 35,
-    "Email": "carlos.oliveira@exemplo.com",
-    "Telefone": "(11) 98888-2222",
-    "Endereco": "Av. Paulista, 1500",
-    "Cidade": "São Paulo",
-    "Estado": "SP"
+    "nome": "Carlos",
+    "sobrenome": "Oliveira",
+    "idade": 35,
+    "email": "carlos.oliveira@exemplo.com",
+    "telefone": "(11) 98888-2222",
+    "endereco": "Av. Paulista, 1500",
+    "cidade": "São Paulo",
+    "estado": "SP"
 }
 
 ### - Teste para Listar Usuários
@@ -47,63 +47,63 @@ GET http://localhost:3000/usuarios
 Content-Type: application/json
 
 ### - Teste para Consultar Usuário por ID
-GET http://localhost:3000/usuarios/1
+GET http://localhost:3000/usuario/1
 Content-Type: application/json
 
 ### - Teste para Consultar Usuário por nome
-GET http://localhost:3000/usuarios/buscar/Maria
+GET http://localhost:3000/usuario/buscar/Maria
 Content-Type: application/json
 
 ### - Teste para Atualizar o Usuário
-PUT http://localhost:3000/usuarios/1
+PUT http://localhost:3000/usuario/1
 Content-Type: application/json
 
 {
-    "Nome": "Maria Alterada",
-    "Sobrenome": "Silva",
-    "Idade": 29,
-    "Email": "maria.alterada@exemplo.com",
-    "Telefone": "(48) 99999-1111",
-    "Endereco": "Rua Central, 100",
-    "Cidade": "Florianópolis",
-    "Estado": "SC"
+    "nome": "Maria Alterada",
+    "sobrenome": "Silva",
+    "idade": 29,
+    "email": "maria.alterada@exemplo.com",
+    "telefone": "(48) 99999-1111",
+    "endereco": "Rua Central, 100",
+    "cidade": "Florianópolis",
+    "estado": "SC"
 }
 
 ### - Teste para Excluir Usuário
-DELETE http://localhost:3000/usuarios/2
+DELETE http://localhost:3000/usuario/2
 Content-Type: application/json
 
 
 ################################
 
 ### - Teste para Cadastrar o Produto
-POST http://localhost:3000/produtos
+POST http://localhost:3000/produto
 Content-Type: application/json
 
 {
-    "Nome": "Tênis Running Premium",
-    "Descricao": "Tênis esportivo confortável para corridas de longa distância.",
-    "Categoria": "Calçados",
-    "Preco": 599.90,
-    "PercentualDesconto": 10.0,
-    "Quantidade": 15,
-    "Marca": "SportMax",
-    "Imagem": "https://dummyjson.com/product-assets/shoes/1.jpg"
+    "nome": "Tênis Running Premium",
+    "descricao": "Tênis esportivo confortável para corridas de longa distância.",
+    "categoria": "Calçados",
+    "preco": 599.90,
+    "percentualDesconto": 10.0,
+    "quantidade": 15,
+    "marca": "SportMax",
+    "imagem": "https://dummyjson.com/product-assets/shoes/1.jpg"
 }
 
 ### - Teste para Cadastrar Outro Produto
-POST http://localhost:3000/produtos
+POST http://localhost:3000/produto
 Content-Type: application/json
 
 {
-    "Nome": "Mochila Trekking Explorer",
-    "Descricao": "Mochila impermeável 50L com múltiplos compartimentos.",
-    "Categoria": "Acessórios",
-    "Preco": 349.99,
-    "PercentualDesconto": 5.0,
-    "Quantidade": 8,
-    "Marca": "ExplorerGear",
-    "Imagem": "https://dummyjson.com/product-assets/bags/2.jpg"
+    "nome": "Mochila Trekking Explorer",
+    "descricao": "Mochila impermeável 50L com múltiplos compartimentos.",
+    "categoria": "Acessórios",
+    "preco": 349.99,
+    "percentualDesconto": 5.0,
+    "quantidade": 8,
+    "marca": "ExplorerGear",
+    "imagem": "https://dummyjson.com/product-assets/bags/2.jpg"
 }
 
 ### - Teste para Listar Produtos
@@ -111,36 +111,36 @@ GET http://localhost:3000/produtos
 Content-Type: application/json
 
 ### - Teste para Consultar Produto por ID
-GET http://localhost:3000/produtos/1
+GET http://localhost:3000/produto/1
 Content-Type: application/json
 
 ### - Teste para Consultar Produto por nome
-GET http://localhost:3000/produtos/buscar/Tênis Running Premium
+GET http://localhost:3000/produto/buscar/Tênis Running Premium
 Content-Type: application/json
 
 ### - Teste para Atualizar Produto
-PUT http://localhost:3000/produtos/1
+PUT http://localhost:3000/produto/1
 Content-Type: application/json
 
 {
-    "Nome": "Tênis Running Premium Pro",
-    "Descricao": "Versão profissional do tênis de corrida esportivo confortável.",
-    "Categoria": "Calçados",
-    "Preco": 649.90,
-    "PercentualDesconto": 15.0,
-    "Quantidade": 20,
-    "Marca": "SportMax",
-    "Imagem": "https://dummyjson.com/product-assets/shoes/1.jpg"
+    "nome": "Tênis Running Premium Pro",
+    "descricao": "Versão profissional do tênis de corrida esportivo confortável.",
+    "categoria": "Calçados",
+    "preco": 649.90,
+    "percentualDesconto": 15.0,
+    "quantidade": 20,
+    "marca": "SportMax",
+    "imagem": "https://dummyjson.com/product-assets/shoes/1.jpg"
 }
 
 ### - Teste para Excluir Produto
-DELETE http://localhost:3000/produtos/2
+DELETE http://localhost:3000/produto/2
 Content-Type: application/json
 
 
 #####################################
-### - Teste para Cadastrar Movimentação (Sucesso: Compra/Saída com estoque disponível)
-POST http://localhost:3000/compras
+### - Teste para Cadastrar Compra (Sucesso: Saída com estoque disponível)
+POST http://localhost:3000/compra
 Content-Type: application/json
 
 {
@@ -152,8 +152,8 @@ Content-Type: application/json
     "statusCompra": "PAGA"
 }
 
-### - Teste para Cadastrar Movimentação (Erro: Compra/Saída com saldo insuficiente)
-POST http://localhost:3000/compras
+### - Teste para Cadastrar Compra (Erro: Saída com saldo insuficiente)
+POST http://localhost:3000/compra
 Content-Type: application/json
 
 {
@@ -165,8 +165,8 @@ Content-Type: application/json
     "statusCompra": "PENDENTE"
 }
 
-### - Teste para Cadastrar Movimentação (Sucesso: Entrada de estoque)
-POST http://localhost:3000/compras
+### - Teste para Cadastrar Compra (Sucesso: Entrada de estoque)
+POST http://localhost:3000/compra
 Content-Type: application/json
 
 {
@@ -178,7 +178,7 @@ Content-Type: application/json
     "statusCompra": "PAGA"
 }
 
-### - Teste para Listar Compras / Movimentações
+### - Teste para Listar Compras
 GET http://localhost:3000/compras
 Content-Type: application/json
 
