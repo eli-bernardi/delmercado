@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Del Mercado - Gráficos Analíticos</title>
+  <link rel="shortcut icon" href="/img/dell.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/style_cad.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="../js/grafic.js" defer></script>
+</head>
+
+<body>
+
+  <header class="cabecalho">
+    <a href="../index.html" class="logo">Del Mercado</a>
+    <nav class="navegacao-principal aberto">
+      <a href="../index.html">Início</a>
+      <a href="relatorio_produtos_criticos.html">Produtos Críticos</a>
+      <a href="relatorio_volume_compras.html">Volume por Produto</a>
+      <a href="grafico_analitico.html" class="ativo">Gráficos</a>
+    </nav>
+  </header>
+
+  <main class="conteudo-principal">
+
+    <div class="cabecalho-pagina revelar ativo">
+      <div>
+        <h1 class="titulo-pagina">Gráficos Analíticos</h1>
+        <p class="subtitulo-pagina">Painel visual gerencial atualizado em tempo real.</p>
+        <hr class="divisoria">
+      </div>
+    </div>
+
+    <div id="resposta" class="toast"></div>
+
+    <div class="grid-2">
+      <!-- Gráfico 1 -->
+      <div class="painel-vidro revelar ativo">
+        <div class="cabecalho-grafico margem-fundo-4">
+          <h2 class="titulo-grafico">
+            <span class="texto-cor-marca">📊</span> Estoque Físico Crítico
+          </h2>
+          <p class="tamanho-texto-xs texto-cor-cinza-400">Saldo de produtos abaixo de 10 unidades. Eixo X: Produto, Eixo Y: Qtd.</p>
+        </div>
+        <div style="position: relative; height: 300px;">
+          <canvas id="chart-estoque-critico"></canvas>
+          <div id="chart-spinner-1" class="spinner-container" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(10,10,10,0.5); display: flex; justify-content: center; align-items: center;">
+            <div class="spinner"></div>
+          </div>
+          <div id="chart-empty-1" class="estado-vazio oculto">Sem dados críticos de estoque.</div>
+        </div>
+      </div>
+
+      <!-- Gráfico 2 -->
+      <div class="painel-vidro revelar ativo">
+        <div class="cabecalho-grafico margem-fundo-4">
+          <h2 class="titulo-grafico">
+            <span class="texto-cor-marca">📈</span> Volume Financeiro de Compras (Top 5)
+          </h2>
+          <p class="tamanho-texto-xs texto-cor-cinza-400">Top 5 produtos com maior volume de capital em compras. Eixo X: Capital (R$), Eixo Y: Produto.</p>
+        </div>
+        <div style="position: relative; height: 300px;">
+          <canvas id="chart-volume-compras"></canvas>
+          <div id="chart-spinner-2" class="spinner-container" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(10,10,10,0.5); display: flex; justify-content: center; align-items: center;">
+            <div class="spinner"></div>
+          </div>
+          <div id="chart-empty-2" class="estado-vazio oculto">Nenhuma compra registrada.</div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="rodape">
+    <div class="conteudo-rodape">
+      <p>&copy; 2026 - Del Company | Todos os direitos reservados</p>
+    </div>
+  </footer>
+
+</body>
+</html>
