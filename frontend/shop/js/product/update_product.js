@@ -30,7 +30,7 @@ btn_atualizar.addEventListener('click', (e) => {
         imagem: imagem
     }
 
-    fetch(`http://localhost:3000/produtos/${codProduto}`, {
+    fetch(`http://localhost:3000/produto/${codProduto}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'

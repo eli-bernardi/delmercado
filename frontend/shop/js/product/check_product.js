@@ -5,7 +5,7 @@ let btn_consultar_nome = document.getElementById('btn_consultar_nome')
 btn_consultar.addEventListener('click', (e) => {
     e.preventDefault()
     const codProduto = document.getElementById('codProduto').value
-    fetch(`http://localhost:3000/produtos/${codProduto}`)
+    fetch(`http://localhost:3000/produto/${codProduto}`)
         .then(res => res.json())
         .then(dados => {
             if (!dados || dados.message) {
@@ -28,7 +28,7 @@ btn_consultar.addEventListener('click', (e) => {
 btn_consultar_nome.addEventListener('click', (e) => {
     e.preventDefault()
     const nome = document.getElementById('nome').value
-    fetch(`http://localhost:3000/produtos/buscar/${nome}`)
+    fetch(`http://localhost:3000/produto/buscar/${nome}`)
         .then(res => res.json())
         .then(dados => {
             if (!dados || dados.message) {

@@ -40,17 +40,17 @@ async function listarProdutos() {
       const row = document.createElement('tr');
       row.innerHTML = `
         <td>${prod.codProduto}</td>
-        <td><img src="${prod.Imagem || prod.imagem}" alt="${prod.Nome || prod.nome}" style="width:50px;height:50px;object-fit:cover;border-radius:8px;"></td>
+        <td><img src="${prod.imagem}" alt="${prod.nome}" style="width:50px;height:50px;object-fit:cover;border-radius:8px;"></td>
         <td>
-          <div class="fonte-semi-negrito text-white">${prod.Nome || prod.nome || 'Sem nome'}</div>
-          <div class="texto-xs texto-cinza-400">${prod.Marca || prod.marca || 'Sem marca'}</div>
+          <div class="fonte-semi-negrito text-white">${prod.nome || 'Sem nome'}</div>
+          <div class="texto-xs texto-cinza-400">${prod.marca || 'Sem marca'}</div>
         </td>
-        <td>${prod.Categoria || prod.categoria}</td>
-        <td>R$ ${parseFloat(prod.Preco || prod.preco || 0).toFixed(2)}</td>
-        <td>${parseFloat(prod.PercentualDesconto || prod.percentualDesconto || 0).toFixed(1)}%</td>
+        <td>${prod.categoria}</td>
+        <td>R$ ${parseFloat(prod.preco || 0).toFixed(2)}</td>
+        <td>${parseFloat(prod.percentualDesconto || 0).toFixed(1)}%</td>
         <td>
-          <span class="${parseInt(prod.Quantidade || prod.quantidade || 0) < 10 ? 'texto-vermelho-400' : 'texto-verde-400'} fonte-negrito">
-            ${prod.Quantidade !== undefined ? prod.Quantidade : prod.quantidade} un.
+          <span class="${parseInt(prod.quantidade || 0) < 10 ? 'texto-vermelho-400' : 'texto-verde-400'} fonte-negrito">
+            ${prod.quantidade} un.
           </span>
         </td>
         <td class="texto-direita acoes-tabela">
@@ -77,19 +77,19 @@ async function listarProdutos() {
 // Abrir formulário para edição
 async function editarProduto(id) {
   try {
-    const res = await fetch(`${API_URL}/produtos/${id}`);
+    const res = await fetch(`${API_URL}/produto/${id}`);
     if (!res.ok) throw new Error('Erro ao buscar produto');
     const prod = await res.json();
 
     if (hiddenId) hiddenId.value = prod.codProduto;
-    if (inputNome) inputNome.value = prod.Nome || prod.nome || '';
-    if (inputMarca) inputMarca.value = prod.Marca || prod.marca || '';
-    if (inputDescricao) inputDescricao.value = prod.Descricao || prod.descricao || '';
-    if (inputCategoria) inputCategoria.value = prod.Categoria || prod.categoria || '';
-    if (inputPreco) inputPreco.value = prod.Preco !== undefined ? prod.Preco : prod.preco;
-    if (inputDesconto) inputDesconto.value = prod.PercentualDesconto !== undefined ? prod.PercentualDesconto : prod.percentualDesconto;
-    if (inputQuantidade) inputQuantidade.value = prod.Quantidade !== undefined ? prod.Quantidade : prod.quantidade;
-    if (inputImagem) inputImagem.value = prod.Imagem || prod.imagem || '';
+    if (inputNome) inputNome.value = prod.nome || '';
+    if (inputMarca) inputMarca.value = prod.marca || '';
+    if (inputDescricao) inputDescricao.value = prod.descricao || '';
+    if (inputCategoria) inputCategoria.value = prod.categoria || '';
+    if (inputPreco) inputPreco.value = prod.preco;
+    if (inputDesconto) inputDesconto.value = prod.percentualDesconto;
+    if (inputQuantidade) inputQuantidade.value = prod.quantidade;
+    if (inputImagem) inputImagem.value = prod.imagem || '';
 
     // Utiliza a função global exposta em main.js para rolar e abrir
     if (typeof window.abrirFormCadastro === 'function') {
@@ -112,18 +112,18 @@ if (productForm) {
 
     const id = hiddenId.value;
     const produto = {
-      Nome: inputNome.value,
-      Marca: inputMarca.value,
-      Descricao: inputDescricao.value,
-      Categoria: inputCategoria.value,
-      Preco: parseFloat(inputPreco.value),
-      PercentualDesconto: parseFloat(inputDesconto.value),
-      Quantidade: parseInt(inputQuantidade.value),
-      Imagem: inputImagem.value
+      nome: inputNome.value,
+      marca: inputMarca.value,
+      descricao: inputDescricao.value,
+      categoria: inputCategoria.value,
+      preco: parseFloat(inputPreco.value),
+      percentualDesconto: parseFloat(inputDesconto.value),
+      quantidade: parseInt(inputQuantidade.value),
+      imagem: inputImagem.value
     };
 
     const isEdit = !!id;
-    const url = isEdit ? `${API_URL}/produtos/${id}` : `${API_URL}/produtos`;
+    const url = isEdit ? `${API_URL}/produto/${id}` : `${API_URL}/produto`;
     const method = isEdit ? 'PUT' : 'POST';
 
     try {
@@ -158,7 +158,7 @@ async function excluirProduto(id) {
   if (!confirm('Deseja realmente excluir este produto?')) return;
 
   try {
-    const res = await fetch(`${API_URL}/produtos/${id}`, {
+    const res = await fetch(`${API_URL}/produto/${id}`, {
       method: 'DELETE'
     });
     const data = await res.json();
