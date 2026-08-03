@@ -40,12 +40,12 @@ async function listarUsuarios() {
       const row = document.createElement('tr');
       row.innerHTML = `
         <td>${user.codUsuario}</td>
-        <td>${user.Nome || user.nome || ''}</td>
-        <td>${user.Sobrenome || user.sobrenome || ''}</td>
-        <td>${user.Idade || user.idade || ''} anos</td>
-        <td>${user.Email || user.email || ''}</td>
-        <td>${user.Telefone || user.telefone || '-'}</td>
-        <td>${user.Cidade || user.cidade || '-'}/${user.Estado || user.estado || '-'}</td>
+        <td>${user.nome || ''}</td>
+        <td>${user.sobrenome || ''}</td>
+        <td>${user.idade || ''} anos</td>
+        <td>${user.email || ''}</td>
+        <td>${user.telefone || '-'}</td>
+        <td>${user.cidade || '-'}/${user.estado || '-'}</td>
         <td class="texto-direita acoes-tabela">
           <button class="btn-editar-tabela" onclick="editarUsuario(${user.codUsuario})">
             <i class="fa-solid fa-pen"></i>
@@ -70,19 +70,19 @@ async function listarUsuarios() {
 // Editar usuário
 async function editarUsuario(id) {
   try {
-    const res = await fetch(`${API_URL}/usuarios/${id}`);
+    const res = await fetch(`${API_URL}/usuario/${id}`);
     if (!res.ok) throw new Error('Erro ao buscar usuário');
     const user = await res.json();
 
     if (hiddenId) hiddenId.value = user.codUsuario;
-    if (inputNome) inputNome.value = user.Nome || user.nome || '';
-    if (inputSobrenome) inputSobrenome.value = user.Sobrenome || user.sobrenome || '';
-    if (inputIdade) inputIdade.value = user.Idade || user.idade || '';
-    if (inputEmail) inputEmail.value = user.Email || user.email || '';
-    if (inputTelefone) inputTelefone.value = user.Telefone || user.telefone || '';
-    if (inputEndereco) inputEndereco.value = user.Endereco || user.endereco || '';
-    if (inputCidade) inputCidade.value = user.Cidade || user.cidade || '';
-    if (inputEstado) inputEstado.value = user.Estado || user.estado || '';
+    if (inputNome) inputNome.value = user.nome || '';
+    if (inputSobrenome) inputSobrenome.value = user.sobrenome || '';
+    if (inputIdade) inputIdade.value = user.idade || '';
+    if (inputEmail) inputEmail.value = user.email || '';
+    if (inputTelefone) inputTelefone.value = user.telefone || '';
+    if (inputEndereco) inputEndereco.value = user.endereco || '';
+    if (inputCidade) inputCidade.value = user.cidade || '';
+    if (inputEstado) inputEstado.value = user.estado || '';
 
     if (typeof window.abrirFormCadastro === 'function') {
       window.abrirFormCadastro();
@@ -104,18 +104,18 @@ if (userForm) {
 
     const id = hiddenId.value;
     const usuario = {
-      Nome: inputNome.value,
-      Sobrenome: inputSobrenome.value,
-      Idade: parseInt(inputIdade.value),
-      Email: inputEmail.value,
-      Telefone: inputTelefone.value,
-      Endereco: inputEndereco.value,
-      Cidade: inputCidade.value,
-      Estado: inputEstado.value
+      nome: inputNome.value,
+      sobrenome: inputSobrenome.value,
+      idade: parseInt(inputIdade.value),
+      email: inputEmail.value,
+      telefone: inputTelefone.value,
+      endereco: inputEndereco.value,
+      cidade: inputCidade.value,
+      estado: inputEstado.value
     };
 
     const isEdit = !!id;
-    const url = isEdit ? `${API_URL}/usuarios/${id}` : `${API_URL}/usuarios`;
+    const url = isEdit ? `${API_URL}/usuario/${id}` : `${API_URL}/usuario`;
     const method = isEdit ? 'PUT' : 'POST';
 
     try {
@@ -150,7 +150,7 @@ async function excluirUsuario(id) {
   if (!confirm('Deseja realmente excluir este usuário?')) return;
 
   try {
-    const res = await fetch(`${API_URL}/usuarios/${id}`, {
+    const res = await fetch(`${API_URL}/usuario/${id}`, {
       method: 'DELETE'
     });
     const data = await res.json();

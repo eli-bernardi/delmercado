@@ -30,7 +30,7 @@ btn_atualizar.addEventListener('click', (e) => {
         estado: estado
     }
 
-    fetch(`http://localhost:3000/usuarios/${codUsuario}`, {
+    fetch(`http://localhost:3000/usuario/${codUsuario}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'

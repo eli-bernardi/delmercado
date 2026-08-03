@@ -13,7 +13,7 @@ btn_consultar.addEventListener('click', (e) => {
         return
     }
 
-    fetch(`http://localhost:3000/usuarios/${codUsuario}`)
+    fetch(`http://localhost:3000/usuario/${codUsuario}`)
         .then(res => res.json())
         .then(dados => {
             if (!dados) {
@@ -48,7 +48,7 @@ btn_consultar_nome.addEventListener('click', (e) => {
         return
     }
 
-    fetch(`http://localhost:3000/usuarios/buscar/${nome}`)
+    fetch(`http://localhost:3000/usuario/buscar/${nome}`)
         .then(res => res.json())
         .then(dados => {
             if (!dados) {

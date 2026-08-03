@@ -24,7 +24,7 @@ btn_cadastrar.addEventListener('click', (e) => {
         estado: estado
     }
 
-    fetch('http://localhost:3000/usuarios', {
+    fetch('http://localhost:3000/usuario', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
