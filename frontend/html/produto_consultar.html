@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Del Mercado - Consultar Produto</title>
+  <link rel="shortcut icon" href="/img/dell.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/style_cad.css">
+  <script src="../js/produto_consultar.js" defer></script>
+</head>
+
+<body>
+
+  <header class="cabecalho">
+    <a href="../index.html" class="logo">Del Mercado</a>
+    <nav class="navegacao-principal aberto">
+      <a href="../index.html">Início</a>
+      <a href="produto_cadastrar.html">Cadastrar</a>
+      <a href="produto_listar.html">Listar</a>
+      <a href="produto_consultar.html" class="ativo">Consultar</a>
+      <a href="produto_atualizar.html">Atualizar</a>
+      <a href="produto_apagar.html">Apagar</a>
+    </nav>
+  </header>
+
+  <main class="conteudo-principal">
+
+    <div class="cabecalho-pagina revelar ativo">
+      <div>
+        <h1 class="titulo-pagina">Consultar Produto</h1>
+        <p class="subtitulo-pagina">Busque por Código ou Nome do Produto.</p>
+        <hr class="divisoria">
+      </div>
+    </div>
+
+    <div id="resposta" class="toast"></div>
+
+    <section class="grid-2">
+      <!-- Consulta por Código -->
+      <div class="painel-vidro revelar ativo">
+        <h2 class="titulo-formulario margem-fundo-4">Buscar por Código (ID)</h2>
+        <form class="formulario">
+          <div class="campo-formulario" style="grid-column: 1 / -1;">
+            <label class="rotulo-formulario">Código do Produto</label>
+            <input type="number" id="codProduto" class="entrada-formulario" placeholder="Ex: 1">
+          </div>
+          <button id="btn_consultar" class="botao-outline margem-topo-2">Consultar por Código</button>
+        </form>
+      </div>
+
+      <!-- Consulta por Nome -->
+      <div class="painel-vidro revelar ativo">
+        <h2 class="titulo-formulario margem-fundo-4">Buscar por Nome</h2>
+        <form class="formulario">
+          <div class="campo-formulario" style="grid-column: 1 / -1;">
+            <label class="rotulo-formulario">Nome do Produto</label>
+            <input type="text" id="nome" class="entrada-formulario" placeholder="Ex: Mochila">
+          </div>
+          <button id="btn_consultar_nome" class="botao-outline margem-topo-2">Consultar por Nome</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Resultados -->
+    <section class="painel-vidro tabela-container revelar ativo margem-topo-8">
+      <h2 class="titulo-formulario margem-fundo-4">Resultado da Consulta</h2>
+      <div class="tabela-wrapper">
+        <table class="tabela">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Imagem</th>
+              <th>Nome</th>
+              <th>Marca</th>
+              <th>Categoria</th>
+              <th>Preço (R$)</th>
+              <th>Desconto (%)</th>
+              <th>Estoque</th>
+            </tr>
+          </thead>
+          <tbody id="resposta_tabela">
+            <tr>
+              <td colspan="8" style="text-align: center; color: #888;">Realize uma busca acima.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="rodape">
+    <div class="conteudo-rodape">
+      <p>&copy; 2026 - Del Company | Todos os direitos reservados</p>
+    </div>
+  </footer>
+
+</body>
+</html>

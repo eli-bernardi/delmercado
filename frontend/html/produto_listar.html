@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Del Mercado - Listar Produtos</title>
+  <link rel="shortcut icon" href="/img/dell.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/style_cad.css">
+  <script src="../js/produto_listar.js" defer></script>
+</head>
+
+<body>
+
+  <header class="cabecalho">
+    <a href="../index.html" class="logo">Del Mercado</a>
+    <nav class="navegacao-principal aberto">
+      <a href="../index.html">Início</a>
+      <a href="produto_cadastrar.html">Cadastrar</a>
+      <a href="produto_listar.html" class="ativo">Listar</a>
+      <a href="produto_consultar.html">Consultar</a>
+      <a href="produto_atualizar.html">Atualizar</a>
+      <a href="produto_apagar.html">Apagar</a>
+    </nav>
+  </header>
+
+  <main class="conteudo-principal">
+
+    <div class="cabecalho-pagina revelar ativo">
+      <div>
+        <h1 class="titulo-pagina">Catálogo de Produtos</h1>
+        <p class="subtitulo-pagina">Todos os produtos cadastrados no estoque.</p>
+        <hr class="divisoria">
+      </div>
+      <button id="btn_listar" class="botao-outline">Carregar / Atualizar Catálogo</button>
+    </div>
+
+    <div id="resposta" class="toast"></div>
+
+    <section class="painel-vidro tabela-container revelar ativo">
+      <div class="tabela-wrapper">
+        <table class="tabela">
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Imagem</th>
+              <th>Nome</th>
+              <th>Marca</th>
+              <th>Categoria</th>
+              <th>Preço (R$)</th>
+              <th>Desconto (%)</th>
+              <th>Estoque</th>
+            </tr>
+          </thead>
+          <tbody id="resposta_tabela">
+          </tbody>
+        </table>
+      </div>
+      <div id="table-spinner" class="carregando oculto">
+        <div class="spinner"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="rodape">
+    <div class="conteudo-rodape">
+      <p>&copy; 2026 - Del Company | Todos os direitos reservados</p>
+    </div>
+  </footer>
+
+</body>
+</html>

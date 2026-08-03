@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Del Mercado - Atualizar Produto</title>
+  <link rel="shortcut icon" href="/img/dell.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/style_cad.css">
+  <script src="../js/produto_atualizar.js" defer></script>
+</head>
+
+<body>
+
+  <header class="cabecalho">
+    <a href="../index.html" class="logo">Del Mercado</a>
+    <nav class="navegacao-principal aberto">
+      <a href="../index.html">Início</a>
+      <a href="produto_cadastrar.html">Cadastrar</a>
+      <a href="produto_listar.html">Listar</a>
+      <a href="produto_consultar.html">Consultar</a>
+      <a href="produto_atualizar.html" class="ativo">Atualizar</a>
+      <a href="produto_apagar.html">Apagar</a>
+    </nav>
+  </header>
+
+  <main class="conteudo-principal">
+
+    <div class="cabecalho-pagina revelar ativo">
+      <div>
+        <h1 class="titulo-pagina">Atualizar Produto</h1>
+        <p class="subtitulo-pagina">Insira o Código do produto para carregar os dados e atualizá-los.</p>
+        <hr class="divisoria">
+      </div>
+    </div>
+
+    <div id="resposta" class="toast"></div>
+
+    <!-- Carregar Produto -->
+    <section class="painel-vidro revelar ativo margem-fundo-6">
+      <h2 class="titulo-formulario margem-fundo-4">Carregar Produto por ID</h2>
+      <div class="formulario" style="display: flex; gap: 1rem; align-items: flex-end;">
+        <div class="campo-formulario" style="flex: 1;">
+          <label class="rotulo-formulario">Código do Produto *</label>
+          <input type="number" id="codProduto" class="entrada-formulario" required placeholder="Ex: 1">
+        </div>
+        <button id="btn_carregar" class="botao-outline" style="height: 42px;">Buscar Produto</button>
+      </div>
+    </section>
+
+    <!-- Formulário de Edição -->
+    <section class="painel-vidro formulario-container revelar ativo">
+      <h2 class="titulo-formulario margem-fundo-4">Editar Informações</h2>
+      <form id="product-form" class="formulario">
+        <div class="campo-formulario">
+          <label class="rotulo-formulario">Nome do Produto *</label>
+          <input type="text" id="nome" class="entrada-formulario" required>
+        </div>
+
+        <div class="campo-formulario">
+          <label class="rotulo-formulario">Marca *</label>
+          <input type="text" id="marca" class="entrada-formulario" required>
+        </div>
+
+        <div class="campo-formulario duas-colunas" style="grid-column: 1 / -1;">
+          <label class="rotulo-formulario">Descrição *</label>
+          <textarea id="descricao" rows="2" class="entrada-formulario" required></textarea>
+        </div>
+
+        <div class="campo-formulario">
+          <label class="rotulo-formulario">Categoria *</label>
+          <input type="text" id="categoria" class="entrada-formulario" required>
+        </div>
+
+        <div class="campo-formulario">
+          <label class="rotulo-formulario">Preço Unitário (R$) *</label>
+          <input type="number" id="preco" class="entrada-formulario" step="0.01" min="0" required>
+        </div>
+
+        <div class="campo-formulario">
+          <label class="rotulo-formulario">Percentual de Desconto (%) *</label>
+          <input type="number" id="percentualDesconto" class="entrada-formulario" step="0.1" min="0" max="100" required>
+        </div>
+
+        <div class="campo-formulario">
+          <label class="rotulo-formulario">Quantidade em Estoque *</label>
+          <input type="number" id="quantidade" class="entrada-formulario" min="0" required>
+        </div>
+
+        <div class="campo-formulario duas-colunas" style="grid-column: 1 / -1;">
+          <label class="rotulo-formulario">URL da Imagem *</label>
+          <input type="url" id="imagem" class="entrada-formulario" required>
+        </div>
+
+        <div class="acoes-formulario">
+          <button type="submit" class="botao-outline" id="btn_atualizar">Atualizar Produto</button>
+        </div>
+      </form>
+    </section>
+
+  </main>
+
+  <footer class="rodape">
+    <div class="conteudo-rodape">
+      <p>&copy; 2026 - Del Company | Todos os direitos reservados</p>
+    </div>
+  </footer>
+
+</body>
+</html>
