@@ -78,11 +78,11 @@ function renderizarProdutos(produtos) {
     grade.innerHTML = '';
 
     produtos.forEach(prod => {
-        const nome = prod.Nome || prod.nome || 'Sem nome';
-        const preco = parseFloat(prod.Preco !== undefined ? prod.Preco : (prod.preco || 0)).toFixed(2);
-        const desconto = parseFloat(prod.PercentualDesconto !== undefined ? prod.PercentualDesconto : (prod.percentualDesconto || 0)).toFixed(1);
-        const estoque = parseInt(prod.Quantidade !== undefined ? prod.Quantidade : (prod.quantidade || 0));
-        const descricao = prod.Descricao || prod.descricao || 'Sem descrição';
+        const nome = prod.nome || 'Sem nome';
+        const preco = parseFloat(prod.preco || 0).toFixed(2);
+        const desconto = parseFloat(prod.percentualDesconto || 0).toFixed(1);
+        const estoque = parseInt(prod.quantidade || 0);
+        const descricao = prod.descricao || 'Sem descrição';
 
         const card = document.createElement('div');
         card.className = 'cartao-base cartao-elevacao cartao-brilho flex flex-col';
@@ -126,9 +126,9 @@ if (busca) {
         }
 
         const filtrados = todosProdutos.filter(p => {
-            const nome = (p.Nome || p.nome || '').toLowerCase();
-            const descricao = (p.Descricao || p.descricao || '').toLowerCase();
-            const marca = (p.Marca || p.marca || '').toLowerCase();
+            const nome = (p.nome || '').toLowerCase();
+            const descricao = (p.descricao || '').toLowerCase();
+            const marca = (p.marca || '').toLowerCase();
             return nome.includes(termo) || descricao.includes(termo) || marca.includes(termo);
         });
 
