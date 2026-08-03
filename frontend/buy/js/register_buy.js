@@ -39,7 +39,7 @@ async function carregarOpcoes() {
         users.forEach(u => {
             const opt = document.createElement('option');
             opt.value = u.codUsuario;
-            opt.textContent = `${u.Nome || u.nome} ${u.Sobrenome || u.sobrenome} (ID: ${u.codUsuario})`;
+            opt.textContent = `${u.nome} ${u.sobrenome} (ID: ${u.codUsuario})`;
             userSelect.appendChild(opt);
         });
 
@@ -51,10 +51,10 @@ async function carregarOpcoes() {
         prods.forEach(p => {
             const opt = document.createElement('option');
             opt.value = p.codProduto;
-            const nome = p.Nome || p.nome;
-            const quantidade = p.Quantidade !== undefined ? p.Quantidade : p.quantidade;
-            const preco = p.Preco !== undefined ? p.Preco : p.preco;
-            const desconto = p.PercentualDesconto !== undefined ? p.PercentualDesconto : p.percentualDesconto;
+            const nome = p.nome;
+            const quantidade = p.quantidade;
+            const preco = p.preco;
+            const desconto = p.percentualDesconto;
 
             opt.textContent = `${nome} (Qtd: ${quantidade}) - R$ ${parseFloat(preco).toFixed(2)}`;
             // Armazena dados extras para o cálculo da prévia
@@ -134,7 +134,7 @@ if (form) {
         };
 
         try {
-            const res = await fetch(`${API_BASE}/compras`, {
+            const res = await fetch(`${API_BASE}/compra`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
