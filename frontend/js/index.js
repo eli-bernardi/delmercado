@@ -54,8 +54,8 @@ function renderizarProdutos(produtos) {
     produtos.forEach(prod => {
         const nome = prod.nome || 'Sem nome'
         const preco = parseFloat(prod.preco || 0).toFixed(2)
-        const desconto = parseFloat(prod.percentualDesconto || 0).toFixed(1)
-        const estoque = parseInt(prod.quantidade || 0)
+        const desconto = parseFloat(prod.desconto || 0).toFixed(1)
+        const estoque = parseInt(prod.qtdeEstoque || 0)
         const descricao = prod.descricao || 'Sem descrição'
 
         const card = document.createElement('div')
@@ -114,15 +114,34 @@ if (busca) {
     })
 }
 
-async function importar(endpoint, botao, mensagemSucesso) {
+async function importar(endpoint, apiExterna, chaveDados, botao, mensagemSucesso) {
     botao.disabled = true
     const textoOriginal = botao.textContent
     botao.textContent = 'Carregando...'
 
     try {
-        const resp = await fetch(`${API}/${endpoint}`, { method: 'POST' })
+        // 1️⃣ Busca os dados da API externa (DummyJSON)
+        const respostaExterna = await fetch(apiExterna)
+        if (!respostaExterna.ok) throw new Error('Falha ao buscar dados da API externa')
+        const dadosExternos = await respostaExterna.json()
+
+        // A DummyJSON retorna { products: [...] } ou { users: [...] }
+        const lista = dadosExternos[chaveDados] || dadosExternos
+
+        if (!lista || lista.length === 0) {
+            throw new Error('Nenhum dado retornado pela API externa')
+        }
+
+        // 2️⃣ Envia os dados para o backend no body do POST
+        const resp = await fetch(`${API}/${endpoint}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(lista)
+        })
+
         const dados = await resp.json()
-        if (!resp.ok) throw new Error(dados.error || 'Falha na importação')
+        if (!resp.ok) throw new Error(dados.message || dados.error || 'Falha na importação')
+
         mostrarToast(dados.message || mensagemSucesso)
         if (endpoint === 'produtos/bulk') await carregarProdutos()
     } catch (erro) {
@@ -135,13 +154,25 @@ async function importar(endpoint, botao, mensagemSucesso) {
 
 if (btnProdutos) {
     btnProdutos.addEventListener('click', () => {
-        importar('produtos/bulk', btnProdutos, 'Produtos importados com sucesso!')
+        importar(
+            'produtos/bulk',
+            'https://dummyjson.com/products?limit=100',
+            'products',
+            btnProdutos,
+            'Produtos importados com sucesso!'
+        )
     })
 }
 
 if (btnUsuarios) {
     btnUsuarios.addEventListener('click', () => {
-        importar('usuarios/bulk', btnUsuarios, 'Usuários importados com sucesso!')
+        importar(
+            'usuarios/bulk',
+            'https://dummyjson.com/users?limit=100',
+            'users',
+            btnUsuarios,
+            'Usuários importados com sucesso!'
+        )
     })
 }
 
