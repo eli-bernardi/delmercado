@@ -1,150 +1,164 @@
-const sequelize = require('../db/conn')
-const Compra = require('../models/Compra')
-const Produto = require('../models/Produto')
 const Usuario = require('../models/Usuario')
+const Produto = require('../models/Produto')
+const Compra = require('../models/Compra')
 const VwProdutosCriticos = require('../models/Vw_produtos_criticos')
 const VwVolumeCompras = require('../models/Vw_volume_compras')
 
-const cadastrar = async (req,res)=>{
+const cadastrar = (req, res) => {
     const valores = req.body
 
-    if(!valores.codUsuario || !valores.codProduto || !valores.tipoMovimento || 
-        !valores.quantidadeMovimentada || !valores.formaPagamento || !valores.statusCompra){
-        return res.status(400).json({message: 'Campos obrigatórios: codUsuario, codProduto, tipoMovimento, quantidadeMovimentada, formaPagamento, statusCompra.'})
+    // Validação dos campos obrigatórios
+    if (!valores.idUsuario || !valores.idProduto || !valores.tipoMovimento ||
+        !valores.quantidadeMovimentada || !valores.formaPagamento ||
+        !valores.statusCompra || !valores.dataCompra) {
+        return res.status(400).json({ message: 'Todos os campos obrigatórios devem ser preenchidos!' })
     }
 
-    if(valores.quantidadeMovimentada <= 0){
-        return res.status(400).json({message: 'Quantidade movimentada deve ser maior que zero.'})
-    }
-
-    const transaction = await sequelize.transaction()
-    try{
-        const usuario = await Usuario.findByPk(valores.codUsuario, { transaction })
-        if(!usuario){
-            await transaction.rollback()
-            return res.status(404).json({message: 'Usuário não encontrado.'})
-        }
-
-        const produto = await Produto.findByPk(valores.codProduto, { transaction })
-        if(!produto){
-            await transaction.rollback()
-            return res.status(404).json({message: 'Produto não encontrado.'})
-        }
-
-        const precoUnitario = parseFloat(produto.preco)
-        const desconto = parseFloat(produto.percentualDesconto) || 0
-        const precoFinal = (precoUnitario * (1 - desconto / 100)) * valores.quantidadeMovimentada
-
-        if(valores.tipoMovimento === 'SAIDA'){
-            if(produto.quantidade < valores.quantidadeMovimentada){
-                await transaction.rollback()
-                return res.status(400).json({message: 'Saldo insuficiente em estoque.'})
+    // 1 - Verificar se o produto existe no banco
+    Produto.findByPk(valores.idProduto)
+        .then((produto) => {
+            if (!produto) {
+                return res.status(404).json({ message: 'Produto não encontrado!' })
             }
-            produto.quantidade -= parseInt(valores.quantidadeMovimentada, 10)
-        }else if(valores.tipoMovimento === 'ENTRADA'){
-            produto.quantidade += parseInt(valores.quantidadeMovimentada, 10)
-        }else{
-            await transaction.rollback()
-            return res.status(400).json({message: 'Tipo de movimento inválido. Use ENTRADA ou SAIDA.'})
-        }
 
-        await produto.save({ transaction })
+            // 2 - Verificar se o usuário existe no banco
+            return Usuario.findByPk(valores.idUsuario)
+                .then((usuario) => {
+                    if (!usuario) {
+                        return res.status(404).json({ message: 'Usuário não encontrado!' })
+                    }
 
-        const novaCompra = await Compra.create({
-            codUsuario: valores.codUsuario,
-            codProduto: valores.codProduto,
-            tipoMovimento: valores.tipoMovimento,
-            quantidadeMovimentada: valores.quantidadeMovimentada,
-            precoUnitario: precoUnitario,
-            descontoAplicado: desconto,
-            precoFinal: precoFinal,
-            formaPagamento: valores.formaPagamento,
-            statusCompra: valores.statusCompra,
-            dataCompra: new Date()
-        }, { transaction })
+                    let novaQuantidade = produto.qtdeEstoque
+                    const precoUnit = produto.preco // Recupera o preço atual direto do cadastro do produto
 
-        await transaction.commit()
+                    // Lógica de movimentação baseada no estoque atualizado
+                    if (valores.tipoMovimento === 'ENTRADA') {
+                        novaQuantidade += parseInt(valores.quantidadeMovimentada)
+                    } else if (valores.tipoMovimento === 'SAIDA') {
+                        if (produto.qtdeEstoque < valores.quantidadeMovimentada) {
+                            return res.status(400).json({ message: 'Quantidade insuficiente no estoque para esta saída!' })
+                        }
+                        novaQuantidade -= parseInt(valores.quantidadeMovimentada)
+                    } else {
+                        return res.status(400).json({ message: 'Tipo de Movimentação Inválida! Use ENTRADA ou SAIDA.' })
+                    }
 
-        res.status(201).json({message: 'Compra registrada com sucesso!', dados: novaCompra})
-    }catch(err){
-        await transaction.rollback()
-        console.error('Não foi possível registrar a compra',err)
-        res.status(500).json({message: 'Não foi possível registrar a compra'})
-    }
-}
+                    // Cálculo do preço final aplicando o desconto percentual
+                    const desconto = valores.descontoAplicado || produto.desconto || 0.00
+                    const valorBruto = valores.quantidadeMovimentada * precoUnit
+                    const valorDesconto = valorBruto * (desconto / 100)
+                    const precoFinalCalculado = valorBruto - valorDesconto
 
-const listar = async (req,res)=>{
-    try{
-        const dados = await Compra.findAll({
-            include: [
-                { model: Usuario, as: 'usuario', attributes: ['nome','sobrenome'] },
-                { model: Produto, as: 'produto', attributes: ['nome'] }
-            ],
-            order: [['dataCompra','DESC']]
+                    // 3 - Atualiza o estoque do produto com a nova quantidade calculada
+                    return produto.update({ qtdeEstoque: novaQuantidade })
+                        .then(() => {
+                            // 4 - Registra a compra na tabela
+                            return Compra.create({
+                                idUsuario: valores.idUsuario,
+                                idProduto: valores.idProduto,
+                                tipoMovimento: valores.tipoMovimento,
+                                quantidadeMovimentada: valores.quantidadeMovimentada,
+                                precoUnitario: precoUnit,
+                                descontoAplicado: desconto,
+                                precoFinal: precoFinalCalculado,
+                                formaPagamento: valores.formaPagamento,
+                                statusCompra: valores.statusCompra,
+                                dataCompra: valores.dataCompra
+                            })
+                        })
+                        .then((compra) => {
+                            res.status(201).json(compra)
+                        })
+                })
         })
-        res.status(200).json(dados)
-    }catch(err){
-        console.error('Não foi possível listar as compras',err)
-        res.status(500).json({message: 'Não foi possível listar as compras'})
-    }
+        .catch((err) => {
+            console.error('Erro ao registrar a Compra:', err)
+            res.status(500).json({ message: 'Erro ao registrar a Compra' })
+        })
 }
 
-const buscarPorCod = async (req,res)=>{
+const listar = (req, res) => {
+    Compra.findAll({
+        include: [
+            { model: Usuario, as: 'usuarioCompra', attributes: ['nome', 'sobrenome'] },
+            { model: Produto, as: 'produtoCompra', attributes: ['nome'] }
+        ],
+        order: [['dataCompra', 'DESC']]
+    })
+        .then((dados) => {
+            res.status(200).json(dados)
+        })
+        .catch((err) => {
+            console.error('Não foi possível listar as compras', err)
+            res.status(500).json({ message: 'Não foi possível listar as compras' })
+        })
+}
+
+const buscarPorCod = (req, res) => {
     const id = req.params.id
-    try{
-        const dados = await Compra.findByPk(id, {
-            include: [
-                { model: Usuario, as: 'usuario', attributes: ['nome','sobrenome'] },
-                { model: Produto, as: 'produto', attributes: ['nome'] }
-            ]
+
+    Compra.findByPk(id, {
+        include: [
+            { model: Usuario, as: 'usuarioCompra', attributes: ['nome', 'sobrenome'] },
+            { model: Produto, as: 'produtoCompra', attributes: ['nome'] }
+        ]
+    })
+        .then((dados) => {
+            if (!dados) {
+                return res.status(404).json({ message: 'Compra não encontrada!' })
+            }
+            res.status(200).json(dados)
         })
-        if(!dados){
-            return res.status(404).json({message: 'Compra não encontrada!'})
-        }
-        res.status(200).json(dados)
-    }catch(err){
-        console.error('Não foi possível encontrar a compra',err)
-        res.status(500).json({message: 'Não foi possível encontrar a compra'})
-    }
+        .catch((err) => {
+            console.error('Não foi possível encontrar a compra', err)
+            res.status(500).json({ message: 'Não foi possível encontrar a compra' })
+        })
 }
 
-const relatorioProdutosCriticos = async (req,res)=>{
-    try{
-        const dados = await VwProdutosCriticos.findAll()
-        res.status(200).json(dados)
-    }catch(err){
-        console.error('Erro ao buscar produtos críticos',err)
-        res.status(500).json({message: 'Erro ao buscar produtos críticos'})
-    }
+const relatorioProdutosCriticos = (req, res) => {
+    VwProdutosCriticos.findAll()
+        .then((dados) => {
+            res.status(200).json(dados)
+        })
+        .catch((err) => {
+            console.error('Erro ao buscar produtos críticos', err)
+            res.status(500).json({ message: 'Erro ao buscar produtos críticos' })
+        })
 }
 
-const relatorioVolumeCompras = async (req,res)=>{
-    try{
-        const dados = await VwVolumeCompras.findAll({
-            order: [['valor_financeiro_movimentado','DESC']]
+const relatorioVolumeCompras = (req, res) => {
+    VwVolumeCompras.findAll({
+        order: [['valor_financeiro_movimentado', 'DESC']]
+    })
+        .then((dados) => {
+            res.status(200).json(dados)
         })
-        res.status(200).json(dados)
-    }catch(err){
-        console.error('Erro ao buscar volume de compras',err)
-        res.status(500).json({message: 'Erro ao buscar volume de compras'})
-    }
+        .catch((err) => {
+            console.error('Erro ao buscar volume de compras', err)
+            res.status(500).json({ message: 'Erro ao buscar volume de compras' })
+        })
 }
 
-const relatorioGraficos = async (req,res)=>{
-    try{
-        const estoqueCritico = await VwProdutosCriticos.findAll()
-        const volumeCompras = await VwVolumeCompras.findAll({
-            limit: 5,
-            order: [['valor_financeiro_movimentado','DESC']]
+const relatorioGraficos = (req, res) => {
+    let estoqueCritico = []
+    let volumeCompras = []
+
+    VwProdutosCriticos.findAll()
+        .then((dados) => {
+            estoqueCritico = dados
+            return VwVolumeCompras.findAll({
+                limit: 5,
+                order: [['valor_financeiro_movimentado', 'DESC']]
+            })
         })
-        res.status(200).json({
-            estoqueCritico,
-            volumeCompras
+        .then((dados) => {
+            volumeCompras = dados
+            res.status(200).json({ estoqueCritico, volumeCompras })
         })
-    }catch(err){
-        console.error('Erro ao gerar dados para gráficos',err)
-        res.status(500).json({message: 'Erro ao gerar dados para gráficos'})
-    }
+        .catch((err) => {
+            console.error('Erro ao gerar dados para gráficos', err)
+            res.status(500).json({ message: 'Erro ao gerar dados para gráficos' })
+        })
 }
 
 module.exports = { cadastrar, listar, buscarPorCod, relatorioProdutosCriticos, relatorioVolumeCompras, relatorioGraficos }

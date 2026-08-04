@@ -1,9 +1,9 @@
 const conn = require('./db/conn')
 const { Usuario, Produto, Compra } = require('./models/rel')
 
-async function syncDataBase(){
-    try{
-        await conn.sync({force: true})
+async function syncDataBase() {
+    try {
+        await conn.sync({ force: true })
         console.log('Tabelas sincronizadas')
 
         // Injetar a criação da view vw_produtos_criticos
@@ -13,9 +13,9 @@ async function syncDataBase(){
                 codProduto AS codigo_produto,
                 nome AS nome,
                 categoria AS categoria,
-                quantidade AS quantidade_atual
+                qtdeEstoque AS quantidade_atual
             FROM produtos
-            WHERE quantidade < 10;
+            WHERE qtdeEstoque < 10;
         `
         await conn.query(queryViewCriticos)
         console.log('view vw_produtos_criticos criada com sucesso!')
@@ -28,17 +28,18 @@ async function syncDataBase(){
                 SUM(c.quantidadeMovimentada) AS quantidade_total_movimentada,
                 SUM(c.quantidadeMovimentada * c.precoUnitario) AS valor_financeiro_movimentado
             FROM compras c
-            INNER JOIN produtos p ON c.codProduto = p.codProduto
+            INNER JOIN produtos p ON c.idProduto = p.codProduto
             WHERE c.tipoMovimento = 'SAIDA'
             GROUP BY p.codProduto, p.nome;
         `
         await conn.query(queryViewVolume)
         console.log('view vw_volume_compras criada com sucesso!')
-    }catch(err){
-        console.error('Erro ao sincronizar as tabelas',err)
-    }finally{
+
+    } catch (err) {
+        console.error('Erro ao sincronizar as tabelas', err)
+    } finally {
         await conn.close()
-        console.log('Fechando a conexão com o banco de dados') 
+        console.log('Fechando a conexão com o banco de dados')
     }
 }
 
