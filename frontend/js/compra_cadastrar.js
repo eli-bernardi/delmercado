@@ -1,60 +1,71 @@
-const API = 'http://localhost:3000'
+let userSelect = document.getElementById('move-usuario')
+let prodSelect = document.getElementById('move-produto')
+let qtdInput = document.getElementById('move-quantidade')
+let pagamentoSelect = document.getElementById('move-pagamento')
+let statusSelect = document.getElementById('move-status')
+let form = document.getElementById('movement-form')
+let resposta = document.getElementById('resposta')
 
-const userSelect = document.getElementById('move-usuario')
-const prodSelect = document.getElementById('move-produto')
-const qtdInput = document.getElementById('move-quantidade')
-const pagamentoSelect = document.getElementById('move-pagamento')
-const statusSelect = document.getElementById('move-status')
-const form = document.getElementById('movement-form')
-const resposta = document.getElementById('resposta')
+let previewPreco = document.getElementById('preview-preco')
+let previewDesconto = document.getElementById('preview-desconto')
+let previewFinal = document.getElementById('preview-final')
+let stockHint = document.getElementById('product-stock-hint')
 
-const previewPreco = document.getElementById('preview-preco')
-const previewDesconto = document.getElementById('preview-desconto')
-const previewFinal = document.getElementById('preview-final')
-const stockHint = document.getElementById('product-stock-hint')
+function carregarOpcoes() {
+    if (!userSelect || !prodSelect) return
 
-async function carregarOpcoes() {
-    try {
-        if (!userSelect || !prodSelect) return
+    userSelect.innerHTML = '<option value="">Carregando usuários...</option>'
+    prodSelect.innerHTML = '<option value="">Carregando produtos...</option>'
 
-        userSelect.innerHTML = '<option value="">Carregando usuários...</option>'
-        prodSelect.innerHTML = '<option value="">Carregando produtos...</option>'
-
-        // Carrega Usuários
-        const resUsers = await fetch(`${API}/usuarios`)
-        if (!resUsers.ok) throw new Error('Erro ao carregar usuários')
-        const users = await resUsers.json()
-        userSelect.innerHTML = '<option value="">Selecione um usuário...</option>'
-        users.forEach(u => {
-            const opt = document.createElement('option')
-            opt.value = u.codUsuario
-            opt.textContent = `${u.nome} ${u.sobrenome} (ID: ${u.codUsuario})`
-            userSelect.appendChild(opt)
+    // Carrega Usuários
+    fetch('http://localhost:3000/usuarios')
+        .then(res => {
+            if (!res.ok) throw new Error('Erro ao carregar usuários')
+            return res.json()
+        })
+        .then(users => {
+            userSelect.innerHTML = '<option value="">Selecione um usuário...</option>'
+            for (let i = 0; i < users.length; i++) {
+                let u = users[i]
+                let opt = document.createElement('option')
+                opt.value = u.codUsuario
+                opt.textContent = `${u.nome} ${u.sobrenome} (ID: ${u.codUsuario})`
+                userSelect.appendChild(opt)
+            }
+        })
+        .catch(err => {
+            console.error('Erro ao carregar usuários:', err)
+            resposta.innerHTML = '<p style="color: red;">Não foi possível carregar as opções.</p>'
         })
 
-        // Carrega Produtos
-        const resProds = await fetch(`${API}/produtos`)
-        if (!resProds.ok) throw new Error('Erro ao carregar produtos')
-        const prods = await resProds.json()
-        prodSelect.innerHTML = '<option value="">Selecione um produto...</option>'
-        prods.forEach(p => {
-            const opt = document.createElement('option')
-            opt.value = p.codProduto
-            opt.textContent = `${p.nome} (Qtd: ${p.quantidade}) - R$ ${parseFloat(p.preco).toFixed(2)}`
-            opt.dataset.preco = p.preco
-            opt.dataset.desconto = p.percentualDesconto
-            opt.dataset.quantidade = p.quantidade
-            prodSelect.appendChild(opt)
+    // Carrega Produtos
+    fetch('http://localhost:3000/produtos')
+        .then(res => {
+            if (!res.ok) throw new Error('Erro ao carregar produtos')
+            return res.json()
         })
-    } catch (err) {
-        console.error('Erro ao popular selects:', err)
-        mostrarToast('Não foi possível carregar as opções.', true)
-    }
+        .then(prods => {
+            prodSelect.innerHTML = '<option value="">Selecione um produto...</option>'
+            for (let i = 0; i < prods.length; i++) {
+                let p = prods[i]
+                let opt = document.createElement('option')
+                opt.value = p.codProduto
+                opt.textContent = `${p.nome} (Qtd: ${p.qtdeEstoque}) - R$ ${parseFloat(p.preco).toFixed(2)}`
+                opt.dataset.preco = p.preco
+                opt.dataset.desconto = p.desconto
+                opt.dataset.qtdeEstoque = p.qtdeEstoque
+                prodSelect.appendChild(opt)
+            }
+        })
+        .catch(err => {
+            console.error('Erro ao carregar produtos:', err)
+            resposta.innerHTML = '<p style="color: red;">Não foi possível carregar as opções.</p>'
+        })
 }
 
 function atualizarPrevia() {
-    const opt = prodSelect.options[prodSelect.selectedIndex]
-    const qtd = parseInt(qtdInput.value) || 0
+    let opt = prodSelect.options[prodSelect.selectedIndex]
+    let qtd = parseInt(qtdInput.value) || 0
 
     if (!opt || !opt.value) {
         if (previewPreco) previewPreco.textContent = '-'
@@ -64,17 +75,17 @@ function atualizarPrevia() {
         return
     }
 
-    const preco = parseFloat(opt.dataset.preco)
-    const desconto = parseFloat(opt.dataset.desconto) || 0
-    const estoque = parseInt(opt.dataset.quantidade)
+    let preco = parseFloat(opt.dataset.preco)
+    let desconto = parseFloat(opt.dataset.desconto) || 0
+    let estoque = parseInt(opt.dataset.qtdeEstoque)
 
     if (previewPreco) previewPreco.textContent = `R$ ${preco.toFixed(2)}`
     if (previewDesconto) previewDesconto.textContent = `${desconto.toFixed(1)}%`
     if (stockHint) stockHint.textContent = `Estoque disponível: ${estoque} un.`
 
     if (qtd > 0) {
-        const precoComDesconto = preco * (1 - desconto / 100)
-        const total = precoComDesconto * qtd
+        let precoComDesconto = preco * (1 - desconto / 100)
+        let total = precoComDesconto * qtd
         if (previewFinal) previewFinal.textContent = `R$ ${total.toFixed(2)}`
     } else {
         if (previewFinal) previewFinal.textContent = '-'
@@ -85,62 +96,52 @@ if (prodSelect) prodSelect.addEventListener('change', atualizarPrevia)
 if (qtdInput) qtdInput.addEventListener('input', atualizarPrevia)
 
 if (form) {
-    form.addEventListener('submit', async (e) => {
+    form.addEventListener('submit', (e) => {
         e.preventDefault()
 
-        const codUsuario = parseInt(userSelect.value)
-        const codProduto = parseInt(prodSelect.value)
-        const tipoMovimento = document.querySelector('input[name="tipoMovimento"]:checked').value
-        const quantidadeMovimentada = parseInt(qtdInput.value)
-        const formaPagamento = pagamentoSelect.value
-        const statusCompra = statusSelect.value
+        let idUsuario = parseInt(userSelect.value)
+        let idProduto = parseInt(prodSelect.value)
+        let tipoMovimento = document.querySelector('input[name="tipoMovimento"]:checked').value
+        let quantidadeMovimentada = parseInt(qtdInput.value)
+        let formaPagamento = pagamentoSelect.value
+        let statusCompra = statusSelect.value
+        let dataCompra = document.getElementById('move-data') ? document.getElementById('move-data').value : new Date().toISOString().split('T')[0]
 
-        const opt = prodSelect.options[prodSelect.selectedIndex]
-        const estoque = parseInt(opt.dataset.quantidade)
+        let opt = prodSelect.options[prodSelect.selectedIndex]
+        let estoque = parseInt(opt.dataset.qtdeEstoque)
 
         if (tipoMovimento === 'SAIDA' && estoque < quantidadeMovimentada) {
-            mostrarToast('Quantidade indisponível no estoque!', true)
+            resposta.innerHTML = '<p style="color: #ffaa00;">Quantidade indisponível no estoque!</p>'
             return
         }
 
-        const payload = {
-            codUsuario,
-            codProduto,
-            tipoMovimento,
-            quantidadeMovimentada,
-            formaPagamento,
-            statusCompra
+        let payload = {
+            idUsuario: idUsuario,
+            idProduto: idProduto,
+            tipoMovimento: tipoMovimento,
+            quantidadeMovimentada: quantidadeMovimentada,
+            formaPagamento: formaPagamento,
+            statusCompra: statusCompra,
+            dataCompra: dataCompra
         }
 
-        try {
-            const res = await fetch(`${API}/compra`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
+        fetch('http://localhost:3000/compra', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        })
+            .then(res => res.json())
+            .then(data => {
+                resposta.innerHTML = '<p style="color: lightgreen;">Transação registrada com sucesso!</p>'
+                form.reset()
+                atualizarPrevia()
+                carregarOpcoes()
             })
-
-            const data = await res.json()
-            if (!res.ok) throw new Error(data.message || 'Erro ao registrar compra.')
-
-            mostrarToast('Transação registrada com sucesso!', false)
-            form.reset()
-            atualizarPrevia()
-            await carregarOpcoes()
-        } catch (err) {
-            mostrarToast(err.message, true)
-        }
+            .catch(err => {
+                console.error('Erro ao registrar compra:', err)
+                resposta.innerHTML = `<p style="color: red;">${err.message || 'Erro ao registrar a compra.'}</p>`
+            })
     })
-}
-
-function mostrarToast(msg, erro = false) {
-    if (!resposta) return
-    resposta.textContent = msg
-    resposta.className = `toast ${erro ? 'erro' : 'sucesso'}`
-    resposta.style.display = 'block'
-    clearTimeout(resposta._timeout)
-    resposta._timeout = setTimeout(() => {
-        resposta.style.display = 'none'
-    }, 4500)
 }
 
 document.addEventListener('DOMContentLoaded', () => {

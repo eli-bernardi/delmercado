@@ -61,26 +61,26 @@ function renderizarProdutos(produtos) {
         const card = document.createElement('div')
         card.className = 'cartao-base cartao-elevacao cartao-brilho flex flex-col'
         card.innerHTML = `
-      <div class="flex justificar-entre itens-inicio mb-3">
-        <h3 class="fonte-negrito texto-branco truncar" style="max-width: 150px;">${nome}</h3>
-        <span class="texto-xs fundo-marca/20 texto-marca px-2 py-0.5 arredondado fonte-semi-negrito">ID ${prod.codProduto || '-'}</span>
-      </div>
-      <p class="texto-cinza-400 texto-xs mb-4 linha-clamp-2">${descricao}</p>
-      <div class="mt-auto espaco-y-1" style="font-size: 0.875rem;">
-        <div style="display: flex; justify-content: space-between;">
-          <span class="texto-cinza-400">Preço</span>
-          <span class="texto-branco fonte-semi-negrito">R$ ${preco}</span>
-        </div>
-        <div style="display: flex; justify-content: space-between;">
-          <span class="texto-cinza-400">Desconto</span>
-          <span class="texto-branco">${desconto}%</span>
-        </div>
-        <div style="display: flex; justify-content: space-between;">
-          <span class="texto-cinza-400">Estoque</span>
-          <span class="${estoque < 10 ? 'texto-vermelho-400' : 'texto-verde-400'} fonte-negrito">${estoque} unid.</span>
-        </div>
-      </div>
-    `
+            <div class="flex justificar-entre itens-inicio mb-3">
+                <h3 class="fonte-negrito texto-branco truncar" style="max-width: 150px;">${nome}</h3>
+                <span class="texto-xs fundo-marca/20 texto-marca px-2 py-0.5 arredondado fonte-semi-negrito">ID ${prod.codProduto || '-'}</span>
+            </div>
+            <p class="texto-cinza-400 texto-xs mb-4 linha-clamp-2">${descricao}</p>
+            <div class="mt-auto espaco-y-1" style="font-size: 0.875rem;">
+                <div style="display: flex; justify-content: space-between;">
+                    <span class="texto-cinza-400">Preço</span>
+                    <span class="texto-branco fonte-semi-negrito">R$ ${preco}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span class="texto-cinza-400">Desconto</span>
+                    <span class="texto-branco">${desconto}%</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span class="texto-cinza-400">Estoque</span>
+                    <span class="${estoque < 10 ? 'texto-vermelho-400' : 'texto-verde-400'} fonte-negrito">${estoque} unid.</span>
+                </div>
+            </div>
+        `
         grade.appendChild(card)
     })
 }

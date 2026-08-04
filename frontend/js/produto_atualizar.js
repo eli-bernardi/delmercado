@@ -1,102 +1,90 @@
-const API = 'http://localhost:3000'
-const resposta = document.getElementById('resposta')
-const btn_carregar = document.getElementById('btn_carregar')
-const btn_atualizar = document.getElementById('btn_atualizar')
+let resposta = document.getElementById('resposta')
+let btn_carregar = document.getElementById('btn_carregar')
+let btn_atualizar = document.getElementById('btn_atualizar')
 
 btn_carregar.addEventListener('click', (e) => {
     e.preventDefault()
 
-    const codProduto = document.getElementById('codProduto').value
+    let codProduto = document.getElementById('codProduto').value
 
     if (!codProduto) {
-        mostrarToast('Por favor, informe o Código do Produto!', true)
+        resposta.innerHTML = '<p style="color: #ffaa00;">Por favor, informe o Código do Produto!</p>'
         return
     }
 
-    fetch(`${API}/produto/${codProduto}`)
-        .then(res => {
-            if (!res.ok) {
-                throw new Error('Produto não encontrado!')
-            }
-            return res.json()
-        })
-        .then(prod => {
-            document.getElementById('nome').value = prod.nome || ''
-            document.getElementById('marca').value = prod.marca || ''
-            document.getElementById('descricao').value = prod.descricao || ''
-            document.getElementById('categoria').value = prod.categoria || ''
-            document.getElementById('preco').value = prod.preco || ''
-            document.getElementById('percentualDesconto').value = prod.percentualDesconto || ''
-            document.getElementById('quantidade').value = prod.quantidade || ''
-            document.getElementById('imagem').value = prod.imagem || ''
-            mostrarToast('Produto carregado com sucesso!', false)
-        })
-        .catch((err) => {
-            console.error('Erro ao buscar o produto', err)
-            mostrarToast('Produto não encontrado no banco de dados.', true)
-        })
+    fetch(`http://localhost:3000/produto/${codProduto}`)
+    .then(res => {
+        if (!res.ok) {
+            throw new Error('Produto não encontrado!')
+        }
+        return res.json()
+    })
+    .then(prod => {
+        document.getElementById('nome').value = prod.nome || ''
+        document.getElementById('marca').value = prod.marca || ''
+        document.getElementById('descricao').value = prod.descricao || ''
+        document.getElementById('categoria').value = prod.categoria || ''
+        document.getElementById('preco').value = prod.preco || ''
+        document.getElementById('desconto').value = prod.desconto || ''
+        document.getElementById('qtdeEstoque').value = prod.qtdeEstoque || ''
+        document.getElementById('imagem').value = prod.imagem || ''
+        resposta.innerHTML = '<p style="color: lightgreen;">Produto carregado com sucesso!</p>'
+    })
+    .catch((err) => {
+        console.error('Erro ao buscar o produto', err)
+        resposta.innerHTML = '<p style="color: red;">Produto não encontrado no banco de dados.</p>'
+    })
 })
 
 btn_atualizar.addEventListener('click', (e) => {
     e.preventDefault()
 
-    const codProduto = document.getElementById('codProduto').value
-    const nome = document.getElementById('nome').value
-    const marca = document.getElementById('marca').value
-    const descricao = document.getElementById('descricao').value
-    const categoria = document.getElementById('categoria').value
-    const preco = document.getElementById('preco').value
-    const percentualDesconto = document.getElementById('percentualDesconto').value
-    const quantidade = document.getElementById('quantidade').value
-    const imagem = document.getElementById('imagem').value
+    let codProduto = document.getElementById('codProduto').value
+    let nome = document.getElementById('nome').value
+    let marca = document.getElementById('marca').value
+    let descricao = document.getElementById('descricao').value
+    let categoria = document.getElementById('categoria').value
+    let preco = document.getElementById('preco').value
+    let desconto = document.getElementById('desconto').value
+    let qtdeEstoque = document.getElementById('qtdeEstoque').value
+    let imagem = document.getElementById('imagem').value
 
     if (!codProduto) {
-        mostrarToast('Por favor, informe o Código do Produto!', true)
+        resposta.innerHTML = '<p style="color: #ffaa00;">Por favor, informe o Código do Produto!</p>'
         return
     }
 
-    const produtoAtualizado = {
+    let produtoAtualizado = {
         nome: nome,
         marca: marca,
         descricao: descricao,
         categoria: categoria,
         preco: parseFloat(preco) || 0,
-        percentualDesconto: parseFloat(percentualDesconto) || 0,
-        quantidade: parseInt(quantidade) || 0,
+        desconto: parseFloat(desconto) || 0,
+        qtdeEstoque: parseInt(qtdeEstoque) || 0,
         imagem: imagem
     }
 
-    fetch(`${API}/produto/${codProduto}`, {
+    fetch(`http://localhost:3000/produto/${codProduto}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(produtoAtualizado)
     })
-        .then(res => {
-            if (!res.ok) {
-                throw new Error('Erro ao atualizar produto.')
-            }
-            return res.json()
-        })
-        .then(dados => {
-            mostrarToast(dados.message || 'Produto atualizado com sucesso!', false)
-            document.getElementById('product-form').reset()
-            document.getElementById('codProduto').value = ''
-        })
-        .catch((err) => {
-            console.error('Erro ao atualizar os dados', err)
-            mostrarToast('Erro ao tentar atualizar o produto.', true)
-        })
+    .then(res => {
+        if (!res.ok) {
+            throw new Error('Erro ao atualizar produto.')
+        }
+        return res.json()
+    })
+    .then(dados => {
+        resposta.innerHTML = `<p style="color: lightgreen;">${dados.message || 'Produto atualizado com sucesso!'}</p>`
+        document.getElementById('product-form').reset()
+        document.getElementById('codProduto').value = ''
+    })
+    .catch((err) => {
+        console.error('Erro ao atualizar os dados', err)
+        resposta.innerHTML = '<p style="color: red;">Erro ao tentar atualizar o produto.</p>'
+    })
 })
-
-function mostrarToast(msg, erro = false) {
-    if (!resposta) return
-    resposta.textContent = msg
-    resposta.className = `toast ${erro ? 'erro' : 'sucesso'}`
-    resposta.style.display = 'block'
-    clearTimeout(resposta._timeout)
-    resposta._timeout = setTimeout(() => {
-        resposta.style.display = 'none'
-    }, 4500)
-}

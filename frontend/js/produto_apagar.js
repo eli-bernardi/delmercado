@@ -1,14 +1,13 @@
-const API = 'http://localhost:3000'
-const resposta = document.getElementById('resposta')
-const btn_apagar = document.getElementById('btn_apagar')
+let resposta = document.getElementById('resposta')
+let btn_apagar = document.getElementById('btn_apagar')
 
 btn_apagar.addEventListener('click', (e) => {
     e.preventDefault()
 
-    const codProduto = document.getElementById('codProduto').value
+    let codProduto = document.getElementById('codProduto').value
 
     if (!codProduto) {
-        mostrarToast('Por favor, informe o Código do Produto!', true)
+        resposta.innerHTML = '<p style="color: #ffaa00;">Por favor, informe o Código do Produto!</p>'
         return
     }
 
@@ -16,27 +15,16 @@ btn_apagar.addEventListener('click', (e) => {
         return
     }
 
-    fetch(`${API}/produto/${codProduto}`, {
+    fetch(`http://localhost:3000/produto/${codProduto}`, {
         method: 'DELETE'
     })
-        .then(res => res.json())
-        .then(dados => {
-            mostrarToast(dados.message || 'Registro apagado com sucesso!', false)
-            document.querySelector('form').reset()
-        })
-        .catch((err) => {
-            console.error('Erro ao apagar os dados', err)
-            mostrarToast('Erro ao tentar apagar o produto.', true)
-        })
+    .then(res => res.json())
+    .then(dados => {
+        resposta.innerHTML = `<p style="color: lightgreen;">${dados.message || 'Registro apagado com sucesso!'}</p>`
+        document.querySelector('form').reset()
+    })
+    .catch((err) => {
+        console.error('Erro ao apagar os dados', err)
+        resposta.innerHTML = '<p style="color: red;">Erro ao tentar apagar o produto.</p>'
+    })
 })
-
-function mostrarToast(msg, erro = false) {
-    if (!resposta) return
-    resposta.textContent = msg
-    resposta.className = `toast ${erro ? 'erro' : 'sucesso'}`
-    resposta.style.display = 'block'
-    clearTimeout(resposta._timeout)
-    resposta._timeout = setTimeout(() => {
-        resposta.style.display = 'none'
-    }, 4500)
-}

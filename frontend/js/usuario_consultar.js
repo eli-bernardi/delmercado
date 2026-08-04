@@ -1,20 +1,19 @@
-const API = 'http://localhost:3000'
-const resposta = document.getElementById('resposta')
-const btn_consultar = document.getElementById('btn_consultar')
-const btn_consultar_nome = document.getElementById('btn_consultar_nome')
-const resposta_tabela = document.getElementById('resposta_tabela')
+let resposta = document.getElementById('resposta')
+let btn_consultar = document.getElementById('btn_consultar')
+let btn_consultar_nome = document.getElementById('btn_consultar_nome')
+let resposta_tabela = document.getElementById('resposta_tabela')
 
 btn_consultar.addEventListener('click', (e) => {
     e.preventDefault()
 
-    const codUsuario = document.getElementById('codUsuario').value
+    let codUsuario = document.getElementById('codUsuario').value
 
     if (!codUsuario) {
-        mostrarToast('Por favor, informe o Código do Usuário!', true)
+        resposta.innerHTML = '<p style="color: #ffaa00;">Por favor, informe o Código do Usuário!</p>'
         return
     }
 
-    fetch(`${API}/usuario/${codUsuario}`)
+    fetch(`http://localhost:3000/usuario/${codUsuario}`)
         .then(res => {
             if (!res.ok) {
                 throw new Error('Usuário não encontrado!')
@@ -27,21 +26,21 @@ btn_consultar.addEventListener('click', (e) => {
         .catch((err) => {
             console.error('Erro ao consultar os dados', err)
             resposta_tabela.innerHTML = `<tr><td colspan="9" style="text-align: center; color: #f87171;">Usuário não encontrado.</td></tr>`
-            mostrarToast('Usuário não encontrado.', true)
+            resposta.innerHTML = '<p style="color: red;">Usuário não encontrado.</p>'
         })
 })
 
 btn_consultar_nome.addEventListener('click', (e) => {
     e.preventDefault()
 
-    const nome = document.getElementById('nome').value
+    let nome = document.getElementById('nome').value
 
     if (!nome) {
-        mostrarToast('Por favor, informe o Nome do Usuário!', true)
+        resposta.innerHTML = '<p style="color: #ffaa00;">Por favor, informe o Nome do Usuário!</p>'
         return
     }
 
-    fetch(`${API}/usuario/buscar/${nome}`)
+    fetch(`http://localhost:3000/usuario/buscar/${nome}`)
         .then(res => {
             if (!res.ok) {
                 throw new Error('Usuário não encontrado!')
@@ -54,13 +53,15 @@ btn_consultar_nome.addEventListener('click', (e) => {
         .catch((err) => {
             console.error('Erro ao consultar os dados', err)
             resposta_tabela.innerHTML = `<tr><td colspan="9" style="text-align: center; color: #f87171;">Usuário não encontrado.</td></tr>`
-            mostrarToast('Usuário não encontrado.', true)
+            resposta.innerHTML = '<p style="color: red;">Usuário não encontrado.</p>'
         })
 })
 
 function criarTbody(dados) {
     let corpo = ''
-    dados.forEach(el => {
+
+    for (let i = 0; i < dados.length; i++) {
+        let el = dados[i]
         corpo += `<tr>`
         corpo += `<td>${el.codUsuario}</td>`
         corpo += `<td>${el.nome}</td>`
@@ -72,17 +73,7 @@ function criarTbody(dados) {
         corpo += `<td>${el.cidade || '-'}</td>`
         corpo += `<td>${el.estado || '-'}</td>`
         corpo += `</tr>`
-    })
-    return corpo
-}
+    }
 
-function mostrarToast(msg, erro = false) {
-    if (!resposta) return
-    resposta.textContent = msg
-    resposta.className = `toast ${erro ? 'erro' : 'sucesso'}`
-    resposta.style.display = 'block'
-    clearTimeout(resposta._timeout)
-    resposta._timeout = setTimeout(() => {
-        resposta.style.display = 'none'
-    }, 4500)
+    return corpo
 }

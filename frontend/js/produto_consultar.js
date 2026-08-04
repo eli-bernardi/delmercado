@@ -1,20 +1,19 @@
-const API = 'http://localhost:3000'
-const resposta = document.getElementById('resposta')
-const btn_consultar = document.getElementById('btn_consultar')
-const btn_consultar_nome = document.getElementById('btn_consultar_nome')
-const resposta_tabela = document.getElementById('resposta_tabela')
+let resposta = document.getElementById('resposta')
+let btn_consultar = document.getElementById('btn_consultar')
+let btn_consultar_nome = document.getElementById('btn_consultar_nome')
+let resposta_tabela = document.getElementById('resposta_tabela')
 
 btn_consultar.addEventListener('click', (e) => {
     e.preventDefault()
 
-    const codProduto = document.getElementById('codProduto').value
+    let codProduto = document.getElementById('codProduto').value
 
     if (!codProduto) {
-        mostrarToast('Por favor, informe o Código do Produto!', true)
+        resposta.innerHTML = '<p style="color: #ffaa00;">Por favor, informe o Código do Produto!</p>'
         return
     }
 
-    fetch(`${API}/produto/${codProduto}`)
+    fetch(`http://localhost:3000/produto/${codProduto}`)
         .then(res => {
             if (!res.ok) {
                 throw new Error('Produto não encontrado!')
@@ -27,21 +26,21 @@ btn_consultar.addEventListener('click', (e) => {
         .catch((err) => {
             console.error('Erro ao consultar os dados', err)
             resposta_tabela.innerHTML = `<tr><td colspan="8" style="text-align: center; color: #f87171;">Produto não encontrado.</td></tr>`
-            mostrarToast('Produto não encontrado.', true)
+            resposta.innerHTML = '<p style="color: #f87171;">Produto não encontrado.</p>'
         })
 })
 
 btn_consultar_nome.addEventListener('click', (e) => {
     e.preventDefault()
 
-    const nome = document.getElementById('nome').value
+    let nome = document.getElementById('nome').value
 
     if (!nome) {
-        mostrarToast('Por favor, informe o Nome do Produto!', true)
+        resposta.innerHTML = '<p style="color: #ffaa00;">Por favor, informe o Nome do Produto!</p>'
         return
     }
 
-    fetch(`${API}/produto/buscar/${nome}`)
+    fetch(`http://localhost:3000/produto/buscar/${nome}`)
         .then(res => {
             if (!res.ok) {
                 throw new Error('Produto não encontrado!')
@@ -54,13 +53,15 @@ btn_consultar_nome.addEventListener('click', (e) => {
         .catch((err) => {
             console.error('Erro ao consultar os dados', err)
             resposta_tabela.innerHTML = `<tr><td colspan="8" style="text-align: center; color: #f87171;">Produto não encontrado.</td></tr>`
-            mostrarToast('Produto não encontrado.', true)
+            resposta.innerHTML = '<p style="color: red;">Produto não encontrado.</p>'
         })
 })
 
 function criarTbody(dados) {
     let corpo = ''
-    dados.forEach(el => {
+
+    for (let i = 0; i < dados.length; i++) {
+        let el = dados[i]
         corpo += `<tr>`
         corpo += `<td>${el.codProduto}</td>`
         corpo += `<td><img src="${el.imagem}" alt="${el.nome}" style="width:50px;height:50px;object-fit:cover;border-radius:8px;"></td>`
@@ -68,20 +69,10 @@ function criarTbody(dados) {
         corpo += `<td>${el.marca || '-'}</td>`
         corpo += `<td>${el.categoria}</td>`
         corpo += `<td>R$ ${parseFloat(el.preco || 0).toFixed(2)}</td>`
-        corpo += `<td>${parseFloat(el.percentualDesconto || 0).toFixed(1)}%</td>`
-        corpo += `<td><span class="${parseInt(el.quantidade || 0) < 10 ? 'texto-cor-vermelho-400' : 'texto-cor-verde-400'} peso-fonte-bold">${el.quantidade} un.</span></td>`
+        corpo += `<td>${parseFloat(el.desconto || 0).toFixed(1)}%</td>`
+        corpo += `<td><span class="${parseInt(el.qtdeEstoque || 0) < 10 ? 'texto-cor-vermelho-400' : 'texto-cor-verde-400'} peso-fonte-bold">${el.qtdeEstoque} un.</span></td>`
         corpo += `</tr>`
-    })
-    return corpo
-}
+    }
 
-function mostrarToast(msg, erro = false) {
-    if (!resposta) return
-    resposta.textContent = msg
-    resposta.className = `toast ${erro ? 'erro' : 'sucesso'}`
-    resposta.style.display = 'block'
-    clearTimeout(resposta._timeout)
-    resposta._timeout = setTimeout(() => {
-        resposta.style.display = 'none'
-    }, 4500)
+    return corpo
 }
