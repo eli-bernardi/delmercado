@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Del Mercado - Cadastrar Produto</title>
+  <link rel="shortcut icon" href="/img/dell.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <!-- <link rel="stylesheet" href="../css/style_cad.css"> -->
+  <script src="../js/produto_cadastrar.js" defer></script>
+</head>
+
+<body>
+
+  <header class="cabecalho">
+    <a href="../index.html" class="logo">Del Mercado</a>
+    <nav class="navegacao">
+      <a href="../index.html">Início</a>
+      <a href="produto_cadastrar.html" class="ativo">Cadastrar</a>
+      <a href="produto_listar.html">Listar</a>
+      <a href="produto_consultar.html">Consultar</a>
+      <a href="produto_atualizar.html">Atualizar</a>
+      <a href="produto_apagar.html">Apagar</a>
+    </nav>
+  </header>
+
+  <main class="conteudo-principal">
+
+    <div class="cabecalho-pagina revelar ativo">
+      <div>
+        <h1 class="titulo-pagina">Cadastrar Novo Produto</h1>
+        <p class="subtitulo-pagina">Adicione um novo produto ao catálogo do estoque.</p>
+        <hr class="divisoria">
+      </div>
+    </div>
+
+    <div id="resposta" class="toast"></div>
+
+    <section class="painel-vidro formulario-container revelar ativo">
+      <form id="product-form" class="formulario">
+        <div class="campo-formulario">
+          <label class="rotulo-formulario">Nome do Produto *</label>
+          <input type="text" id="nome" class="entrada-formulario" required>
+        </div>
+
+        <div class="campo-formulario">
+          <label class="rotulo-formulario">Marca *</label>
+          <input type="text" id="marca" class="entrada-formulario" required>
+        </div>
+
+        <div class="campo-formulario duas-colunas" style="grid-column: 1 / -1;">
+          <label class="rotulo-formulario">Descrição *</label>
+          <textarea id="descricao" rows="2" class="entrada-formulario" required></textarea>
+        </div>
+
+        <div class="campo-formulario">
+          <label class="rotulo-formulario">Categoria *</label>
+          <input type="text" id="categoria" class="entrada-formulario" required>
+        </div>
+
+        <div class="campo-formulario">
+          <label class="rotulo-formulario">Preço Unitário (R$) *</label>
+          <input type="number" id="preco" class="entrada-formulario" step="0.01" min="0" required>
+        </div>
+
+        <div class="campo-formulario">
+          <label class="rotulo-formulario">Desconto (%)</label>
+          <input type="number" id="desconto" class="entrada-formulario" step="0.1" min="0" max="100">
+        </div>
+
+        <div class="campo-formulario">
+          <label class="rotulo-formulario">Quantidade em Estoque *</label>
+          <input type="number" id="qtdeEstoque" class="entrada-formulario" min="0" required>
+        </div>
+
+        <div class="campo-formulario duas-colunas" style="grid-column: 1 / -1;">
+          <label class="rotulo-formulario">URL da Imagem *</label>
+          <input type="url" id="imagem" class="entrada-formulario" placeholder="https://..." required>
+        </div>
+
+        <div class="acoes-formulario">
+          <button type="submit" class="botao-outline" id="btn_cadastrar">Cadastrar Produto</button>
+          <button type="button" class="botao-outline" id="btn_carga_lote" style="background: rgba(250,204,21,0.15); border-color: #facc15; color: #facc15;">Carga em Lote (DummyJSON)</button>
+        </div>
+      </form>
+    </section>
+
+  </main>
+
+  <footer class="rodape">
+    <div class="conteudo-rodape">
+      <p>&copy; 2026 - Del Company | Todos os direitos reservados</p>
+    </div>
+  </footer>
+
+</body>
+</html>

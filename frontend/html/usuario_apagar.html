@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Del Mercado - Excluir Usuário</title>
+  <link rel="shortcut icon" href="/img/dell.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <!-- <link rel="stylesheet" href="../css/style_cad.css"> -->
+  <script src="../js/usuario_apagar.js" defer></script>
+</head>
+
+<body>
+
+  <header class="cabecalho">
+    <a href="../index.html" class="logo">Del Mercado</a>
+    <nav class="navegacao">
+      <a href="../index.html">Início</a>
+      <a href="usuario_cadastrar.html">Cadastrar</a>
+      <a href="usuario_listar.html">Listar</a>
+      <a href="usuario_consultar.html">Consultar</a>
+      <a href="usuario_atualizar.html">Atualizar</a>
+      <a href="usuario_apagar.html" class="ativo">Apagar</a>
+    </nav>
+  </header>
+
+  <main class="conteudo-principal">
+
+    <div class="cabecalho-pagina revelar ativo">
+      <div>
+        <h1 class="titulo-pagina">Excluir Usuário</h1>
+        <p class="subtitulo-pagina">Informe o Código do usuário para removê-lo definitivamente do sistema.</p>
+        <hr class="divisoria">
+      </div>
+    </div>
+
+    <div id="resposta" class="toast"></div>
+
+    <section class="painel-vidro formulario-container revelar ativo">
+      <h2 class="titulo-formulario margem-fundo-4">Apagar Registro por ID</h2>
+      <form class="formulario">
+        <div class="campo-formulario" style="grid-column: 1 / -1;">
+          <label class="rotulo-formulario">Código do Usuário *</label>
+          <input type="number" id="codUsuario" class="entrada-formulario" required placeholder="Ex: 1">
+        </div>
+        <div class="acoes-formulario">
+          <button type="submit" class="botao-outline" id="btn_apagar" style="border-color: #ef4444; color: #f87171;">Apagar Usuário</button>
+        </div>
+      </form>
+    </section>
+
+  </main>
+
+  <footer class="rodape">
+    <div class="conteudo-rodape">
+      <p>&copy; 2026 - Del Company | Todos os direitos reservados</p>
+    </div>
+  </footer>
+
+</body>
+</html>

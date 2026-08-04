@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Del Mercado - Registrar Compra</title>
+  <link rel="shortcut icon" href="/img/dell.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <!-- <link rel="stylesheet" href="../css/style_cad.css"> -->
+  <script src="../js/compra_cadastrar.js" defer></script>
+</head>
+
+<body>
+
+  <header class="cabecalho">
+    <a href="../index.html" class="logo">Del Mercado</a>
+    <nav class="navegacao">
+      <a href="../index.html">Início</a>
+      <a href="compra_cadastrar.html" class="ativo">Registrar</a>
+      <a href="compra_listar.html">Listar Histórico</a>
+    </nav>
+  </header>
+
+  <main class="conteudo-principal">
+
+    <div class="cabecalho-pagina revelar ativo">
+      <div>
+        <h1 class="titulo-pagina">Registrar Movimentação de Estoque</h1>
+        <p class="subtitulo-pagina">Selecione o usuário, o produto e o tipo de transação (Entrada/Saída).</p>
+        <hr class="divisoria">
+      </div>
+    </div>
+
+    <div id="resposta" class="toast"></div>
+
+    <section class="grid-2">
+      <!-- Formulário de Transação -->
+      <div class="painel-vidro revelar ativo">
+        <h2 class="titulo-formulario margem-fundo-4">Nova Movimentação</h2>
+        <form id="movement-form" class="formulario">
+          <div class="campo-formulario" style="grid-column: 1 / -1;">
+            <label class="rotulo-formulario">Usuário *</label>
+            <select id="move-usuario" class="entrada-formulario" required>
+              <option value="">Carregando usuários...</option>
+            </select>
+          </div>
+
+          <div class="campo-formulario" style="grid-column: 1 / -1;">
+            <label class="rotulo-formulario">Produto *</label>
+            <select id="move-produto" class="entrada-formulario" required>
+              <option value="">Carregando produtos...</option>
+            </select>
+            <span id="product-stock-hint" class="tamanho-texto-xs texto-cor-cinza-400 margem-topo-1" style="display: block;"></span>
+          </div>
+
+          <div class="campo-formulario" style="grid-column: 1 / -1;">
+            <label class="rotulo-formulario">Tipo de Movimentação *</label>
+            <div style="display: flex; gap: 2rem; margin-top: 0.5rem;">
+              <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                <input type="radio" name="tipoMovimento" value="SAIDA" checked style="accent-color: #d62828;"> Saída (Venda)
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                <input type="radio" name="tipoMovimento" value="ENTRADA" style="accent-color: #4ade80;"> Entrada (Estoque)
+              </label>
+            </div>
+          </div>
+
+          <div class="campo-formulario">
+            <label class="rotulo-formulario">Quantidade *</label>
+            <input type="number" id="move-quantidade" class="entrada-formulario" min="1" required placeholder="Ex: 5">
+          </div>
+
+          <div class="campo-formulario">
+            <label class="rotulo-formulario">Forma de Pagamento *</label>
+            <select id="move-pagamento" class="entrada-formulario" required>
+              <option value="DINHEIRO">Dinheiro</option>
+              <option value="DEBITO">Débito</option>
+              <option value="CREDITO">Crédito</option>
+            </select>
+          </div>
+
+          <div class="campo-formulario" style="grid-column: 1 / -1;">
+            <label class="rotulo-formulario">Status da Transação *</label>
+            <select id="move-status" class="entrada-formulario" required>
+              <option value="PAGA">Paga / Concluída</option>
+              <option value="PENDENTE">Pendente</option>
+            </select>
+          </div>
+
+          <button type="submit" class="botao-outline margem-topo-2" style="grid-column: 1 / -1;">Registrar Transação</button>
+        </form>
+      </div>
+
+      <!-- Card de Prévia Financeira -->
+      <div class="painel-vidro revelar ativo" style="display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <h2 class="titulo-formulario margem-fundo-6">Resumo da Prévia</h2>
+          
+          <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.75rem;">
+              <span class="texto-cor-cinza-400">Preço Unitário:</span>
+              <span id="preview-preco" class="peso-fonte-semibold">-</span>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.75rem;">
+              <span class="texto-cor-cinza-400">Desconto do Catálogo:</span>
+              <span id="preview-desconto" class="peso-fonte-semibold">-</span>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; padding-bottom: 0.75rem;">
+              <span class="texto-cor-cinza-400" style="font-size: 1.125rem;">Preço Estimado Total:</span>
+              <span id="preview-final" class="tamanho-texto-2xl peso-fonte-black texto-cor-marca">-</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="fundo-marca-10 preenchimento-4 borda-arredondada-lg borda-marca-30 margem-topo-8">
+          <p class="tamanho-texto-xs texto-cor-cinza-400">
+            * O cálculo final do preço é feito no servidor aplicando o desconto do produto e multiplicando pela quantidade.
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="rodape">
+    <div class="conteudo-rodape">
+      <p>&copy; 2026 - Del Company | Todos os direitos reservados</p>
+    </div>
+  </footer>
+
+</body>
+</html>
