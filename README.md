@@ -617,6 +617,6 @@ Isso ajuda a divulgar o projeto e incentiva seu desenvolvimento.
 
 **Desenvolvido com ❤️, ☕ e muito JavaScript.**
 
-### © 2025 — Del Company | Eliel Bernardi
+### © 2026 — Del Company | Eliel Bernardi
 
 </div>
